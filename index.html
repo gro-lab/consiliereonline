@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Răzvan Mischie - Embracing simplicity in design and life">
+    <meta name="author" content="Răzvan Mischie">
+    <title>Răzvan Mischie - Consiliere Online</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon (optional - you can add one later) -->
+    <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+</head>
+<body>
+    <div id="svgBackground"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#hero" class="nav-link active" data-en="Home" data-ro="Acasă">Home</a></li>
+                <li><a href="#about" class="nav-link" data-en="About me" data-ro="Despre mine">About me</a></li>
+                <li><a href="#gallery" class="nav-link" data-en="Events" data-ro="Evenimente">Events</a></li>
+                <li><a href="#contact" class="nav-link" data-en="Contact" data-ro="Contact">Contact</a></li>
+            </ul>
+            <div class="language-toggle">
+                <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" data-lang="ro" onclick="setLanguage('ro')">RO</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="section-content">
+            <h1 class="hero-title">
+                <span lang="ro">Salut,<br/> sunt Răzvan</span>
+                <span lang="en">Hi, <br/> I'm Răzvan</span>
+            </h1>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-content">
+            <p class="section-paragraph" lang="en">
+                Embracing simplicity in design and life. We believe that less is more, and that true beauty 
+                lies in the essential. Our approach strips away the unnecessary, revealing the pure essence 
+                of what truly matters. Through thoughtful reduction, we create spaces and experiences that 
+                breathe with clarity and purpose.
+            </p>
+            <p class="section-paragraph" lang="ro">
+                Îmbrățișând simplitatea în design și viață. Credem că mai puțin înseamnă mai mult și că adevărata 
+                frumusețe se află în esențial. Abordarea noastră elimină ceea ce nu este necesar, dezvăluind esența 
+                pură a ceea ce contează cu adevărat. Prin reducere atentă, creăm spații și experiențe care 
+                respiră cu claritate și scop.
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="about">
+        <div class="section-content">
+            <p class="section-paragraph" lang="en">
+                Our services focus on creating meaningful connections between people and spaces. We specialize 
+                in minimalist design consultancy, spatial planning, and lifestyle curation. Each project is 
+                approached with intentionality, ensuring that every element serves a purpose while maintaining 
+                aesthetic harmony and functional excellence.
+            </p>
+            <p class="section-paragraph" lang="ro">
+                Serviciile noastre se concentrează pe crearea de conexiuni semnificative între oameni și spații. 
+                Ne specializăm în consultanță de design minimalist, planificare spațială și curatoriat de stil 
+                de viață. Fiecare proiect este abordat cu intenție, asigurându-ne că fiecare element servește 
+                un scop, menținând în același timp armonia estetică și excelența funcțională.
+            </p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="section-content">
+            <h2 style="margin-bottom: 40px; font-size: 2.5rem; font-weight: 300;">
+                <span lang="en">Events</span>
+                <span lang="ro">Evenimente</span>
+            </h2>
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-slide">
+                            <span class="carousel-placeholder">Event Poster 1</span>
+                        </div>
+                        <div class="carousel-slide">
+                            <span class="carousel-placeholder">Event Poster 2</span>
+                        </div>
+                        <div class="carousel-slide">
+                            <span class="carousel-placeholder">Event Poster 3</span>
+                        </div>
+                        <div class="carousel-slide">
+                            <span class="carousel-placeholder">Event Poster 4</span>
+                        </div>
+                        <div class="carousel-slide">
+                            <span class="carousel-placeholder">Event Poster 5</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-nav prev" onclick="moveCarousel(-1)" aria-label="Previous">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </button>
+                <button class="carousel-nav next" onclick="moveCarousel(1)" aria-label="Next">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </button>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-content">
+            <h2 style="margin-bottom: 20px; font-size: 2.5rem; font-weight: 300;">
+                <span lang="en">Get in Touch</span>
+                <span lang="ro">Contactează-mă</span>
+            </h2>
+            <div class="contact-links">
+                <a href="https://instagram.com/razvanmischie" class="contact-btn" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                    </svg>
+                    Instagram
+                </a>
+                <a href="tel:+40740123456" class="contact-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 10.999h2C22 5.869 18.127 2 12.99 2v2C17.052 4 20 6.943 20 10.999z"/>
+                        <path d="M13 8c2.103 0 3 .897 3 3h2c0-3.225-1.775-5-5-5v2zm3.422 5.443a1.001 1.001 0 00-1.391.043l-2.393 2.461c-.576-.11-1.734-.471-2.926-1.66-1.192-1.193-1.553-2.354-1.66-2.926l2.459-2.394a1 1 0 00.043-1.391L6.859 3.513a1 1 0 00-1.391-.087l-2.17 1.861a1 1 0 00-.29.649c-.015.25-.301 6.172 4.291 10.766C11.305 20.707 16.323 21 17.705 21c.202 0 .326-.006.359-.008a.992.992 0 00.648-.291l1.86-2.171a1 1 0 00-.086-1.391l-4.064-3.696z"/>
+                    </svg>
+                    <span lang="en">Call</span>
+                    <span lang="ro">Sună</span>
+                </a>
+                <a href="mailto:contact@razvanmischie.com" class="contact-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    Email
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- External JavaScript -->
+    <script src="svg-backgrounds.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
