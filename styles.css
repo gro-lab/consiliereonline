@@ -110,30 +110,25 @@ nav {
     border-radius: 20px;
     font-family: inherit;
     
-    /* iOS Safari specific fixes */
+    /* iOS Safari specific fixes - only target iOS */
     -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    
-    /* Prevent iOS from styling the button */
     -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+}
+
+/* iOS-specific override to force black text color */
+@supports (-webkit-touch-callout: none) {
+    .lang-btn {
+        color: var(--primary-color) !important;
+    }
     
-    /* Ensure consistent text rendering */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    
-    /* Remove any outline on focus for consistency */
-    outline: none;
+    .lang-btn:not(.active) {
+        color: #000 !important;
+    }
 }
 
 .lang-btn:focus {
     /* Add custom focus styling */
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+    outline: 2px solid rgba(0, 0, 0, 0.2);
 }
 
 .lang-btn.active {
@@ -248,13 +243,6 @@ section {
     justify-content: center;
     transition: var(--transition);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    
-    /* iOS Safari fixes for carousel buttons */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
 }
 
 .carousel-nav:hover {
@@ -297,13 +285,6 @@ section {
     background: transparent;
     cursor: pointer;
     transition: var(--transition);
-    
-    /* iOS Safari fixes for carousel dots */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
 }
 
 .carousel-dot.active {
@@ -339,12 +320,6 @@ section {
     border-radius: 30px;
     transition: var(--transition);
     font-weight: 500;
-    
-    /* iOS Safari fixes for contact buttons */
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
 }
 
 .contact-btn:hover {
@@ -361,13 +336,6 @@ section {
     background: none;
     border: none;
     padding: 5px;
-    
-    /* iOS Safari fixes for mobile menu toggle */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
 }
 
 .mobile-menu-toggle span {
