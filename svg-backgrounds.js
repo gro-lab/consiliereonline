@@ -1,6 +1,85 @@
-// Create a single large SVG background that covers the entire viewport
+// Create a single large SVG background with continuously moving elements
 window.createFullPageSVG = function() {
     const svgBackground = document.getElementById('svgBackground');
+    
+    // Helper function to get a random value between min and max
+    const random = (min, max) => Math.random() * (max - min) + min;
+    
+    // Helper function to get a random animation duration
+    const randomDuration = () => `${random(15, 35)}s`;
+    
+    // Helper function to get a random animation delay
+    const randomDelay = () => `${random(0, 10)}s`;
+    
+    // Helper function to get element-specific class
+    const getElementClass = (id) => {
+        const classMap = {
+            '#brain': 'svg-brain',
+            '#chat': 'svg-chat',
+            '#circle': 'svg-circle',
+            '#square': 'svg-square',
+            '#triangle': 'svg-triangle',
+            '#star': 'svg-star',
+            '#hexagon': 'svg-hexagon',
+            '#diamond': 'svg-diamond',
+            '#line': 'svg-line',
+            '#arc': 'svg-arc',
+            '#wave': 'svg-wave',
+            '#spiral': 'svg-spiral',
+            '#zigzag': 'svg-zigzag',
+            '#curve': 'svg-curve',
+            '#infinity': 'svg-infinity',
+            '#lightning': 'svg-lightning'
+        };
+        return classMap[id] || 'svg-element';
+    };
+    
+    // Create animated elements with bounded positions
+    const createAnimatedElement = (href, baseX, baseY, scale, sectionY = 0) => {
+        const elementClass = getElementClass(href);
+        
+        // Keep elements within viewport bounds (10-90% range)
+        const x = Math.max(10, Math.min(90, baseX));
+        const y = Math.max(sectionY + 10, Math.min(sectionY + 90, baseY));
+        
+        // Random variations for more organic feel
+        const scaleVariation = random(0.8, 1.2);
+        const finalScale = scale * scaleVariation;
+        
+        // Create unique animation timing for each element
+        const duration1 = randomDuration();
+        const duration2 = randomDuration();
+        const duration3 = randomDuration();
+        const delay = randomDelay();
+        
+        return `<g class="svg-element ${elementClass}" 
+                   style="--duration1: ${duration1}; --duration2: ${duration2}; --duration3: ${duration3}; --delay: ${delay};">
+                   <use href="${href}" 
+                        transform="translate(${x},${y}) scale(${finalScale})" />
+                </g>`;
+    };
+    
+    // Generate more elements for denser, livelier background
+    const generateSectionElements = (sectionY, opacity, elementCount = 30) => {
+        const elements = ['#brain', '#chat', '#circle', '#square', '#triangle', '#star', 
+                         '#hexagon', '#diamond', '#line', '#arc', '#wave', '#spiral', 
+                         '#zigzag', '#curve', '#infinity', '#lightning'];
+        
+        let elementsHTML = '';
+        
+        for (let i = 0; i < elementCount; i++) {
+            const element = elements[Math.floor(random(0, elements.length))];
+            const x = random(10, 90);
+            const y = random(sectionY + 10, sectionY + 90);
+            const scale = random(0.5, 2.5);
+            
+            elementsHTML += createAnimatedElement(element, x, y, scale, sectionY);
+        }
+        
+        return `<g stroke="#a2d2ff${opacity}" stroke-width="1" stroke-linecap="round" fill="none">
+                    ${elementsHTML}
+                </g>`;
+    };
     
     const svg = `
 <svg width="100%" height="100%" viewBox="0 0 100 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -23,102 +102,91 @@ window.createFullPageSVG = function() {
     <line id="line" x1="-3" y1="0" x2="3" y2="0" />
   </defs>
 
+  <!-- Create style tag for CSS custom properties -->
+  <style>
+    .svg-element {
+      animation-play-state: running;
+    }
+    .svg-element use {
+      animation: inherit;
+    }
+  </style>
+
   <!-- Hero Section Elements (0-100) -->
-  <g stroke="#a2d2ff40" stroke-width="1" stroke-linecap="round" fill="none">
-    <use href="#brain" transform="translate(15.5,25.3) scale(2.1)" />
-    <use href="#brain" transform="translate(78.2,45.8) scale(1.8)" />
-    <use href="#chat" transform="translate(35.7,15.9) scale(1.3)" />
-    <use href="#chat" transform="translate(88.1,32.4) scale(1.1)" />
-    <use href="#line" transform="translate(25.4,65.2) scale(2.2)" />
-    <use href="#line" transform="translate(70.8,20.1) scale(1.8)" />
-    <use href="#arc" transform="translate(12.3,78.9) scale(2.0)" />
-    <use href="#arc" transform="translate(82.6,8.7) scale(1.5)" />
-    <use href="#wave" transform="translate(45.2,88.3) scale(2.5)" />
-    <use href="#wave" transform="translate(8.9,35.6) scale(1.4)" />
-    <use href="#circle" transform="translate(92.4,58.7) scale(1.6)" />
-    <use href="#circle" transform="translate(28.7,72.1) scale(1.2)" />
-    <use href="#triangle" transform="translate(58.3,12.5) scale(1.7)" />
-    <use href="#star" transform="translate(41.8,95.2) scale(2.0)" />
-  </g>
-
+  ${generateSectionElements(0, '40', 35)}
+  
   <!-- About Section Elements (100-200) -->
-  <g stroke="#a2d2ff35" stroke-width="1" stroke-linecap="round" fill="none">
-    <use href="#brain" transform="translate(22.1,125.7) scale(2.3)" />
-    <use href="#brain" transform="translate(75.9,145.2) scale(1.9)" />
-    <use href="#chat" transform="translate(48.6,135.8) scale(1.4)" />
-    <use href="#chat" transform="translate(85.3,118.9) scale(1.0)" />
-    <use href="#line" transform="translate(31.8,165.4) scale(2.1)" />
-    <use href="#line" transform="translate(67.2,128.7) scale(1.6)" />
-    <use href="#arc" transform="translate(18.5,178.1) scale(2.2)" />
-    <use href="#arc" transform="translate(89.7,108.4) scale(1.7)" />
-    <use href="#wave" transform="translate(52.4,188.6) scale(2.3)" />
-    <use href="#wave" transform="translate(15.1,135.2) scale(1.5)" />
-    <use href="#square" transform="translate(95.8,158.9) scale(1.8)" />
-    <use href="#diamond" transform="translate(35.2,172.3) scale(1.3)" />
-    <use href="#hexagon" transform="translate(71.6,112.8) scale(1.9)" />
-    <use href="#spiral" transform="translate(28.9,195.7) scale(2.4)" />
-  </g>
-
+  ${generateSectionElements(100, '35', 30)}
+  
   <!-- Services Section Elements (200-300) -->
-  <g stroke="#a2d2ff30" stroke-width="1" stroke-linecap="round" fill="none">
-    <use href="#brain" transform="translate(38.4,225.1) scale(2.0)" />
-    <use href="#brain" transform="translate(82.7,245.8) scale(1.7)" />
-    <use href="#chat" transform="translate(55.2,235.4) scale(1.2)" />
-    <use href="#chat" transform="translate(91.6,218.3) scale(1.1)" />
-    <use href="#line" transform="translate(42.1,265.9) scale(2.3)" />
-    <use href="#line" transform="translate(73.8,228.4) scale(1.9)" />
-    <use href="#arc" transform="translate(24.7,278.2) scale(2.1)" />
-    <use href="#arc" transform="translate(96.3,208.7) scale(1.6)" />
-    <use href="#wave" transform="translate(58.9,288.1) scale(2.2)" />
-    <use href="#wave" transform="translate(21.4,235.6) scale(1.3)" />
-    <use href="#infinity" transform="translate(79.5,258.4) scale(1.8)" />
-    <use href="#lightning" transform="translate(45.8,272.9) scale(2.1)" />
-    <use href="#zigzag" transform="translate(12.3,295.3) scale(1.5)" />
-    <use href="#curve" transform="translate(87.1,212.7) scale(1.4)" />
-  </g>
-
+  ${generateSectionElements(200, '30', 30)}
+  
   <!-- Gallery Section Elements (300-400) -->
-  <g stroke="#a2d2ff25" stroke-width="1" stroke-linecap="round" fill="none">
-    <use href="#brain" transform="translate(44.8,325.6) scale(2.2)" />
-    <use href="#brain" transform="translate(78.1,345.3) scale(1.8)" />
-    <use href="#chat" transform="translate(61.7,335.9) scale(1.3)" />
-    <use href="#chat" transform="translate(88.2,318.8) scale(1.0)" />
-    <use href="#line" transform="translate(48.4,365.2) scale(2.0)" />
-    <use href="#line" transform="translate(80.3,328.1) scale(1.7)" />
-    <use href="#arc" transform="translate(30.9,378.7) scale(2.3)" />
-    <use href="#arc" transform="translate(92.6,308.2) scale(1.5)" />
-    <use href="#wave" transform="translate(65.2,388.4) scale(2.4)" />
-    <use href="#wave" transform="translate(27.8,335.1) scale(1.6)" />
-    <use href="#star" transform="translate(85.7,358.6) scale(2.0)" />
-    <use href="#hexagon" transform="translate(52.1,372.8) scale(1.9)" />
-    <use href="#diamond" transform="translate(18.6,395.1) scale(1.4)" />
-    <use href="#circle" transform="translate(93.4,312.5) scale(1.3)" />
-  </g>
-
+  ${generateSectionElements(300, '25', 30)}
+  
   <!-- Contact Section Elements (400-500) -->
-  <g stroke="#a2d2ff20" stroke-width="1" stroke-linecap="round" fill="none">
-    <use href="#brain" transform="translate(51.2,425.7) scale(2.1)" />
-    <use href="#brain" transform="translate(74.5,445.2) scale(1.9)" />
-    <use href="#chat" transform="translate(68.1,435.3) scale(1.4)" />
-    <use href="#chat" transform="translate(84.8,418.6) scale(1.1)" />
-    <use href="#line" transform="translate(54.7,465.8) scale(2.2)" />
-    <use href="#line" transform="translate(86.9,428.3) scale(1.8)" />
-    <use href="#arc" transform="translate(37.3,478.9) scale(2.0)" />
-    <use href="#arc" transform="translate(89.1,408.4) scale(1.6)" />
-    <use href="#wave" transform="translate(71.6,488.2) scale(2.3)" />
-    <use href="#wave" transform="translate(34.2,435.7) scale(1.5)" />
-    <use href="#infinity" transform="translate(91.8,458.1) scale(1.7)" />
-    <use href="#spiral" transform="translate(58.4,472.6) scale(2.5)" />
-    <use href="#lightning" transform="translate(25.1,495.4) scale(1.8)" />
-    <use href="#curve" transform="translate(93.7,412.9) scale(1.2)" />
-  </g>
+  ${generateSectionElements(400, '20', 30)}
 </svg>
     `;
     
     svgBackground.innerHTML = svg;
+    
+    // Optional: Add subtle parallax effect on scroll (not mouse move to avoid interference)
+    let ticking = false;
+    function updateParallax() {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrolled = window.pageYOffset;
+                const groups = svgBackground.querySelectorAll('g[stroke]');
+                
+                groups.forEach((group, index) => {
+                    const speed = 0.5 + (index * 0.1);
+                    const yPos = -(scrolled * speed * 0.1); // Reduced parallax effect
+                    group.style.transform = `translateY(${yPos}px)`;
+                });
+                
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }
+    
+    // Add scroll listener for subtle parallax
+    window.addEventListener('scroll', updateParallax, { passive: true });
+    
+    // Ensure elements keep moving even when tab is inactive
+    document.addEventListener('visibilitychange', () => {
+        const elements = svgBackground.querySelectorAll('.svg-element');
+        if (document.hidden) {
+            elements.forEach(el => el.style.animationPlayState = 'paused');
+        } else {
+            elements.forEach(el => el.style.animationPlayState = 'running');
+        }
+    });
 };
 
 // Initialize the background when the page loads
 document.addEventListener('DOMContentLoaded', function() {
     window.createFullPageSVG();
+    
+    // Performance optimization: Use CSS animations instead of JavaScript
+    // The continuous wandering movements are handled entirely by CSS keyframes
+    // This ensures smooth 60fps animations without JavaScript overhead
+    
+    // Optional: Add intersection observer for performance
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const elements = entry.target.querySelectorAll('.svg-element use');
+                if (entry.isIntersecting) {
+                    elements.forEach(el => el.style.animationPlayState = 'running');
+                } else {
+                    elements.forEach(el => el.style.animationPlayState = 'paused');
+                }
+            });
+        });
+        
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => observer.observe(section));
+    }
 });
