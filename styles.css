@@ -711,7 +711,7 @@ section {
 .carousel-container {
     position: relative;
     max-width: 600px;
-    width: 100%;
+    width: 70vw;
     margin: 0 auto;
 }
 
