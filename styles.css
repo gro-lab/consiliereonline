@@ -752,6 +752,7 @@ section {
 }
 
 .carousel-caption {
+    display: none;
     position: absolute;
     bottom: 0;
     left: 0;
