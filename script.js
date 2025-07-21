@@ -16,6 +16,63 @@ function toggleMobileMenu() {
     document.getElementById('navMenu').classList.toggle('active');
 }
 
+// Modal functionality
+const eventImages = [
+    './ev1.jpeg',
+    './ev2.jpeg', 
+    './ev3.jpeg'
+];
+
+const eventCaptions = [
+    {
+        en: 'Recognition Workshop - June 25, 7:00 PM - 10:00 PM - 35 RON',
+        ro: 'Atelier de Re-cunoaștere - 25 Iunie, 19:00 - 22:00 - 35 RON'
+    },
+    {
+        en: 'Recognition Workshop: Specific Interests - July 26, 6:00 PM - 8:00 PM - 35 RON',
+        ro: 'Atelier de Re-cunoaștere: Interese Specifice - 26 Iulie, 18:00 - 20:00 - 35 RON'
+    },
+    {
+        en: 'Recognition Workshop: Communication and Its Nuances - July 10, 6:30 PM - 9:30 PM - 35 RON',
+        ro: 'Atelier de Re-cunoaștere: Comunicarea și Nuanțele Ei - 10 Iulie, 18:30 - 21:30 - 35 RON'
+    }
+];
+
+function openModal(imageIndex) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const captionText = document.getElementById('modalCaption');
+    
+    modal.style.display = 'block';
+    setTimeout(() => modal.classList.add('show'), 10);
+    
+    modalImg.src = eventImages[imageIndex];
+    
+    // Get current language
+    const isRomanian = document.body.classList.contains('lang-ro');
+    captionText.textContent = isRomanian ? eventCaptions[imageIndex].ro : eventCaptions[imageIndex].en;
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.remove('show');
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }, 300);
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
 // Carousel functionality
 let currentSlide = 0;
 

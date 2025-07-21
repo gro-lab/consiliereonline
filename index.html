@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Răzvan Mischie - Embracing simplicity in design and life">
     <meta name="author" content="Răzvan Mischie">
     <title>Răzvan Mischie - Consiliere Online</title>
@@ -93,14 +93,28 @@
             <div class="carousel-container">
                 <div class="carousel-wrapper">
                     <div class="carousel-track" id="carouselTrack">
-                        <div id="event1" class="carousel-slide">
-                            <span class="carousel-placeholder">Atelier de recunoaștere</span>
+                        <div id="event1" class="carousel-slide" onclick="openModal(0)">
+                            <div class="carousel-caption">
+                                <h3>Atelier de Re-cunoaștere</h3>
+                                <p>25 Iunie • 19:00 - 22:00</p>
+                                <p class="carousel-price">35 RON</p>
+                            </div>
                         </div>
-                        <div id="event2" class="carousel-slide">
-                            <span  class="carousel-placeholder">Atelier de recunoaștere</span>
+                        <div id="event2" class="carousel-slide" onclick="openModal(1)">
+                            <div class="carousel-caption">
+                                <h3>Atelier de Re-cunoaștere</h3>
+                                <p>Interese Specifice</p>
+                                <p>26 Iulie • 18:00 - 20:00</p>
+                                <p class="carousel-price">35 RON</p>
+                            </div>
                         </div>
-                        <div id="event3" class="carousel-slide">
-                            <span  class="carousel-placeholder">Atelier de recunoaștere</span>
+                        <div id="event3" class="carousel-slide" onclick="openModal(2)">
+                            <div class="carousel-caption">
+                                <h3>Atelier de Re-cunoaștere</h3>
+                                <p>Comunicarea și Nuanțele Ei</p>
+                                <p>10 Iulie • 18:30 - 21:30</p>
+                                <p class="carousel-price">35 RON</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,6 +164,13 @@
             </div>
         </div>
     </section>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div class="modal-caption" id="modalCaption"></div>
+    </div>
 
     <!-- External JavaScript -->
     <script src="svg-backgrounds.js"></script>
