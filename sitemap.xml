@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://consiliereonline.com/</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://consiliereonline.com/og-image.jpg</image:loc>
+      <image:title>Răzvan Mischie - Consiliere Online Dezvoltare Personală</image:title>
+      <image:caption>Servicii profesionale de consiliere online în Timișoara</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- About Section -->
+  <url>
+    <loc>https://consiliereonline.com/#about</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Services Section -->
+  <url>
+    <loc>https://consiliereonline.com/#services</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Events/Gallery Section -->
+  <url>
+    <loc>https://consiliereonline.com/#gallery</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://consiliereonline.com/ev1.jpeg</image:loc>
+      <image:title>Atelier de Re-cunoaștere</image:title>
+      <image:caption>Workshop dezvoltare personală - 25 Iunie</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://consiliereonline.com/ev2.jpeg</image:loc>
+      <image:title>Atelier de Re-cunoaștere: Interese Specifice</image:title>
+      <image:caption>Workshop dezvoltare personală - 26 Iulie</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://consiliereonline.com/ev3.jpeg</image:loc>
+      <image:title>Atelier de Re-cunoaștere: Comunicarea și Nuanțele Ei</image:title>
+      <image:caption>Workshop comunicare - 10 Iulie</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- FAQ Section -->
+  <url>
+    <loc>https://consiliereonline.com/#faq</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Contact Section -->
+  <url>
+    <loc>https://consiliereonline.com/#contact</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- 404 Error Page -->
+  <url>
+    <loc>https://consiliereonline.com/404.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  
+</urlset>

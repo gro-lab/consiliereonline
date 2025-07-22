@@ -693,6 +693,11 @@ section {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.hero-subtitle {
+    opacity: 0;
+    animation: fadeInUp 1s ease 0.2s forwards;
+}
+
 .section-paragraph {
     font-size: 1.2rem;
     line-height: 1.8;
@@ -791,16 +796,19 @@ section {
 #event1 {
     background-image: url('./ev1.jpeg');
     background-size: cover;
+    background-position: center;
 }
 
 #event2 {
     background-image: url('./ev2.jpeg');
     background-size: cover;
+    background-position: center;
 }
 
 #event3 {
     background-image: url('./ev3.jpeg');
     background-size: cover;
+    background-position: center;
 }
 
 /* Carousel Navigation */
@@ -995,17 +1003,41 @@ section {
     }
 }
 
-/* Language specific styles */
-[lang="ro"] {
+/* Language specific styles - FIXED */
+/* Default - show Romanian when body has lang-ro class */
+body.lang-ro [lang="en"] {
     display: none;
 }
 
-.lang-ro [lang="en"] {
-    display: none;
-}
-
-.lang-ro [lang="ro"] {
+body.lang-ro [lang="ro"] {
     display: block;
+}
+
+body.lang-ro span[lang="ro"],
+body.lang-ro p[lang="ro"] {
+    display: inline;
+}
+
+body.lang-ro li[lang="ro"] {
+    display: list-item;
+}
+
+/* Show English when body doesn't have lang-ro class */
+body:not(.lang-ro) [lang="ro"] {
+    display: none;
+}
+
+body:not(.lang-ro) [lang="en"] {
+    display: block;
+}
+
+body:not(.lang-ro) span[lang="en"],
+body:not(.lang-ro) p[lang="en"] {
+    display: inline;
+}
+
+body:not(.lang-ro) li[lang="en"] {
+    display: list-item;
 }
 
 /* Mobile and Responsive Adjustments */

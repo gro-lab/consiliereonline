@@ -1,38 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Răzvan Mischie - Embracing simplicity in design and life">
+    
+    <!-- Primary Meta Tags -->
+    <title>Consiliere Online Dezvoltare Personală | Răzvan Mischie | Timișoara</title>
+    <meta name="title" content="Consiliere Online Dezvoltare Personală | Răzvan Mischie | Timișoara">
+    <meta name="description" content="Servicii profesionale de consiliere online pentru dezvoltare personală în Timișoara. Sprijin emoțional, gestionarea stresului și anxietății. Programează o ședință!">
+    <meta name="keywords" content="consiliere online, dezvoltare personală, psiholog online, consilier Timișoara, terapie online, suport emoțional, consiliere psihologică, coaching personal, gestionare stres, anxietate, blocaje emoționale, echilibru emoțional">
     <meta name="author" content="Răzvan Mischie">
-    <title>Răzvan Mischie - Consiliere Online</title>
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="Romanian">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://consiliereonline.com/">
+    <meta property="og:title" content="Consiliere Online Dezvoltare Personală | Răzvan Mischie">
+    <meta property="og:description" content="Servicii profesionale de consiliere online pentru dezvoltare personală. Sprijin emoțional și gestionarea stresului cu Răzvan Mischie.">
+    <meta property="og:image" content="https://consiliereonline.com/og-image.jpg">
+    <meta property="og:locale" content="ro_RO">
+    <meta property="og:site_name" content="Răzvan Mischie - Consiliere Online">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://consiliereonline.com/">
+    <meta property="twitter:title" content="Consiliere Online Dezvoltare Personală | Răzvan Mischie">
+    <meta property="twitter:description" content="Servicii profesionale de consiliere online pentru dezvoltare personală. Sprijin emoțional și gestionarea stresului.">
+    <meta property="twitter:image" content="https://consiliereonline.com/og-image.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://consiliereonline.com/">
     
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Favicon (optional - you can add one later) -->
-    <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+    <!-- Language visibility fix -->
+    <style>
+        /* Override problematic CSS from styles.css */
+        /* Default: show Romanian content */
+        body.lang-ro [lang="en"] {
+            display: none !important;
+        }
+        
+        body.lang-ro [lang="ro"] {
+            display: block !important;
+        }
+        
+        body.lang-ro span[lang="ro"] {
+            display: inline !important;
+        }
+        
+        body.lang-ro span[lang="en"] {
+            display: none !important;
+        }
+        
+        /* When English is selected */
+        body:not(.lang-ro) [lang="ro"] {
+            display: none !important;
+        }
+        
+        body:not(.lang-ro) [lang="en"] {
+            display: block !important;
+        }
+        
+        body:not(.lang-ro) span[lang="en"] {
+            display: inline !important;
+        }
+        
+        body:not(.lang-ro) span[lang="ro"] {
+            display: none !important;
+        }
+        
+        /* Ensure list items work properly */
+        body.lang-ro li[lang="en"] {
+            display: none !important;
+        }
+        
+        body.lang-ro li[lang="ro"] {
+            display: list-item !important;
+        }
+        
+        body:not(.lang-ro) li[lang="ro"] {
+            display: none !important;
+        }
+        
+        body:not(.lang-ro) li[lang="en"] {
+            display: list-item !important;
+        }
+    </style>
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Răzvan Mischie - Consiliere Online",
+        "description": "Servicii profesionale de consiliere online și dezvoltare personală în Timișoara",
+        "url": "https://consiliereonline.com",
+        "telephone": "+40750267476",
+        "email": "contact@razvanmischie.com",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Str. Episcop Augustin Pacha, nr.1, ap. 31, interfon 131",
+            "addressLocality": "Timișoara",
+            "addressRegion": "Timiș",
+            "postalCode": "300055",
+            "addressCountry": "RO"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 45.7489,
+            "longitude": 21.2087
+        },
+        "openingHours": "Mo-Fr 09:00-20:00",
+        "priceRange": "$$",
+        "image": "https://consiliereonline.com/og-image.jpg",
+        "sameAs": [
+            "https://www.instagram.com/razvanmischie.cdp/"
+        ]
+    }
+    </script>
+    
+    <!-- FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{
+            "@type": "Question",
+            "name": "Ce este consilierea online pentru dezvoltare personală?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Consilierea online pentru dezvoltare personală este un proces de sprijin profesional oferit prin platforme digitale, care vă ajută să vă înțelegeți mai bine emoțiile, relațiile și obiectivele personale, din confortul propriei case."
+            }
+        },{
+            "@type": "Question",
+            "name": "Cât durează o ședință de consiliere online?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "O ședință de consiliere online durează în general 50-60 de minute. Durata poate varia în funcție de nevoile specifice ale fiecărui client."
+            }
+        },{
+            "@type": "Question",
+            "name": "Care sunt beneficiile consilierii online față de cea tradițională?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Consilierea online oferă flexibilitate, confort, accesibilitate din orice locație, economie de timp și costuri de deplasare, păstrând aceeași eficiență ca întâlnirile față în față."
+            }
+        }]
+    }
+    </script>
 </head>
-<body>
+<body class="lang-ro">
     <div id="svgBackground"></div>
     
     <!-- Navigation -->
-    <nav>
+    <nav role="navigation" aria-label="Navigare principală">
         <div class="nav-container">
-            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Meniu mobil">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             <ul class="nav-menu" id="navMenu">
-                <li><a href="#hero" class="nav-link active" data-en="Home" data-ro="Acasă">Home</a></li>
-                <li><a href="#about" class="nav-link" data-en="About me" data-ro="Despre mine">About me</a></li>
-                <li><a href="#gallery" class="nav-link" data-en="Events" data-ro="Evenimente">Events</a></li>
+                <li><a href="#hero" class="nav-link active" data-en="Home" data-ro="Acasă">Acasă</a></li>
+                <li><a href="#about" class="nav-link" data-en="About me" data-ro="Despre mine">Despre mine</a></li>
+                <li><a href="#services" class="nav-link" data-en="Services" data-ro="Servicii">Servicii</a></li>
+                <li><a href="#gallery" class="nav-link" data-en="Events" data-ro="Evenimente">Evenimente</a></li>
+                <li><a href="#faq" class="nav-link" data-en="FAQ" data-ro="Întrebări">Întrebări</a></li>
                 <li><a href="#contact" class="nav-link" data-en="Contact" data-ro="Contact">Contact</a></li>
             </ul>
             <div class="language-toggle">
-                <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" data-lang="ro" onclick="setLanguage('ro')">RO</button>
+                <button class="lang-btn" data-lang="en" onclick="setLanguage('en')" aria-label="English">EN</button>
+                <button class="lang-btn active" data-lang="ro" onclick="setLanguage('ro')" aria-label="Română">RO</button>
             </div>
         </div>
     </nav>
@@ -41,15 +183,23 @@
     <section id="hero">
         <div class="section-content">
             <h1 class="hero-title">
-                <span lang="ro">Salut,<br/> sunt Răzvan</span>
-                <span lang="en">Hi, <br/> I'm Răzvan</span>
+                <span lang="ro">Consiliere Online<br/>pentru Dezvoltare Personală</span>
+                <span lang="en">Online Counseling<br/>for Personal Development</span>
             </h1>
+            <p class="hero-subtitle" style="font-size: 1.5rem; margin-top: 20px; opacity: 0.8;">
+                <span lang="ro">cu Răzvan Mischie</span>
+                <span lang="en">with Răzvan Mischie</span>
+            </p>
         </div>
     </section>
 
     <!-- About Section -->
     <section id="about">
         <div class="section-content">
+            <h2 style="font-size: 2.5rem; margin-bottom: 30px; font-weight: 300;">
+                <span lang="ro">Despre Mine și Abordarea Mea</span>
+                <span lang="en">About Me and My Approach</span>
+            </h2>
             <p class="section-paragraph" lang="en">
                 I started this journey out of a desire to provide emotional support and advocacy to those who need a safe space to better understand their lives, relationships, and emotions. My personal and professional experiences, lived alongside colleagues, friends, and family, guided me towards this vocation. During my time volunteering with human rights organizations, I learned how important it is to truly listen, with empathy and without prejudice – and to accept people exactly as they are.
             </p>
@@ -60,14 +210,40 @@
     </section>
 
     <!-- Services Section -->
-    <section id="about">
+    <section id="services">
         <div class="section-content">
+            <h2 style="font-size: 2.5rem; margin-bottom: 30px; font-weight: 300;">
+                <span lang="ro">Servicii de Consiliere Online în Timișoara</span>
+                <span lang="en">Online Counseling Services in Timișoara</span>
+            </h2>
             <p class="section-paragraph" lang="en">
                 I strive to create a safe and confidential environment with each person. I support the process of self-exploration through open and authentic discussions, reconnecting with inner resources and developing emotional balance. I encourage the valorization of existing skills and provide a space for reflection that facilitates personal development, before suggesting changes. Whether you are dealing with stress, anxiety, emotional blockages or simply want to achieve your own goals, I am here to support you on your journey and provide you with mental clarity.
             </p>
             <p class="section-paragraph" lang="ro">
-                În cadrul ședințelor de consiliere individuală, creez împreună cu fiecare persoană un cadru sigur și confidențial. Prin discuții deschise și autentice, sprijin procesul de explorare a sinelui, reconectare cu resursele interioare și dezvoltare a echilibrului emoțional. Încurajez valorificarea aptitudinilor existente și ofer un spațiu de reflecție care facilitează dezvoltarea personală, înainte să sugerez schimbări. Fie că te confrunți cu stres, anxietate, blocaje emoționale sau pur și simplu doresti să îți atingi propriile obiective, sunt aici să te susțin pe parcursul tău și să îți ofer claritate mentală.       
+                În cadrul ședințelor de consiliere individuală online, creez împreună cu fiecare persoană un cadru sigur și confidențial. Prin discuții deschise și autentice, sprijin procesul de explorare a sinelui, reconectare cu resursele interioare și dezvoltare a echilibrului emoțional. Încurajez valorificarea aptitudinilor existente și ofer un spațiu de reflecție care facilitează dezvoltarea personală, înainte să sugerez schimbări. Fie că te confrunți cu stres, anxietate, blocaje emoționale sau pur și simplu dorești să îți atingi propriile obiective, sunt aici să te susțin pe parcursul tău și să îți ofer claritate mentală.
             </p>
+            
+            <div style="margin-top: 40px;">
+                <h3 style="font-size: 1.8rem; margin-bottom: 20px; font-weight: 400;">
+                    <span lang="ro">Domenii de Expertiză</span>
+                    <span lang="en">Areas of Expertise</span>
+                </h3>
+                <ul style="text-align: left; max-width: 600px; margin: 0 auto; line-height: 2;">
+                    <li lang="ro">Gestionarea stresului și anxietății</li>
+                    <li lang="ro">Dezvoltare personală și profesională</li>
+                    <li lang="ro">Îmbunătățirea relațiilor interpersonale</li>
+                    <li lang="ro">Depășirea blocajelor emoționale</li>
+                    <li lang="ro">Creșterea stimei de sine</li>
+                    <li lang="ro">Managementul emoțiilor</li>
+                    
+                    <li lang="en">Stress and anxiety management</li>
+                    <li lang="en">Personal and professional development</li>
+                    <li lang="en">Improving interpersonal relationships</li>
+                    <li lang="en">Overcoming emotional blockages</li>
+                    <li lang="en">Building self-esteem</li>
+                    <li lang="en">Emotion management</li>
+                </ul>
+            </div>
         </div>
     </section>
 
@@ -75,8 +251,8 @@
     <section id="gallery">
         <div class="section-content">
             <h2 style="margin-bottom: 40px; font-size: 2.5rem; font-weight: 300;">
-                <span lang="en">Events</span>
-                <span lang="ro">Evenimente</span>
+                <span lang="en">Workshops & Events</span>
+                <span lang="ro">Ateliere și Evenimente</span>
             </h2>
             <div class="carousel-container">
                 <div class="carousel-wrapper">
@@ -106,12 +282,12 @@
                         </div>
                     </div>
                 </div>
-                <button class="carousel-nav prev" onclick="moveCarousel(-1)" aria-label="Previous">
+                <button class="carousel-nav prev" onclick="moveCarousel(-1)" aria-label="Imagine anterioară">
                     <svg viewBox="0 0 24 24">
                         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                     </svg>
                 </button>
-                <button class="carousel-nav next" onclick="moveCarousel(1)" aria-label="Next">
+                <button class="carousel-nav next" onclick="moveCarousel(1)" aria-label="Imagine următoare">
                     <svg viewBox="0 0 24 24">
                         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                     </svg>
@@ -121,21 +297,89 @@
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section id="faq" style="background: rgba(255,255,255,0.95); padding: 80px 0;">
+        <div class="section-content">
+            <h2 style="margin-bottom: 40px; font-size: 2.5rem; font-weight: 300;">
+                <span lang="ro">Întrebări Frecvente despre Consiliere Online</span>
+                <span lang="en">Frequently Asked Questions</span>
+            </h2>
+            
+            <div class="faq-container" style="text-align: left; max-width: 800px; margin: 0 auto;">
+                <div class="faq-item" style="margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.8); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #333;">
+                        <span lang="ro">Ce este consilierea online pentru dezvoltare personală?</span>
+                        <span lang="en">What is online counseling for personal development?</span>
+                    </h3>
+                    <p lang="ro" style="color: #666; line-height: 1.6;">
+                        Consilierea online pentru dezvoltare personală este un proces de sprijin profesional oferit prin platforme digitale, care vă ajută să vă înțelegeți mai bine emoțiile, relațiile și obiectivele personale, din confortul propriei case. Este la fel de eficientă ca întâlnirile față în față.
+                    </p>
+                    <p lang="en" style="color: #666; line-height: 1.6; display: none;">
+                        Online counseling for personal development is a professional support process offered through digital platforms, helping you better understand your emotions, relationships, and personal goals from the comfort of your home. It's as effective as face-to-face meetings.
+                    </p>
+                </div>
+                
+                <div class="faq-item" style="margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.8); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #333;">
+                        <span lang="ro">Cât durează o ședință de consiliere online?</span>
+                        <span lang="en">How long does an online counseling session last?</span>
+                    </h3>
+                    <p lang="ro" style="color: #666; line-height: 1.6;">
+                        O ședință de consiliere online durează în general 50-60 de minute. Prima ședință poate dura puțin mai mult pentru a ne cunoaște mai bine. Frecvența întâlnirilor se stabilește împreună, în funcție de nevoile dumneavoastră.
+                    </p>
+                    <p lang="en" style="color: #666; line-height: 1.6; display: none;">
+                        An online counseling session generally lasts 50-60 minutes. The first session may take a bit longer to get to know each other better. The frequency of meetings is established together, based on your needs.
+                    </p>
+                </div>
+                
+                <div class="faq-item" style="margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.8); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #333;">
+                        <span lang="ro">Care sunt beneficiile consilierii online față de cea tradițională?</span>
+                        <span lang="en">What are the benefits of online counseling vs traditional?</span>
+                    </h3>
+                    <p lang="ro" style="color: #666; line-height: 1.6;">
+                        Consilierea online oferă: flexibilitate în programare, confort (participați din propria casă), accesibilitate din orice locație din România sau străinătate, economie de timp și costuri de deplasare, confidențialitate sporită, și acces la consiliere profesională chiar dacă locuiți într-o zonă îndepărtată de Timișoara.
+                    </p>
+                    <p lang="en" style="color: #666; line-height: 1.6; display: none;">
+                        Online counseling offers: scheduling flexibility, comfort (participate from home), accessibility from any location in Romania or abroad, time and travel cost savings, enhanced confidentiality, and access to professional counseling even if you live far from Timișoara.
+                    </p>
+                </div>
+                
+                <div class="faq-item" style="padding: 20px; background: rgba(255,255,255,0.8); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #333;">
+                        <span lang="ro">Cum mă pregătesc pentru prima ședință online?</span>
+                        <span lang="en">How do I prepare for the first online session?</span>
+                    </h3>
+                    <p lang="ro" style="color: #666; line-height: 1.6;">
+                        Pentru o experiență optimă: alegeți un spațiu liniștit și privat, testați conexiunea la internet, folosiți căști pentru o mai bună calitate audio, pregătiți-vă gândurile sau întrebările pe care doriți să le discutați. Nu vă faceți griji - prima ședință este despre cunoaștere reciprocă într-un cadru relaxat.
+                    </p>
+                    <p lang="en" style="color: #666; line-height: 1.6; display: none;">
+                        For an optimal experience: choose a quiet and private space, test your internet connection, use headphones for better audio quality, prepare your thoughts or questions you want to discuss. Don't worry - the first session is about getting to know each other in a relaxed setting.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact">
         <div class="section-content">
             <h2 style="margin-bottom: 20px; font-size: 2.5rem; font-weight: 300;">
                 <span lang="en">Get in Touch</span>
-                <span lang="ro">Contactează-mă</span>
+                <span lang="ro">Contactează-mă pentru Consiliere Online</span>
             </h2>
+            <p style="margin-bottom: 30px; font-size: 1.2rem; color: var(--text-light);">
+                <span lang="ro">Fă primul pas către dezvoltarea ta personală</span>
+                <span lang="en">Take the first step towards your personal development</span>
+            </p>
             <div class="contact-links">
-                <a href="https://www.instagram.com/razvanmischie.cdp/" class="contact-btn" target="_blank">
+                <a href="https://www.instagram.com/razvanmischie.cdp/" class="contact-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram Răzvan Mischie">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
                     </svg>
                     Instagram
                 </a>
-                <a href="tel:+40750267476" class="contact-btn">
+                <a href="tel:+40750267476" class="contact-btn" aria-label="Telefon Răzvan Mischie">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20 10.999h2C22 5.869 18.127 2 12.99 2v2C17.052 4 20 6.943 20 10.999z"/>
                         <path d="M13 8c2.103 0 3 .897 3 3h2c0-3.225-1.775-5-5-5v2zm3.422 5.443a1.001 1.001 0 00-1.391.043l-2.393 2.461c-.576-.11-1.734-.471-2.926-1.66-1.192-1.193-1.553-2.354-1.66-2.926l2.459-2.394a1 1 0 00.043-1.391L6.859 3.513a1 1 0 00-1.391-.087l-2.17 1.861a1 1 0 00-.29.649c-.015.25-.301 6.172 4.291 10.766C11.305 20.707 16.323 21 17.705 21c.202 0 .326-.006.359-.008a.992.992 0 00.648-.291l1.86-2.171a1 1 0 00-.086-1.391l-4.064-3.696z"/>
@@ -143,25 +387,42 @@
                     <span lang="en">Call</span>
                     <span lang="ro">Sună</span>
                 </a>
-                <a href="mailto:contact@razvanmischie.com" class="contact-btn">
+                <a href="mailto:contact@razvanmischie.com" class="contact-btn" aria-label="Email Răzvan Mischie">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
                     Email
                 </a>
             </div>
+            
+            <div style="margin-top: 40px; color: var(--text-light);">
+                <p lang="ro">📍 Timișoara, România | 🌐 Disponibil pentru clienți din toată România</p>
+                <p lang="en" style="display: none;">📍 Timișoara, Romania | 🌐 Available for clients throughout Romania</p>
+            </div>
         </div>
     </section>
 
     <!-- Image Modal -->
-    <div id="imageModal" class="modal" onclick="closeModal()">
-        <span class="modal-close">&times;</span>
-        <img class="modal-content" id="modalImage">
+    <div id="imageModal" class="modal" onclick="closeModal()" role="dialog" aria-modal="true" aria-labelledby="modalCaption">
+        <span class="modal-close" aria-label="Închide">&times;</span>
+        <img class="modal-content" id="modalImage" alt="Imagine eveniment consiliere">
         <div class="modal-caption" id="modalCaption"></div>
     </div>
 
     <!-- External JavaScript -->
     <script src="svg-backgrounds.js"></script>
     <script src="script.js"></script>
+    
+    <!-- Initialize language on load -->
+    <script>
+        // Ensure Romanian is set as default on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set Romanian as default if no preference saved
+            const savedLang = localStorage.getItem('language');
+            if (!savedLang) {
+                setLanguage('ro');
+            }
+        });
+    </script>
 </body>
 </html>

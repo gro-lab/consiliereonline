@@ -1,19 +1,40 @@
 // Language switching
 function setLanguage(lang) {
-    document.body.className = lang === 'ro' ? 'lang-ro' : '';
+    // Update body class
+    if (lang === 'ro') {
+        document.body.classList.add('lang-ro');
+    } else {
+        document.body.classList.remove('lang-ro');
+    }
+    
+    // Update language buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+        if (btn.getAttribute('data-lang') === lang) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
     });
 
+    // Update navigation links text
     document.querySelectorAll('.nav-link').forEach(link => {
         const text = lang === 'ro' ? link.dataset.ro : link.dataset.en;
         if (text) link.textContent = text;
     });
+    
+    // Save language preference
+    localStorage.setItem('language', lang);
 }
 
 // Mobile menu toggle
 function toggleMobileMenu() {
-    document.getElementById('navMenu').classList.toggle('active');
+    const navMenu = document.getElementById('navMenu');
+    navMenu.classList.toggle('active');
+    
+    // Toggle aria-expanded for accessibility
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const isExpanded = navMenu.classList.contains('active');
+    menuToggle.setAttribute('aria-expanded', isExpanded);
 }
 
 // Modal functionality
@@ -47,6 +68,7 @@ function openModal(imageIndex) {
     setTimeout(() => modal.classList.add('show'), 10);
     
     modalImg.src = eventImages[imageIndex];
+    modalImg.alt = `Imagine eveniment ${imageIndex + 1}`;
     
     // Get current language
     const isRomanian = document.body.classList.contains('lang-ro');
@@ -54,6 +76,9 @@ function openModal(imageIndex) {
     
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
+    
+    // Set focus to modal for accessibility
+    modal.focus();
 }
 
 function closeModal() {
@@ -75,6 +100,7 @@ document.addEventListener('keydown', (e) => {
 
 // Carousel functionality
 let currentSlide = 0;
+let autoPlayInterval;
 
 function moveCarousel(direction) {
     const carouselTrack = document.getElementById('carouselTrack');
@@ -92,21 +118,30 @@ function moveCarousel(direction) {
     const offset = -currentSlide * 100;
     carouselTrack.style.transform = `translateX(${offset}%)`;
     updateDots();
+    
+    // Reset autoplay when user interacts
+    stopAutoPlay();
+    startAutoPlay();
 }
 
 function updateDots() {
     const dots = document.querySelectorAll('.carousel-dot');
     dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === currentSlide);
+        dot.setAttribute('aria-current', index === currentSlide ? 'true' : 'false');
     });
 }
 
 function goToSlide(slideIndex) {
-    currentSlide = slideIndex;
     const carouselTrack = document.getElementById('carouselTrack');
+    currentSlide = slideIndex;
     const offset = -currentSlide * 100;
     carouselTrack.style.transform = `translateX(${offset}%)`;
     updateDots();
+    
+    // Reset autoplay
+    stopAutoPlay();
+    startAutoPlay();
 }
 
 function createDots() {
@@ -117,12 +152,14 @@ function createDots() {
     for (let i = 0; i < totalSlides; i++) {
         const dot = document.createElement('button');
         dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.setAttribute('aria-label', `Mergi la slide ${i + 1}`);
+        dot.setAttribute('aria-current', i === 0 ? 'true' : 'false');
         dot.onclick = () => goToSlide(i);
         dotsContainer.appendChild(dot);
     }
 }
 
+// Touch support for carousel
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -136,85 +173,147 @@ function handleTouchEnd(e) {
 }
 
 function handleSwipe() {
-    if (touchEndX < touchStartX - 50) {
-        moveCarousel(1);
-    }
-    if (touchEndX > touchStartX + 50) {
-        moveCarousel(-1);
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            // Swipe left - next slide
+            moveCarousel(1);
+        } else {
+            // Swipe right - previous slide
+            moveCarousel(-1);
+        }
     }
 }
 
-let autoPlayInterval;
-
+// Autoplay functionality
 function autoPlay() {
     moveCarousel(1);
 }
 
 function startAutoPlay() {
+    // Clear any existing interval
+    if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+    }
     autoPlayInterval = setInterval(autoPlay, 5000);
 }
 
 function stopAutoPlay() {
-    clearInterval(autoPlayInterval);
+    if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+    }
 }
 
+// Scroll handling for navigation highlighting and animations
 function handleScroll() {
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.nav-link');
-    let current = '';
+    const scrollPosition = window.scrollY + 100;
 
+    // Update active navigation link
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        if (scrollY >= sectionTop - 100) {
-            current = section.getAttribute('id');
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${sectionId}`) {
+                    link.classList.add('active');
+                }
+            });
         }
     });
 
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
-            link.classList.add('active');
-        }
-    });
-
-    document.querySelectorAll('.section-paragraph').forEach(p => {
-        const rect = p.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.8 && !p.classList.contains('fade-in')) {
-            p.classList.add('fade-in');
+    // Fade in paragraphs on scroll
+    document.querySelectorAll('.section-paragraph, .faq-item').forEach(element => {
+        const rect = element.getBoundingClientRect();
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        
+        if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
+            element.classList.add('fade-in');
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Language toggle functionality
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const lang = this.getAttribute('data-lang');
-            setLanguage(lang);
-            localStorage.setItem('language', lang);
+// Smooth scroll for navigation links
+function smoothScroll(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    const targetSection = document.querySelector(targetId);
+    
+    if (targetSection) {
+        const offsetTop = targetSection.offsetTop - 80; // Account for fixed nav
+        window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
         });
-    });
+        
+        // Close mobile menu if open
+        document.getElementById('navMenu').classList.remove('active');
+    }
+}
 
-    // Check for saved language preference
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial language
     const savedLang = localStorage.getItem('language');
+    const browserLang = navigator.language.toLowerCase();
+    
+    // Default to Romanian
     if (savedLang) {
         setLanguage(savedLang);
-    } else if (navigator.language.startsWith('ro')) {
+    } else if (browserLang.startsWith('ro')) {
         setLanguage('ro');
+    } else {
+        setLanguage('ro'); // Default to Romanian for SEO
     }
-
-    // Only initialize carousel if it exists
+    
+    // Language toggle event listeners
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.getAttribute('data-lang');
+            setLanguage(lang);
+        });
+    });
+    
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', smoothScroll);
+    });
+    
+    // Mobile menu close on link click
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('navMenu').classList.remove('active');
+        });
+    });
+    
+    // Initialize carousel if it exists
     const carouselTrack = document.getElementById('carouselTrack');
     if (carouselTrack) {
         createDots();
+        
+        // Touch events
         carouselTrack.addEventListener('touchstart', handleTouchStart, { passive: true });
         carouselTrack.addEventListener('touchend', handleTouchEnd, { passive: true });
+        
+        // Autoplay
         startAutoPlay();
-
+        
+        // Pause on hover
         const carouselContainer = document.querySelector('.carousel-container');
-        carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-        carouselContainer.addEventListener('mouseleave', startAutoPlay);
-
+        if (carouselContainer) {
+            carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+            carouselContainer.addEventListener('mouseleave', startAutoPlay);
+        }
+        
+        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.target.closest('.carousel-container')) {
                 if (e.key === 'ArrowLeft') {
@@ -225,14 +324,49 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    window.addEventListener('scroll', handleScroll);
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            document.getElementById('navMenu').classList.remove('active');
+    
+    // Scroll event listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Initial scroll check
+    handleScroll();
+    
+    // Performance optimization: Throttle scroll events
+    let scrollTimer;
+    window.addEventListener('scroll', () => {
+        if (scrollTimer) {
+            clearTimeout(scrollTimer);
+        }
+        scrollTimer = setTimeout(handleScroll, 10);
+    }, { passive: true });
+    
+    // Accessibility: Reduce motion if preferred
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        // Disable autoplay and animations
+        stopAutoPlay();
+        document.documentElement.style.setProperty('--transition', 'none');
+    }
+    
+    // Handle visibility change (pause animations when tab is not visible)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopAutoPlay();
+        } else {
+            startAutoPlay();
+        }
+    });
+    
+    // Print styles
+    window.addEventListener('beforeprint', () => {
+        stopAutoPlay();
+    });
+    
+    // Error handling for images
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+            console.error('Image failed to load:', this.src);
+            this.alt = 'Imagine indisponibilă';
         });
     });
-
-    handleScroll();
 });
