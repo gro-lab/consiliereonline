@@ -1,165 +1,131 @@
 // Language switching
 function setLanguage(lang) {
-    // Update body class
-    if (lang === 'ro') {
-        document.body.classList.add('lang-ro');
-    } else {
-        document.body.classList.remove('lang-ro');
-    }
-    
-    // Update language buttons
+    document.body.classList.toggle('lang-ro', lang === 'ro');
+
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        if (btn.getAttribute('data-lang') === lang) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', btn.dataset.lang === lang);
     });
 
-    // Update navigation links text
     document.querySelectorAll('.nav-link').forEach(link => {
         const text = lang === 'ro' ? link.dataset.ro : link.dataset.en;
         if (text) link.textContent = text;
     });
-    
-    // Save language preference
+
     localStorage.setItem('language', lang);
 }
 
 // Mobile menu toggle
 function toggleMobileMenu() {
     const navMenu = document.getElementById('navMenu');
-    navMenu.classList.toggle('active');
-    
-    // Toggle aria-expanded for accessibility
     const menuToggle = document.querySelector('.mobile-menu-toggle');
-    const isExpanded = navMenu.classList.contains('active');
+    const isExpanded = navMenu.classList.toggle('active');
     menuToggle.setAttribute('aria-expanded', isExpanded);
 }
 
-// Modal functionality
-const eventImages = [
-    './ev1.jpeg',
-    './ev2.jpeg', 
-    './ev3.jpeg'
-];
-
+// Modal
+const eventImages = ['./ev1.jpeg', './ev2.jpeg', './ev3.jpeg'];
 const eventCaptions = [
     {
-        en: 'Recognition Workshop - June 25, 7:00 PM - 10:00 PM - 35 RON',
-        ro: 'Atelier de Re-cunoaștere - 25 Iunie, 19:00 - 22:00 - 35 RON'
+        ro: 'Atelier de Re-cunoaștere - 25 Iunie, 19:00 - 22:00 - 35 RON',
+        en: 'Recognition Workshop - June 25, 7:00 PM - 10:00 PM - 35 RON'
     },
     {
-        en: 'Recognition Workshop: Specific Interests - July 26, 6:00 PM - 8:00 PM - 35 RON',
-        ro: 'Atelier de Re-cunoaștere: Interese Specifice - 26 Iulie, 18:00 - 20:00 - 35 RON'
+        ro: 'Atelier: Interese Specifice - 26 Iulie, 18:00 - 20:00 - 35 RON',
+        en: 'Workshop: Specific Interests - July 26, 6:00 PM - 8:00 PM - 35 RON'
     },
     {
-        en: 'Recognition Workshop: Communication and Its Nuances - July 10, 6:30 PM - 9:30 PM - 35 RON',
-        ro: 'Atelier de Re-cunoaștere: Comunicarea și Nuanțele Ei - 10 Iulie, 18:30 - 21:30 - 35 RON'
+        ro: 'Comunicarea și Nuanțele Ei - 10 Iulie, 18:30 - 21:30 - 35 RON',
+        en: 'Communication & Its Nuances - July 10, 6:30 PM - 9:30 PM - 35 RON'
     }
 ];
 
-function openModal(imageIndex) {
+function openModal(index) {
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
-    const captionText = document.getElementById('modalCaption');
-    
+    const caption = document.getElementById('modalCaption');
+    const lang = document.body.classList.contains('lang-ro') ? 'ro' : 'en';
+
     modal.style.display = 'block';
-    setTimeout(() => modal.classList.add('show'), 10);
-    
-    modalImg.src = eventImages[imageIndex];
-    modalImg.alt = `Imagine eveniment ${imageIndex + 1}`;
-    
-    // Get current language
-    const isRomanian = document.body.classList.contains('lang-ro');
-    captionText.textContent = isRomanian ? eventCaptions[imageIndex].ro : eventCaptions[imageIndex].en;
-    
-    // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden';
-    
-    // Set focus to modal for accessibility
+    modal.classList.add('show');
+    modal.setAttribute('tabindex', '-1');
     modal.focus();
+
+    modalImg.src = eventImages[index];
+    modalImg.alt = `Imagine eveniment ${index + 1}`;
+    caption.textContent = eventCaptions[index][lang];
+
+    document.body.style.overflow = 'hidden';
+
+    // trap focus inside modal
+    modal.addEventListener('keydown', trapFocus);
 }
 
 function closeModal() {
     const modal = document.getElementById('imageModal');
     modal.classList.remove('show');
-    
+    modal.removeAttribute('tabindex');
+    modal.removeEventListener('keydown', trapFocus);
+
     setTimeout(() => {
         modal.style.display = 'none';
         document.body.style.overflow = '';
     }, 300);
 }
 
-// Close modal on Escape key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
+function trapFocus(e) {
+    if (e.key === 'Tab') {
+        e.preventDefault(); // trap focus inside modal
     }
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
 });
 
-// Carousel functionality
+// Carousel
 let currentSlide = 0;
 let autoPlayInterval;
 
-function moveCarousel(direction) {
-    const carouselTrack = document.getElementById('carouselTrack');
-    const slides = carouselTrack.querySelectorAll('.carousel-slide');
-    const totalSlides = slides.length;
-
-    currentSlide += direction;
-
-    if (currentSlide >= totalSlides) {
-        currentSlide = 0;
-    } else if (currentSlide < 0) {
-        currentSlide = totalSlides - 1;
-    }
-
-    const offset = -currentSlide * 100;
-    carouselTrack.style.transform = `translateX(${offset}%)`;
+function moveCarousel(dir) {
+    const track = document.getElementById('carouselTrack');
+    const slides = track.querySelectorAll('.carousel-slide');
+    currentSlide = (currentSlide + dir + slides.length) % slides.length;
+    track.style.transform = `translateX(${-currentSlide * 100}%)`;
     updateDots();
-    
-    // Reset autoplay when user interacts
     stopAutoPlay();
     startAutoPlay();
 }
 
 function updateDots() {
-    const dots = document.querySelectorAll('.carousel-dot');
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-        dot.setAttribute('aria-current', index === currentSlide ? 'true' : 'false');
+    document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+        dot.setAttribute('aria-current', i === currentSlide ? 'true' : 'false');
     });
 }
 
-function goToSlide(slideIndex) {
-    const carouselTrack = document.getElementById('carouselTrack');
-    currentSlide = slideIndex;
-    const offset = -currentSlide * 100;
-    carouselTrack.style.transform = `translateX(${offset}%)`;
+function goToSlide(i) {
+    currentSlide = i;
+    document.getElementById('carouselTrack').style.transform = `translateX(${-i * 100}%)`;
     updateDots();
-    
-    // Reset autoplay
     stopAutoPlay();
     startAutoPlay();
 }
 
 function createDots() {
-    const dotsContainer = document.getElementById('carouselDots');
-    const carouselTrack = document.getElementById('carouselTrack');
-    const totalSlides = carouselTrack.querySelectorAll('.carousel-slide').length;
-
-    for (let i = 0; i < totalSlides; i++) {
+    const dots = document.getElementById('carouselDots');
+    const total = document.querySelectorAll('.carousel-slide').length;
+    dots.innerHTML = '';
+    for (let i = 0; i < total; i++) {
         const dot = document.createElement('button');
-        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Mergi la slide ${i + 1}`);
+        dot.className = `carousel-dot${i === 0 ? ' active' : ''}`;
+        dot.setAttribute('aria-label', `Slide ${i + 1}`);
         dot.setAttribute('aria-current', i === 0 ? 'true' : 'false');
         dot.onclick = () => goToSlide(i);
-        dotsContainer.appendChild(dot);
+        dots.appendChild(dot);
     }
 }
 
-// Touch support for carousel
+// Touch support
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -169,203 +135,111 @@ function handleTouchStart(e) {
 
 function handleTouchEnd(e) {
     touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-}
-
-function handleSwipe() {
-    const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-            // Swipe left - next slide
-            moveCarousel(1);
-        } else {
-            // Swipe right - previous slide
-            moveCarousel(-1);
-        }
-    }
+    if (Math.abs(diff) > 50) moveCarousel(diff > 0 ? 1 : -1);
 }
 
-// Autoplay functionality
 function autoPlay() {
     moveCarousel(1);
 }
 
 function startAutoPlay() {
-    // Clear any existing interval
-    if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
+    stopAutoPlay();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        autoPlayInterval = setInterval(autoPlay, 5000);
     }
-    autoPlayInterval = setInterval(autoPlay, 5000);
 }
 
 function stopAutoPlay() {
-    if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-        autoPlayInterval = null;
-    }
+    clearInterval(autoPlayInterval);
+    autoPlayInterval = null;
 }
 
-// Scroll handling for navigation highlighting and animations
+// Scroll nav + fade-ins
 function handleScroll() {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const scrollPosition = window.scrollY + 100;
-
-    // Update active navigation link
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const sectionId = section.getAttribute('id');
-        
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${sectionId}`) {
-                    link.classList.add('active');
-                }
+    const scrollY = window.scrollY + 100;
+    document.querySelectorAll('section').forEach(section => {
+        const id = section.id;
+        if (scrollY >= section.offsetTop && scrollY < section.offsetTop + section.offsetHeight) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
             });
         }
     });
 
-    // Fade in paragraphs on scroll
-    document.querySelectorAll('.section-paragraph, .faq-item').forEach(element => {
-        const rect = element.getBoundingClientRect();
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        
-        if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
-            element.classList.add('fade-in');
+    document.querySelectorAll('.section-paragraph, .faq-item').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.8 && rect.bottom > 0) {
+            el.classList.add('fade-in');
         }
     });
 }
 
-// Smooth scroll for navigation links
+// Smooth scroll
 function smoothScroll(e) {
     e.preventDefault();
-    const targetId = this.getAttribute('href');
-    const targetSection = document.querySelector(targetId);
-    
-    if (targetSection) {
-        const offsetTop = targetSection.offsetTop - 80; // Account for fixed nav
-        window.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-        });
-        
-        // Close mobile menu if open
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
         document.getElementById('navMenu').classList.remove('active');
     }
 }
 
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Set initial language
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('language');
     const browserLang = navigator.language.toLowerCase();
-    
-    // Default to Romanian
-    if (savedLang) {
-        setLanguage(savedLang);
-    } else if (browserLang.startsWith('ro')) {
-        setLanguage('ro');
-    } else {
-        setLanguage('ro'); // Default to Romanian for SEO
-    }
-    
-    // Language toggle event listeners
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+    setLanguage(savedLang || (browserLang.startsWith('ro') ? 'ro' : 'ro')); // default to ro
+
+    document.querySelectorAll('.lang-btn').forEach(btn =>
+        btn.addEventListener('click', e => {
             e.preventDefault();
-            const lang = this.getAttribute('data-lang');
-            setLanguage(lang);
-        });
-    });
-    
-    // Smooth scrolling for navigation links
+            setLanguage(btn.dataset.lang);
+        })
+    );
+
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', smoothScroll);
+        link.addEventListener('click', () => document.getElementById('navMenu').classList.remove('active'));
     });
-    
-    // Mobile menu close on link click
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            document.getElementById('navMenu').classList.remove('active');
-        });
-    });
-    
-    // Initialize carousel if it exists
-    const carouselTrack = document.getElementById('carouselTrack');
-    if (carouselTrack) {
+
+    // Carousel
+    if (document.getElementById('carouselTrack')) {
         createDots();
-        
-        // Touch events
-        carouselTrack.addEventListener('touchstart', handleTouchStart, { passive: true });
-        carouselTrack.addEventListener('touchend', handleTouchEnd, { passive: true });
-        
-        // Autoplay
+        document.getElementById('carouselTrack').addEventListener('touchstart', handleTouchStart, { passive: true });
+        document.getElementById('carouselTrack').addEventListener('touchend', handleTouchEnd, { passive: true });
         startAutoPlay();
-        
-        // Pause on hover
-        const carouselContainer = document.querySelector('.carousel-container');
-        if (carouselContainer) {
-            carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-            carouselContainer.addEventListener('mouseleave', startAutoPlay);
-        }
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
+
+        const container = document.querySelector('.carousel-container');
+        container?.addEventListener('mouseenter', stopAutoPlay);
+        container?.addEventListener('mouseleave', startAutoPlay);
+
+        document.addEventListener('keydown', e => {
             if (e.target.closest('.carousel-container')) {
-                if (e.key === 'ArrowLeft') {
-                    moveCarousel(-1);
-                } else if (e.key === 'ArrowRight') {
-                    moveCarousel(1);
-                }
+                if (e.key === 'ArrowLeft') moveCarousel(-1);
+                else if (e.key === 'ArrowRight') moveCarousel(1);
             }
         });
     }
-    
-    // Scroll event listener
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Initial scroll check
+
     handleScroll();
-    
-    // Performance optimization: Throttle scroll events
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     let scrollTimer;
     window.addEventListener('scroll', () => {
-        if (scrollTimer) {
-            clearTimeout(scrollTimer);
-        }
-        scrollTimer = setTimeout(handleScroll, 10);
+        if (scrollTimer) clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(handleScroll, 50);
     }, { passive: true });
-    
-    // Accessibility: Reduce motion if preferred
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-        // Disable autoplay and animations
-        stopAutoPlay();
-        document.documentElement.style.setProperty('--transition', 'none');
-    }
-    
-    // Handle visibility change (pause animations when tab is not visible)
+
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            stopAutoPlay();
-        } else {
-            startAutoPlay();
-        }
+        document.hidden ? stopAutoPlay() : startAutoPlay();
     });
-    
-    // Print styles
-    window.addEventListener('beforeprint', () => {
-        stopAutoPlay();
-    });
-    
-    // Error handling for images
+
+    window.addEventListener('beforeprint', stopAutoPlay);
+
     document.querySelectorAll('img').forEach(img => {
-        img.addEventListener('error', function() {
-            console.error('Image failed to load:', this.src);
+        img.addEventListener('error', function () {
+            console.warn('Image failed to load:', this.src);
             this.alt = 'Imagine indisponibilă';
         });
     });
