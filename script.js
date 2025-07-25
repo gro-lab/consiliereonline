@@ -786,12 +786,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.moveCarousel = (dir) => carousel.move(dir);
     
     // Service Worker Registration (for PWA)
+    // Updated registration in script.js
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(registration => {
-            console.log('ServiceWorker registered:', registration);
-        }).catch(error => {
-            console.log('ServiceWorker registration failed:', error);
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+            console.log('ServiceWorker registration successful');
+        })
+        .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
         });
+    });
     }
 });
 
