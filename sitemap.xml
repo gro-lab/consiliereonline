@@ -5,16 +5,18 @@
   <!-- Main homepage -->
   <url>
     <loc>https://consiliereonline.com/</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2025-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     
+    <!-- Open Graph image -->
     <image:image>
-      <image:loc>https://consiliereonline.com/og-image.jpg</image:loc>
+      <image:loc>https://consiliereonline.com/icons/og-image.jpg</image:loc>
       <image:title>Consiliere Online Dezvoltare Personală</image:title>
-      <image:caption>Coaching și consiliere în Timișoara</image:caption>
+      <image:caption>Coaching și consiliere online</image:caption>
     </image:image>
-
+    
+    <!-- Event images -->
     <image:image>
       <image:loc>https://consiliereonline.com/ev1.jpeg</image:loc>
       <image:title>Atelier de Re-cunoaștere</image:title>
@@ -32,15 +34,19 @@
       <image:title>Atelier de Re-cunoaștere: Comunicarea și Nuanțele Ei</image:title>
       <image:caption>Workshop comunicare autentică - 10 Iulie</image:caption>
     </image:image>
-
+    
+    <!-- Logo -->
+    <image:image>
+      <image:loc>https://consiliereonline.com/icons/logo.png</image:loc>
+      <image:title>Logo Consiliere Online</image:title>
+    </image:image>
   </url>
 
   <!-- 404 error page -->
   <url>
     <loc>https://consiliereonline.com/404.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2025-07-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.1</priority>
   </url>
-
 </urlset>

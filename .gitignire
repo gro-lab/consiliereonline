@@ -7,7 +7,7 @@ Thumbs.db
 .vscode/
 *.sublime-project
 *.sublime-workspace
-
+.DS_Store
 # Temporary files
 *.tmp
 *.temp
