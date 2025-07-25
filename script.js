@@ -789,15 +789,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Updated registration in script.js
     if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-            console.log('ServiceWorker registration successful');
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then((registration) => {
+            console.log('ServiceWorker registration successful with scope:', registration.scope);
         })
-        .catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
+        .catch((error) => {
+            console.log('ServiceWorker registration failed:', error);
         });
     });
-    }
+    }   
 });
 
 // Expose necessary functions globally for inline handlers
