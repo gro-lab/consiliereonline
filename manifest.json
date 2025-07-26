@@ -1,7 +1,7 @@
 {
   "name": "Consiliere Online - Răzvan Mischie",
   "short_name": "Consiliere Online",
-  "description": "Servicii profesionale de consiliere online și life coaching în Uniunea Europeana, specializate în dezvoltare personală.",
+  "description": "Servicii profesionale de consiliere online și life coaching în România, specializate în dezvoltare personală și neurodivergență.",
   "start_url": "/?utm_source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -43,12 +43,6 @@
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
