@@ -712,82 +712,79 @@
         </section>
 
         <!-- Gallery Section -->
-        <section id="gallery" itemscope itemtype="https://schema.org/ImageGallery">
-            <div class="section-content">
-                <h2 itemprop="name">
-                    <span lang="en">Workshops & Events</span>
-                    <span lang="ro">Ateliere și Evenimente de Dezvoltare Personală</span>
-                </h2>
-                <div class="carousel-container">
-                    <div class="carousel-wrapper">
-                        <div class="carousel-track" id="carouselTrack">
-                            <div id="event1" class="carousel-slide" onclick="openModal(0)" itemscope itemtype="https://schema.org/Event">
-                                <div class="carousel-caption">
-                                    <h3 itemprop="name">Atelier de Re-cunoaștere</h3>
-                                    <p itemprop="startDate" content="2025-06-25T19:00">25 Iunie • 19:00 - 22:00</p>
-                                    <p class="carousel-location">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-    </svg>
-    <span lang="ro">Timișoara, România</span>
-    <span lang="en" style="display: none;">Timisoara, Romania</span>
-</p>
-
-                                    <p class="carousel-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-                                        <span itemprop="price">35</span> <span itemprop="priceCurrency">RON</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div id="event2" class="carousel-slide" onclick="openModal(1)" itemscope itemtype="https://schema.org/Event">
-                                <div class="carousel-caption">
-                                    <h3 itemprop="name">Atelier de Re-cunoaștere: Interese Specifice</h3>
-                                    <p itemprop="startDate" content="2025-07-26T18:00">26 Iulie • 18:00 - 20:00</p>
-                                    <p class="carousel-location">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-    </svg>
-    <span lang="ro">Timișoara, România</span>
-    <span lang="en" style="display: none;">Timisoara, Romania</span>
-</p>
-
-                                    <p class="carousel-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-                                        <span itemprop="price">35</span> <span itemprop="priceCurrency">RON</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div id="event3" class="carousel-slide" onclick="openModal(2)" itemscope itemtype="https://schema.org/Event">
-                                <div class="carousel-caption">
-                                    <h3 itemprop="name">Atelier: Comunicarea și Nuanțele Ei</h3>
-                                    <p itemprop="startDate" content="2025-07-10T18:30">10 Iulie • 18:30 - 21:30</p>
-                                    <p class="carousel-location">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-    </svg>
-    <span lang="ro">Timișoara, România</span>
-    <span lang="en" style="display: none;">Timisoara, Romania</span>
-</p>
-
-                                    <p class="carousel-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-                                        <span itemprop="price">35</span> <span itemprop="priceCurrency">RON</span>
-                                    </p>
-                                </div>
-                            </div>
+        <section id="gallery">
+    <div class="section-content">
+        <h2>
+            <span lang="en">Workshops & Events</span>
+            <span lang="ro">Ateliere și Evenimente de Dezvoltare Personală</span>
+        </h2>
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carouselTrack">
+                    <div id="event1" class="carousel-slide" onclick="openModal(0)">
+                        <div class="carousel-caption">
+                            <h3>Atelier de Re-cunoaștere</h3>
+                            <p>25 Iunie • 19:00 - 22:00</p>
+                            <p class="carousel-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                </svg>
+                                <span lang="ro">Timișoara, România</span>
+                                <span lang="en" style="display: none;">Timisoara, Romania</span>
+                            </p>
+                            <p class="carousel-price">
+                                <span>35</span> <span>RON</span>
+                            </p>
                         </div>
                     </div>
-                    <button class="carousel-nav prev" onclick="moveCarousel(-1)" aria-label="Imagine anterioară">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                        </svg>
-                    </button>
-                    <button class="carousel-nav next" onclick="moveCarousel(1)" aria-label="Imagine următoare">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                        </svg>
-                    </button>
-                    <div class="carousel-dots" id="carouselDots"></div>
+                    <div id="event2" class="carousel-slide" onclick="openModal(1)">
+                        <div class="carousel-caption">
+                            <h3>Atelier de Re-cunoaștere: Interese Specifice</h3>
+                            <p>26 Iulie • 18:00 - 20:00</p>
+                            <p class="carousel-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                </svg>
+                                <span lang="ro">Timișoara, România</span>
+                                <span lang="en" style="display: none;">Timisoara, Romania</span>
+                            </p>
+                            <p class="carousel-price">
+                                <span>35</span> <span>RON</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="event3" class="carousel-slide" onclick="openModal(2)">
+                        <div class="carousel-caption">
+                            <h3>Atelier: Comunicarea și Nuanțele Ei</h3>
+                            <p>10 Iulie • 18:30 - 21:30</p>
+                            <p class="carousel-location">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                </svg>
+                                <span lang="ro">Timișoara, România</span>
+                                <span lang="en" style="display: none;">Timisoara, Romania</span>
+                            </p>
+                            <p class="carousel-price">
+                                <span>35</span> <span>RON</span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+            <button class="carousel-nav prev" onclick="moveCarousel(-1)" aria-label="Imagine anterioară">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <button class="carousel-nav next" onclick="moveCarousel(1)" aria-label="Imagine următoare">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </button>
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+    </div>
+</section>
 
         <!-- FAQ Section -->
         <section id="faq">
@@ -922,12 +919,12 @@ For an optimal experience: choose a quiet and private space, test your internet 
     <script src="script.js" defer></script>
     
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_ID"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=493932370"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'YOUR_GA_ID');
+        gtag('config', 'Y493932370');
     </script>
     
     <!-- JSON-LD Event Data for Dynamic Updates -->
