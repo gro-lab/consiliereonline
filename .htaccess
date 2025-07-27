@@ -1,115 +1,78 @@
 # .htaccess for consiliereonline.com
 # Last updated: July 2025
-# Server: Apache 2.4+
 
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    
-    # Force HTTPS and www (choose one)
-    RewriteCond %{HTTPS} !=on [OR]
-    RewriteCond %{HTTP_HOST} !^www\. [NC]
-    RewriteRule ^ https://www.consiliereonline.com%{REQUEST_URI} [L,R=301]
-    
-    # Remove trailing slashes
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.+)/$ /$1 [L,R=301]
-    
-    # Service Worker URL rewrite
-    RewriteRule ^service-worker\.js$ /sw.js [L]
+  RewriteEngine On
+  RewriteBase /
+  
+  # Force HTTPS
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  
+  # Remove trailing slashes
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)/$ /$1 [L,R=301]
 </IfModule>
 
-# ===== SERVICE WORKER FIXES =====
+# Service Worker Headers
 <IfModule mod_headers.c>
-    # Critical SW headers
-    <Files "sw.js">
-        Header set Service-Worker-Allowed "/"
-        Header set Cache-Control "no-cache, no-store, must-revalidate"
-        Header set Pragma "no-cache"
-        Header set Expires "0"
-        Header set Content-Type "application/javascript; charset=UTF-8"
-        Header set Access-Control-Allow-Origin "*"
-    </Files>
-    
-    # Security headers
-    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com; frame-src 'self' https://www.youtube.com;"
+  <FilesMatch "sw\.js">
+    Header set Service-Worker-Allowed "/"
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+    Header set Content-Type "application/javascript; charset=UTF-8"
+  </FilesMatch>
+  
+  # Cache static assets
+  <FilesMatch "\.(css|js|jpg|jpeg|png|gif|webp|svg|woff|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  
+  # Security headers
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 </IfModule>
 
-# ===== CACHE CONTROL =====
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresDefault "access plus 1 month"
-    
-    # Static assets
-    ExpiresByType text/css "access plus 1 year"
-    ExpiresByType application/javascript "access plus 1 year"
-    ExpiresByType image/jpg "access plus 1 year"
-    ExpiresByType image/jpeg "access plus 1 year"
-    ExpiresByType image/png "access plus 1 year"
-    ExpiresByType image/webp "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType font/woff2 "access plus 1 year"
-    
-    # Dynamic content
-    ExpiresByType text/html "access plus 1 hour"
-    ExpiresByType application/json "access plus 0 seconds"
-</IfModule>
-
-# ===== MIME TYPES =====
+# MIME types
 <IfModule mod_mime.c>
-    AddType application/javascript .js
-    AddType text/css .css
-    AddType image/svg+xml .svg
-    AddType image/x-icon .ico
-    AddType image/webp .webp
-    AddType application/manifest+json .webmanifest
-    AddType application/json .json
-    AddType font/woff2 .woff2
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType image/x-icon .ico
+  AddType image/webp .webp
+  AddType application/manifest+json .webmanifest
+  AddType application/json .json
 </IfModule>
 
-# ===== COMPRESSION =====
+# Compression
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE text/javascript
-    AddOutputFilterByType DEFLATE application/javascript
-    AddOutputFilterByType DEFLATE application/json
-    AddOutputFilterByType DEFLATE image/svg+xml
-    AddOutputFilterByType DEFLATE font/woff2
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>
 
-# ===== ERROR HANDLING =====
+# Error documents
 ErrorDocument 404 /404.html
 ErrorDocument 500 /404.html
-ErrorDocument 503 /404.html
 
-# ===== SECURITY =====
+# Prevent directory listing
 Options -Indexes
-Options -MultiViews
 
-<FilesMatch "^(\.env|\.htaccess|\.git|composer\.(json|lock)|package(-lock)?\.json|\.log)$">
-    Require all denied
+# Block access to sensitive files
+<FilesMatch "(\.env|\.htaccess|\.gitignore|composer\.json|composer\.lock|package\.json|package-lock\.json|\.log)$">
+  Order allow,deny
+  Deny from all
 </FilesMatch>
 
-<FilesMatch "\.(php|phtml|sh|pl|py|cgi)$">
-    Require all denied
-</FilesMatch>
-
-# ===== ALLOW LETSENCRYPT =====
+# Allow LetsEncrypt verification
 <FilesMatch "^\.well-known/acme-challenge/">
-    Require all granted
+  Order allow,deny
+  Allow from all
 </FilesMatch>
-
-# ===== CUSTOM RULES =====
-# Disable ETags
-FileETag None
-Header unset ETag
-
-# Disable server signature
-ServerSignature Off
