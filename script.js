@@ -788,16 +788,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Service Worker Registration (for PWA)
     // Updated registration in script.js
     if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        .then((registration) => {
-            console.log('ServiceWorker registration successful with scope:', registration.scope);
-        })
-        .catch((error) => {
-            console.log('ServiceWorker registration failed:', error);
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(function(registration) {
+                console.log('ServiceWorker registration successful with scope:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('ServiceWorker registration failed:', error);
+            });
         });
-    });
-    }   
+    }
 });
 
 // Expose necessary functions globally for inline handlers

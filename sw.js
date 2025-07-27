@@ -1,58 +1,89 @@
-// sw.js - Optimized Service Worker for Presentational Site
-const CACHE_NAME = 'consiliereonline-v2';
-const STATIC_ASSETS = [
+// Service Worker for consiliereonline.com
+// Version: 3.0
+const CACHE_NAME = 'consiliereonline-v3';
+const OFFLINE_PAGE = '/404.html';
+
+// Core assets to cache during installation
+const CORE_ASSETS = [
   '/',
   '/index.html',
   '/styles.css',
   '/script.js',
-  '/404.html',
-  '/icons/og-image.jpg',
-  '/icons/logo.png',
-  '/manifest.json'
+  OFFLINE_PAGE,
+  '/manifest.json',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/icons/apple-touch-icon.png',
+  '/favicon.ico'
 ];
 
-// Workshop images (cache but update frequently)
-const WORKSHOP_ASSETS = [
+// Dynamic assets (workshop images)
+const DYNAMIC_ASSETS = [
   '/ev1.jpg',
   '/ev2.jpg',
   '/ev3.jpg'
 ];
 
-// ===== INSTALL =====
+// ===== INSTALLATION =====
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        // Cache static assets first
-        return cache.addAll(STATIC_ASSETS)
+        // Cache core assets first
+        console.log('[ServiceWorker] Caching core assets');
+        return cache.addAll(CORE_ASSETS)
           .then(() => {
-            // Optional: Cache workshop assets with network-first strategy
+            // Cache dynamic assets with network-first strategy
+            console.log('[ServiceWorker] Caching dynamic assets');
             return Promise.all(
-              WORKSHOP_ASSETS.map(url => {
-                return fetch(url)
-                  .then(response => cache.put(url, response))
-                  .catch(() => console.log(`Failed to cache: ${url}`));
+              DYNAMIC_ASSETS.map(url => {
+                return fetch(url, { cache: 'reload' })
+                  .then(response => {
+                    if (response.ok) return cache.put(url, response);
+                    throw new Error(`Bad response for ${url}`);
+                  })
+                  .catch(err => {
+                    console.warn(`[ServiceWorker] Failed to cache ${url}:`, err);
+                  });
               })
             );
           });
       })
-      .catch(err => console.error('Install error:', err))
+      .catch(err => {
+        console.error('[ServiceWorker] Installation failed:', err);
+        throw err;
+      })
   );
 });
 
-// ===== FETCH =====
+// ===== FETCH HANDLER =====
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Strategy 1: Always fresh for dynamic content
-  if (url.pathname.includes('/api/') || url.search.includes('fresh')) {
-    event.respondWith(fetch(request));
+  // Skip non-GET requests and cross-origin requests
+  if (request.method !== 'GET' || !url.origin.startsWith(self.location.origin)) {
     return;
   }
 
-  // Strategy 2: Cache-first for static assets
-  if (STATIC_ASSETS.includes(url.pathname)) {
+  // Strategy 1: Network-first for API calls
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(request)
+        .then(networkResponse => {
+          // Update cache if successful
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME)
+            .then(cache => cache.put(request, responseClone));
+          return networkResponse;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Strategy 2: Cache-first for core assets
+  if (CORE_ASSETS.includes(url.pathname)) {
     event.respondWith(
       caches.match(request)
         .then(cached => cached || fetch(request))
@@ -60,34 +91,81 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Strategy 3: Stale-while-revalidate for workshop images
-  if (WORKSHOP_ASSETS.includes(url.pathname)) {
+  // Strategy 3: Stale-while-revalidate for dynamic assets
+  if (DYNAMIC_ASSETS.includes(url.pathname)) {
     event.respondWith(
       caches.match(request).then(cached => {
-        const networkFetch = fetch(request).then(response => {
-          // Update cache in background
-          caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-          return response;
-        });
+        const networkFetch = fetch(request)
+          .then(response => {
+            // Update cache if valid response
+            if (response.ok) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME)
+                .then(cache => cache.put(request, clone));
+            }
+            return response;
+          })
+          .catch(() => cached); // Fallback to cache if fetch fails
+        
         return cached || networkFetch;
       })
     );
     return;
   }
 
-  // Default: Network fallback
-  event.respondWith(fetch(request));
+  // Default: Network with cache fallback
+  event.respondWith(
+    fetch(request)
+      .catch(() => {
+        // Return offline page for document requests
+        if (request.headers.get('Accept').includes('text/html')) {
+          return caches.match(OFFLINE_PAGE);
+        }
+      })
+  );
 });
 
-// ===== ACTIVATE =====
+// ===== ACTIVATION =====
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map(name => {
-          if (name !== CACHE_NAME) return caches.delete(name);
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('[ServiceWorker] Removing old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
         })
       );
     })
+    .then(() => {
+      // Enable navigation preload if available
+      if (self.registration.navigationPreload) {
+        return self.registration.navigationPreload.enable();
+      }
+    })
+    .then(() => self.clients.claim())
+    .then(() => console.log('[ServiceWorker] Activation complete'))
   );
 });
+
+// ===== BACKGROUND SYNC =====
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'update-content') {
+    event.waitUntil(updateContent());
+  }
+});
+
+async function updateContent() {
+  const cache = await caches.open(CACHE_NAME);
+  await Promise.all(
+    DYNAMIC_ASSETS.map(async (url) => {
+      try {
+        const response = await fetch(url, { cache: 'reload' });
+        if (response.ok) await cache.put(url, response);
+      } catch (err) {
+        console.warn(`[ServiceWorker] Background sync failed for ${url}:`, err);
+      }
+    })
+  );
+}
