@@ -25,24 +25,34 @@ const DYNAMIC_ASSETS = [
   '/ev3.jpg'
 ];
 
-// ===== INSTALLATION =====
+// Updated INSTALLATION section
 self.addEventListener('install', (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-      try {
-        // Parallel cache loading with timeout
-        await Promise.all([
-          cache.addAll(CORE_ASSETS),
-          Promise.all(DYNAMIC_ASSETS.map(url => cacheDynamic(cache, url)))
-        ]);
-        console.log('[SW] All assets cached');
-      } catch (err) {
-        console.error('[SW] Installation failed:', err);
-        throw err;
-      }
+      
+      // Cache core assets with individual error handling
+      await Promise.allSettled(
+        CORE_ASSETS.map(url => 
+          cache.add(url).catch(err => 
+            console.warn(`[SW] Failed to cache ${url}:`, err)
+          )
+        )
+      );
+      
+      // Cache dynamic assets
+      await Promise.allSettled(
+        DYNAMIC_ASSETS.map(url => 
+          fetch(url, { cache: 'reload' })
+            .then(res => res.ok && cache.put(url, res))
+            .catch(err => console.warn(`[SW] Failed to cache ${url}:`, err))
+        )
+      );
+      
+      console.log('[SW] Installation completed with possible partial caching');
     })()
   );
+  self.skipWaiting(); // Force activate new SW immediately
 });
 
 async function cacheDynamic(cache, url) {
