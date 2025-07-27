@@ -13,9 +13,9 @@ const STATIC_ASSETS = [
 
 // Workshop images (cache but update frequently)
 const WORKSHOP_ASSETS = [
-  '/ev1.jpeg',
-  '/ev2.jpeg',
-  '/ev3.jpeg'
+  '/ev1.jpg',
+  '/ev2.jpg',
+  '/ev3.jpg'
 ];
 
 // ===== INSTALL =====

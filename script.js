@@ -180,7 +180,7 @@ class Carousel {
         this.isTransitioning = false;
         
         // Event configuration
-        this.eventImages = ['./ev1.jpeg', './ev2.jpeg', './ev3.jpeg'];
+        this.eventImages = ['./ev1.jpg', './ev2.jpg', './ev3.jpg'];
         this.eventCaptions = [
             {
                 ro: 'Atelier de Re-cunoaștere - 25 Iunie, 19:00 - 22:00 - 35 RON',
