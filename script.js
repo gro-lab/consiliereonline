@@ -785,18 +785,27 @@ document.addEventListener('DOMContentLoaded', () => {
     window.closeModal = () => Modal.close();
     window.moveCarousel = (dir) => carousel.move(dir);
     
-    // Service Worker Registration (for PWA)
-    // Updated registration in script.js
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' })
-            .then(function(registration) {
-                console.log('ServiceWorker registration successful with scope:', registration.scope);
-            })
-            .catch(function(error) {
-                console.log('ServiceWorker registration failed:', error);
-            });
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js', { 
+            scope: '/',
+            updateViaCache: 'none'
+        })
+        .then(reg => {
+            console.log('Registration succeeded. Scope:', reg.scope);
+            reg.update(); // Force immediate update check
+        })
+        .catch(err => {
+            console.error('Registration failed:', err);
+            // Diagnostic: Check if file exists
+            fetch('/sw.js').then(r => {
+                console.log('SW file status:', r.status);
+                return r.text();
+            }).then(t => {
+            console.log('SW file content (first 50 chars):', t.substring(0, 50));
         });
+        });
+    });
     }
 });
 

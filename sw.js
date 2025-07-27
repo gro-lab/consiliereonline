@@ -1,7 +1,8 @@
 // Service Worker for consiliereonline.com
-// Version: 3.0
-const CACHE_NAME = 'consiliereonline-v3';
+// Version: 3.1 - Optimized
+const CACHE_NAME = 'consiliereonline-v3.1';
 const OFFLINE_PAGE = '/404.html';
+const CACHE_TIMEOUT = 30000; // 30s network timeout
 
 // Core assets to cache during installation
 const CORE_ASSETS = [
@@ -27,125 +28,132 @@ const DYNAMIC_ASSETS = [
 // ===== INSTALLATION =====
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        // Cache core assets first
-        console.log('[ServiceWorker] Caching core assets');
-        return cache.addAll(CORE_ASSETS)
-          .then(() => {
-            // Cache dynamic assets with network-first strategy
-            console.log('[ServiceWorker] Caching dynamic assets');
-            return Promise.all(
-              DYNAMIC_ASSETS.map(url => {
-                return fetch(url, { cache: 'reload' })
-                  .then(response => {
-                    if (response.ok) return cache.put(url, response);
-                    throw new Error(`Bad response for ${url}`);
-                  })
-                  .catch(err => {
-                    console.warn(`[ServiceWorker] Failed to cache ${url}:`, err);
-                  });
-              })
-            );
-          });
-      })
-      .catch(err => {
-        console.error('[ServiceWorker] Installation failed:', err);
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        // Parallel cache loading with timeout
+        await Promise.all([
+          cache.addAll(CORE_ASSETS),
+          Promise.all(DYNAMIC_ASSETS.map(url => cacheDynamic(cache, url)))
+        ]);
+        console.log('[SW] All assets cached');
+      } catch (err) {
+        console.error('[SW] Installation failed:', err);
         throw err;
-      })
+      }
+    })()
   );
 });
+
+async function cacheDynamic(cache, url) {
+  try {
+    const response = await fetchWithTimeout(url, { cache: 'reload' });
+    if (response.ok) await cache.put(url, response);
+  } catch (err) {
+    console.warn(`[SW] Failed to cache ${url}:`, err);
+  }
+}
+
+function fetchWithTimeout(url, options) {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout')), CACHE_TIMEOUT)
+    )
+  ]);
+}
 
 // ===== FETCH HANDLER =====
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests and cross-origin requests
+  // Skip non-GET and cross-origin
   if (request.method !== 'GET' || !url.origin.startsWith(self.location.origin)) {
     return;
   }
 
-  // Strategy 1: Network-first for API calls
+  // API calls - Network first
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request)
-        .then(networkResponse => {
-          // Update cache if successful
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => cache.put(request, responseClone));
-          return networkResponse;
-        })
-        .catch(() => caches.match(request))
-    );
+    event.respondWith(handleApiRequest(request));
     return;
   }
 
-  // Strategy 2: Cache-first for core assets
+  // Core assets - Cache first
   if (CORE_ASSETS.includes(url.pathname)) {
-    event.respondWith(
-      caches.match(request)
-        .then(cached => cached || fetch(request))
-    );
+    event.respondWith(handleCoreAsset(request));
     return;
   }
 
-  // Strategy 3: Stale-while-revalidate for dynamic assets
+  // Dynamic assets - Stale-while-revalidate
   if (DYNAMIC_ASSETS.includes(url.pathname)) {
-    event.respondWith(
-      caches.match(request).then(cached => {
-        const networkFetch = fetch(request)
-          .then(response => {
-            // Update cache if valid response
-            if (response.ok) {
-              const clone = response.clone();
-              caches.open(CACHE_NAME)
-                .then(cache => cache.put(request, clone));
-            }
-            return response;
-          })
-          .catch(() => cached); // Fallback to cache if fetch fails
-        
-        return cached || networkFetch;
-      })
-    );
+    event.respondWith(handleDynamicAsset(request));
     return;
   }
 
-  // Default: Network with cache fallback
-  event.respondWith(
-    fetch(request)
-      .catch(() => {
-        // Return offline page for document requests
-        if (request.headers.get('Accept').includes('text/html')) {
-          return caches.match(OFFLINE_PAGE);
-        }
-      })
-  );
+  // Default - Network with offline fallback
+  event.respondWith(handleDefault(request));
 });
+
+async function handleApiRequest(request) {
+  try {
+    const response = await fetch(request);
+    const clone = response.clone();
+    caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+    return response;
+  } catch {
+    return caches.match(request);
+  }
+}
+
+async function handleCoreAsset(request) {
+  const cached = await caches.match(request);
+  return cached || fetch(request);
+}
+
+async function handleDynamicAsset(request) {
+  const cachePromise = caches.match(request);
+  const networkPromise = fetch(request).then(response => {
+    if (response.ok) {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+    }
+    return response;
+  }).catch(() => null);
+
+  return (await cachePromise) || (await networkPromise);
+}
+
+async function handleDefault(request) {
+  try {
+    return await fetch(request);
+  } catch {
+    if (request.headers.get('Accept').includes('text/html')) {
+      return caches.match(OFFLINE_PAGE);
+    }
+    return Response.error();
+  }
+}
 
 // ===== ACTIVATION =====
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
+    (async () => {
+      // Clear old caches
+      const keys = await caches.keys();
+      await Promise.all(
+        keys.map(key => key !== CACHE_NAME && caches.delete(key))
       );
-    })
-    .then(() => {
-      // Enable navigation preload if available
+
+      // Enable navigation preload
       if (self.registration.navigationPreload) {
-        return self.registration.navigationPreload.enable();
+        await self.registration.navigationPreload.enable();
       }
-    })
-    .then(() => self.clients.claim())
-    .then(() => console.log('[ServiceWorker] Activation complete'))
+
+      // Claim clients immediately
+      await self.clients.claim();
+      console.log('[SW] Activated and ready');
+    })()
   );
 });
 
@@ -159,13 +167,6 @@ self.addEventListener('sync', (event) => {
 async function updateContent() {
   const cache = await caches.open(CACHE_NAME);
   await Promise.all(
-    DYNAMIC_ASSETS.map(async (url) => {
-      try {
-        const response = await fetch(url, { cache: 'reload' });
-        if (response.ok) await cache.put(url, response);
-      } catch (err) {
-        console.warn(`[ServiceWorker] Background sync failed for ${url}:`, err);
-      }
-    })
+    DYNAMIC_ASSETS.map(url => cacheDynamic(cache, url))
   );
 }
