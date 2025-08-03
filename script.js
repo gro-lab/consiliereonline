@@ -1,4 +1,4 @@
-// Enhanced JavaScript with Performance Optimizations and Fixed Reflows
+// Enhanced JavaScript with Performance Optimizations and Cookie Consent
 
 // Performance: Use strict mode
 'use strict';
@@ -27,6 +27,206 @@ function throttle(func, wait) {
         }
     };
 }
+
+// Cookie Consent Management System - GDPR Compliant
+const CookieConsent = {
+    banner: null,
+    isShown: false,
+    
+    init() {
+        this.banner = document.getElementById('cookieBanner');
+        if (!this.banner) return;
+        
+        // Check if user has already made a choice
+        if (!this.hasConsentDecision()) {
+            this.showBanner();
+        }
+        
+        this.setupEventListeners();
+    },
+    
+    hasConsentDecision() {
+        try {
+            const consent = localStorage.getItem('cookieConsent');
+            return consent === 'accepted' || consent === 'rejected';
+        } catch (e) {
+            return false;
+        }
+    },
+    
+    hasAccepted() {
+        try {
+            return localStorage.getItem('cookieConsent') === 'accepted';
+        } catch (e) {
+            return false;
+        }
+    },
+    
+    showBanner() {
+        if (this.isShown || !this.banner) return;
+        
+        requestAnimationFrame(() => {
+            this.banner.classList.add('show');
+            this.isShown = true;
+            
+            // Trap focus in banner
+            this.trapFocus();
+        });
+    },
+    
+    hideBanner() {
+        if (!this.banner) return;
+        
+        this.banner.classList.remove('show');
+        this.isShown = false;
+        
+        // Remove focus trap
+        this.removeFocusTrap();
+    },
+    
+    setupEventListeners() {
+        const acceptBtn = document.getElementById('cookieAccept');
+        const rejectBtn = document.getElementById('cookieReject');
+        
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => this.acceptCookies());
+        }
+        
+        if (rejectBtn) {
+            rejectBtn.addEventListener('click', () => this.rejectCookies());
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (this.isShown && e.key === 'Escape') {
+                // Don't allow closing with escape - user must make a choice
+                e.preventDefault();
+            }
+        });
+    },
+    
+    acceptCookies() {
+        try {
+            localStorage.setItem('cookieConsent', 'accepted');
+        } catch (e) {
+            console.warn('Could not save cookie consent');
+        }
+        
+        // Load analytics
+        this.loadAnalytics();
+        
+        this.hideBanner();
+        
+        // Track the consent
+        this.trackConsentGiven('accepted');
+    },
+    
+    rejectCookies() {
+        try {
+            localStorage.setItem('cookieConsent', 'rejected');
+        } catch (e) {
+            console.warn('Could not save cookie consent');
+        }
+        
+        this.hideBanner();
+        
+        // Track the consent (using essential tracking only)
+        this.trackConsentGiven('rejected');
+    },
+    
+    loadAnalytics() {
+        // Only load if consent was given
+        if (!this.hasAccepted()) return;
+        
+        // Load Google Analytics dynamically
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061';
+        document.head.appendChild(script);
+        
+        script.onload = () => {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17401674061', {
+                anonymize_ip: true, // GDPR compliance
+                cookie_flags: 'SameSite=None;Secure'
+            });
+            
+            // Event snippet for Book appointment conversion page
+            window.gtag_report_conversion = function(url) {
+                var callback = function () {
+                    if (typeof(url) != 'undefined') {
+                        window.location = url;
+                    }
+                };
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-17401674061/yl43CML9yf4aEM3y4elA',
+                    'event_callback': callback
+                });
+                return false;
+            }
+            
+            console.log('Google Analytics loaded with consent');
+        };
+    },
+    
+    trackConsentGiven(choice) {
+        // Basic tracking without cookies (for essential analytics)
+        if (navigator.sendBeacon) {
+            const data = JSON.stringify({
+                event: 'cookie_consent',
+                choice: choice,
+                timestamp: new Date().toISOString(),
+                page: window.location.pathname
+            });
+            
+            // This would go to your own analytics endpoint
+            // navigator.sendBeacon('/analytics/consent', data);
+        }
+    },
+    
+    trapFocus() {
+        if (!this.banner) return;
+        
+        const focusableElements = this.banner.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+        
+        this.focusTrapHandler = (e) => {
+            if (e.key !== 'Tab') return;
+            
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    lastFocusable.focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    firstFocusable.focus();
+                    e.preventDefault();
+                }
+            }
+        };
+        
+        document.addEventListener('keydown', this.focusTrapHandler);
+        
+        // Focus first button
+        if (firstFocusable) {
+            firstFocusable.focus();
+        }
+    },
+    
+    removeFocusTrap() {
+        if (this.focusTrapHandler) {
+            document.removeEventListener('keydown', this.focusTrapHandler);
+            this.focusTrapHandler = null;
+        }
+    }
+};
 
 // Language Management System
 const LanguageManager = {
@@ -79,7 +279,7 @@ const LanguageManager = {
             });
         });
         
-        // Save preference
+        // Save preference (this is functional, not tracking)
         try {
             localStorage.setItem('language', lang);
         } catch (e) {
@@ -675,8 +875,8 @@ const FormHandler = {
             button.textContent = originalText;
             button.disabled = false;
             
-            // Track conversion
-            if (typeof gtag !== 'undefined') {
+            // Track conversion only if analytics is loaded
+            if (typeof gtag !== 'undefined' && CookieConsent.hasAccepted()) {
                 gtag('event', 'form_submit', {
                     'event_category': 'Contact',
                     'event_label': 'Consultation Request'
@@ -795,7 +995,10 @@ let carousel;
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize modules in order
+    // Initialize cookie consent first
+    CookieConsent.init();
+    
+    // Initialize other modules
     LanguageManager.init();
     MobileMenu.init();
     Navigation.init();
@@ -807,6 +1010,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize carousel
     carousel = new Carousel();
     carousel.init();
+    
+    // Load analytics if consent was already given
+    if (CookieConsent.hasAccepted()) {
+        CookieConsent.loadAnalytics();
+    }
     
     // Make functions globally available for onclick handlers
     window.openModal = (index) => Modal.open(index);
