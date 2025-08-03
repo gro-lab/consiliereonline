@@ -1,5 +1,5 @@
 # Robots.txt for https://consiliereonline.com
-# Last updated: July 2025
+# Last updated: August 2025
 
 # Sitemap location
 Sitemap: https://consiliereonline.com/sitemap.xml
@@ -35,6 +35,12 @@ User-agent: Slurp
 User-agent: DuckDuckBot
 Allow: /
 Crawl-delay: 0
+
+# Google services (Analytics, Ads, etc.)
+User-agent: Google-InspectionTool
+User-agent: GoogleOther
+User-agent: GoogleAdSenseInfeed
+Allow: /
 
 # ===== SOCIAL MEDIA =====
 User-agent: facebookexternalhit
