@@ -1,4 +1,4 @@
-// Enhanced JavaScript with Performance Optimizations and SEO Improvements
+// Enhanced JavaScript with Performance Optimizations and Fixed Reflows
 
 // Performance: Use strict mode
 'use strict';
@@ -16,13 +16,25 @@ function debounce(func, wait) {
     };
 }
 
+// Throttle function for scroll events
+function throttle(func, wait) {
+    let lastTime = 0;
+    return function(...args) {
+        const now = Date.now();
+        if (now - lastTime >= wait) {
+            lastTime = now;
+            func.apply(this, args);
+        }
+    };
+}
+
 // Language Management System
 const LanguageManager = {
     currentLang: 'ro',
     
     init() {
         // Check for saved language preference
-        const savedLang = localStorage.getItem('language');
+        const savedLang = this.getSavedLanguage();
         const browserLang = navigator.language.toLowerCase();
         
         // Prioritize: saved preference > browser language > default (ro)
@@ -36,23 +48,35 @@ const LanguageManager = {
         this.setupLanguageButtons();
     },
     
+    getSavedLanguage() {
+        try {
+            return localStorage.getItem('language');
+        } catch (e) {
+            return null;
+        }
+    },
+    
     setLanguage(lang) {
         if (!['ro', 'en'].includes(lang)) return;
         
         this.currentLang = lang;
-        document.body.classList.toggle('lang-ro', lang === 'ro');
-        document.documentElement.lang = lang;
         
-        // Update language buttons
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === lang);
-            btn.setAttribute('aria-pressed', btn.dataset.lang === lang);
-        });
-        
-        // Update navigation links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            const text = lang === 'ro' ? link.dataset.ro : link.dataset.en;
-            if (text) link.textContent = text;
+        // Batch DOM updates to prevent reflows
+        requestAnimationFrame(() => {
+            document.body.classList.toggle('lang-ro', lang === 'ro');
+            document.documentElement.lang = lang;
+            
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+                btn.setAttribute('aria-pressed', btn.dataset.lang === lang);
+            });
+            
+            // Update navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const text = lang === 'ro' ? link.dataset.ro : link.dataset.en;
+                if (text) link.textContent = text;
+            });
         });
         
         // Save preference
@@ -138,18 +162,23 @@ const MobileMenu = {
     
     toggleMenu() {
         this.isOpen = !this.isOpen;
-        this.menu.classList.toggle('active', this.isOpen);
-        this.toggle.setAttribute('aria-expanded', this.isOpen);
         
-        // Animate hamburger
-        this.animateHamburger(this.isOpen);
+        // Batch DOM updates
+        requestAnimationFrame(() => {
+            this.menu.classList.toggle('active', this.isOpen);
+            this.toggle.setAttribute('aria-expanded', this.isOpen);
+            this.animateHamburger(this.isOpen);
+        });
     },
     
     closeMenu() {
         this.isOpen = false;
-        this.menu.classList.remove('active');
-        this.toggle.setAttribute('aria-expanded', 'false');
-        this.animateHamburger(false);
+        
+        requestAnimationFrame(() => {
+            this.menu.classList.remove('active');
+            this.toggle.setAttribute('aria-expanded', 'false');
+            this.animateHamburger(false);
+        });
     },
     
     animateHamburger(isOpen) {
@@ -167,7 +196,7 @@ const MobileMenu = {
     }
 };
 
-// Enhanced Carousel with Touch Support and Lazy Loading
+// Enhanced Carousel with Touch Support and Performance Optimizations
 class Carousel {
     constructor() {
         this.currentSlide = 0;
@@ -178,6 +207,10 @@ class Carousel {
         this.slides = [];
         this.dots = [];
         this.isTransitioning = false;
+        
+        // Cache for performance
+        this.slideWidth = 0;
+        this.trackWidth = 0;
         
         // Event configuration
         this.eventImages = ['./ev1.jpg', './ev2.jpg', './ev3.jpg'];
@@ -202,6 +235,7 @@ class Carousel {
         if (!this.track) return;
         
         this.slides = Array.from(this.track.querySelectorAll('.carousel-slide'));
+        this.cacheElementDimensions();
         this.createDots();
         this.setupEventListeners();
         this.preloadImages();
@@ -209,6 +243,15 @@ class Carousel {
         // Start autoplay if motion is allowed
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             this.startAutoPlay();
+        }
+    }
+    
+    cacheElementDimensions() {
+        // Cache dimensions to avoid repeated reflows
+        if (this.slides.length > 0) {
+            const firstSlide = this.slides[0];
+            this.slideWidth = firstSlide.offsetWidth;
+            this.trackWidth = this.slideWidth * this.slides.length;
         }
     }
     
@@ -237,19 +280,24 @@ class Carousel {
         });
         
         // Navigation buttons
-        document.querySelector('.carousel-nav.prev')?.addEventListener('click', () => this.move(-1));
-        document.querySelector('.carousel-nav.next')?.addEventListener('click', () => this.move(1));
+        const prevBtn = document.querySelector('.carousel-nav.prev');
+        const nextBtn = document.querySelector('.carousel-nav.next');
+        
+        if (prevBtn) prevBtn.addEventListener('click', () => this.move(-1));
+        if (nextBtn) nextBtn.addEventListener('click', () => this.move(1));
         
         // Keyboard navigation
         const container = document.querySelector('.carousel-container');
-        container?.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') this.move(-1);
-            else if (e.key === 'ArrowRight') this.move(1);
-        });
-        
-        // Pause on hover
-        container?.addEventListener('mouseenter', () => this.stopAutoPlay());
-        container?.addEventListener('mouseleave', () => this.startAutoPlay());
+        if (container) {
+            container.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') this.move(-1);
+                else if (e.key === 'ArrowRight') this.move(1);
+            });
+            
+            // Pause on hover
+            container.addEventListener('mouseenter', () => this.stopAutoPlay());
+            container.addEventListener('mouseleave', () => this.startAutoPlay());
+        }
         
         // Pause when page is not visible
         document.addEventListener('visibilitychange', () => {
@@ -272,6 +320,8 @@ class Carousel {
         if (!dotsContainer) return;
         
         dotsContainer.innerHTML = '';
+        this.dots = [];
+        
         this.slides.forEach((_, index) => {
             const dot = document.createElement('button');
             dot.className = `carousel-dot${index === 0 ? ' active' : ''}`;
@@ -320,14 +370,17 @@ class Carousel {
     updateCarousel() {
         this.isTransitioning = true;
         
-        // Update track position
-        this.track.style.transform = `translateX(${-this.currentSlide * 100}%)`;
-        
-        // Update dots
-        this.dots.forEach((dot, index) => {
-            const isActive = index === this.currentSlide;
-            dot.classList.toggle('active', isActive);
-            dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+        // Use requestAnimationFrame for smooth animations
+        requestAnimationFrame(() => {
+            // Update track position
+            this.track.style.transform = `translateX(${-this.currentSlide * 100}%)`;
+            
+            // Update dots
+            this.dots.forEach((dot, index) => {
+                const isActive = index === this.currentSlide;
+                dot.classList.toggle('active', isActive);
+                dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+            });
         });
         
         // Reset transition flag
@@ -345,10 +398,14 @@ class Carousel {
         announcement.setAttribute('aria-live', 'polite');
         announcement.className = 'sr-only';
         announcement.textContent = `Slide ${this.currentSlide + 1} din ${this.slides.length}`;
+        announcement.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;';
+        
         document.body.appendChild(announcement);
         
         setTimeout(() => {
-            document.body.removeChild(announcement);
+            if (announcement.parentNode) {
+                document.body.removeChild(announcement);
+            }
         }, 1000);
     }
     
@@ -407,24 +464,28 @@ const Modal = {
         
         const lang = LanguageManager.currentLang;
         
-        this.modal.style.display = 'block';
-        // Force reflow
-        this.modal.offsetHeight;
-        this.modal.classList.add('show');
-        
-        this.modalImg.src = carousel.eventImages[index];
-        this.modalImg.alt = `Imagine eveniment ${index + 1}`;
-        this.modalCaption.textContent = carousel.eventCaptions[index][lang];
-        
-        document.body.style.overflow = 'hidden';
-        this.isOpen = true;
-        
-        // Focus management
-        this.modal.setAttribute('tabindex', '-1');
-        this.modal.focus();
-        
-        // Trap focus
-        this.trapFocus();
+        // Batch DOM updates
+        requestAnimationFrame(() => {
+            this.modal.style.display = 'block';
+            
+            // Force reflow only once
+            this.modal.offsetHeight;
+            
+            this.modal.classList.add('show');
+            this.modalImg.src = carousel.eventImages[index];
+            this.modalImg.alt = `Imagine eveniment ${index + 1}`;
+            this.modalCaption.textContent = carousel.eventCaptions[index][lang];
+            
+            document.body.style.overflow = 'hidden';
+            this.isOpen = true;
+            
+            // Focus management
+            this.modal.setAttribute('tabindex', '-1');
+            this.modal.focus();
+            
+            // Trap focus
+            this.trapFocus();
+        });
     },
     
     close() {
@@ -451,7 +512,7 @@ const Modal = {
         const firstFocusable = focusableElements[0];
         const lastFocusable = focusableElements[focusableElements.length - 1];
         
-        this.modal.addEventListener('keydown', (e) => {
+        const handleTabKey = (e) => {
             if (e.key !== 'Tab') return;
             
             if (e.shiftKey) {
@@ -465,29 +526,47 @@ const Modal = {
                     e.preventDefault();
                 }
             }
-        });
+        };
+        
+        this.modal.addEventListener('keydown', handleTabKey);
     }
 };
 
-// Smooth Scroll with Navigation Update
+// Optimized Smooth Scroll with Navigation Update
 const Navigation = {
     sections: [],
     navLinks: [],
+    sectionData: [],
     
     init() {
         this.sections = document.querySelectorAll('section[id]');
         this.navLinks = document.querySelectorAll('.nav-link');
+        
+        // Cache section data to prevent reflows during scroll
+        this.cacheSectionData();
         
         // Smooth scroll
         this.navLinks.forEach(link => {
             link.addEventListener('click', (e) => this.smoothScroll(e));
         });
         
-        // Scroll spy
-        window.addEventListener('scroll', debounce(() => this.updateActiveSection(), 100), { passive: true });
+        // Throttled scroll spy to prevent performance issues
+        window.addEventListener('scroll', throttle(() => this.updateActiveSection(), 100), { passive: true });
+        
+        // Recalculate on resize
+        window.addEventListener('resize', debounce(() => this.cacheSectionData(), 250));
         
         // Initial check
         this.updateActiveSection();
+    },
+    
+    cacheSectionData() {
+        // Batch read all section positions to avoid reflows
+        this.sectionData = Array.from(this.sections).map(section => ({
+            id: section.getAttribute('id'),
+            top: section.offsetTop,
+            bottom: section.offsetTop + section.offsetHeight
+        }));
     },
     
     smoothScroll(e) {
@@ -515,20 +594,20 @@ const Navigation = {
     updateActiveSection() {
         const scrollPosition = window.scrollY + 100;
         
-        this.sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.offsetHeight;
-            
-            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                const id = section.getAttribute('id');
-                
-                this.navLinks.forEach(link => {
-                    const isActive = link.getAttribute('href') === `#${id}`;
-                    link.classList.toggle('active', isActive);
-                    link.setAttribute('aria-current', isActive ? 'page' : 'false');
+        // Use cached data to avoid reflows
+        for (const sectionData of this.sectionData) {
+            if (scrollPosition >= sectionData.top && scrollPosition < sectionData.bottom) {
+                // Batch DOM updates
+                requestAnimationFrame(() => {
+                    this.navLinks.forEach(link => {
+                        const isActive = link.getAttribute('href') === `#${sectionData.id}`;
+                        link.classList.toggle('active', isActive);
+                        link.setAttribute('aria-current', isActive ? 'page' : 'false');
+                    });
                 });
+                break;
             }
-        });
+        }
     }
 };
 
@@ -676,25 +755,22 @@ const FormHandler = {
         messageEl.setAttribute('role', 'alert');
         
         const form = document.querySelector('.contact-form');
-        form.parentNode.insertBefore(messageEl, form);
-        
-        // Remove after 5 seconds
-        setTimeout(() => {
-            messageEl.remove();
-        }, 5000);
+        if (form) {
+            form.parentNode.insertBefore(messageEl, form);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                if (messageEl.parentNode) {
+                    messageEl.remove();
+                }
+            }, 5000);
+        }
     }
 };
 
 // Performance Monitor
 const PerformanceMonitor = {
     init() {
-        // Log Core Web Vitals
-        if ('web-vital' in window) {
-            window.addEventListener('load', () => {
-                this.logWebVitals();
-            });
-        }
-        
         // Monitor long tasks
         if ('PerformanceObserver' in window) {
             const observer = new PerformanceObserver((list) => {
@@ -705,59 +781,11 @@ const PerformanceMonitor = {
                 }
             });
             
-            observer.observe({ entryTypes: ['longtask'] });
-        }
-    },
-    
-    logWebVitals() {
-        // Log to analytics
-        if (typeof gtag !== 'undefined') {
-            // Largest Contentful Paint
-            new PerformanceObserver((list) => {
-                const entries = list.getEntries();
-                const lastEntry = entries[entries.length - 1];
-                gtag('event', 'web_vitals', {
-                    name: 'LCP',
-                    value: Math.round(lastEntry.renderTime || lastEntry.loadTime)
-                });
-            }).observe({ type: 'largest-contentful-paint', buffered: true });
-            
-            // First Input Delay
-            new PerformanceObserver((list) => {
-                const entries = list.getEntries();
-                entries.forEach((entry) => {
-                    gtag('event', 'web_vitals', {
-                        name: 'FID',
-                        value: Math.round(entry.processingStart - entry.startTime)
-                    });
-                });
-            }).observe({ type: 'first-input', buffered: true });
-            
-            // Cumulative Layout Shift
-            let clsValue = 0;
-            let clsEntries = [];
-            
-            new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (!entry.hadRecentInput) {
-                        const firstSessionEntry = clsEntries[0];
-                        const lastSessionEntry = clsEntries[clsEntries.length - 1];
-                        
-                        if (firstSessionEntry && entry.startTime - lastSessionEntry.startTime < 1000 && entry.startTime - firstSessionEntry.startTime < 5000) {
-                            clsEntries.push(entry);
-                            clsValue += entry.value;
-                        } else {
-                            clsEntries = [entry];
-                            clsValue = entry.value;
-                        }
-                    }
-                }
-                
-                gtag('event', 'web_vitals', {
-                    name: 'CLS',
-                    value: Math.round(clsValue * 1000) / 1000
-                });
-            }).observe({ type: 'layout-shift', buffered: true });
+            try {
+                observer.observe({ entryTypes: ['longtask'] });
+            } catch (e) {
+                // longtask not supported
+            }
         }
     }
 };
@@ -767,7 +795,7 @@ let carousel;
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize modules
+    // Initialize modules in order
     LanguageManager.init();
     MobileMenu.init();
     Navigation.init();
@@ -780,26 +808,23 @@ document.addEventListener('DOMContentLoaded', () => {
     carousel = new Carousel();
     carousel.init();
     
-    // Make openModal globally available for onclick handlers
+    // Make functions globally available for onclick handlers
     window.openModal = (index) => Modal.open(index);
     window.closeModal = () => Modal.close();
     window.moveCarousel = (dir) => carousel.move(dir);
-    
-    // Service Worker Registration (for PWA)
-    // Updated registration in script.js
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' })
-            .then(function(registration) {
-                console.log('ServiceWorker registration successful with scope:', registration.scope);
-            })
-            .catch(function(error) {
-                console.log('ServiceWorker registration failed:', error);
-            });
-        });
-    }
+    window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
+    window.toggleMobileMenu = () => MobileMenu.toggleMenu();
 });
 
-// Expose necessary functions globally for inline handlers
-window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
-window.toggleMobileMenu = () => MobileMenu.toggleMenu();
+// Service Worker Registration (for PWA)
+if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then(function(registration) {
+            console.log('ServiceWorker registration successful with scope:', registration.scope);
+        })
+        .catch(function(error) {
+            console.log('ServiceWorker registration failed:', error);
+        });
+    });
+}
