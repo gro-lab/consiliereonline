@@ -1032,7 +1032,7 @@ if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             console.log('ServiceWorker registration successful with scope:', registration.scope);
         })
         .catch(function(error) {
-            console.log('ServiceWorker registration failed:', error);
+            console.log('ServiceWorker registration failed!', error);
         });
     });
 }
