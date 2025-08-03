@@ -816,15 +816,26 @@ document.addEventListener('DOMContentLoaded', () => {
     window.toggleMobileMenu = () => MobileMenu.toggleMenu();
 });
 
-// Service Worker Registration (for PWA)
-if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+// Service Worker Registration (for PWA) - Enhanced Error Handling
+if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
     window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
+        navigator.serviceWorker.register('./sw.js', { 
+            scope: './',
+            updateViaCache: 'imports'
+        })
         .then(function(registration) {
             console.log('ServiceWorker registration successful with scope:', registration.scope);
+            
+            // Handle updates
+            registration.addEventListener('updatefound', () => {
+                console.log('New ServiceWorker version available');
+            });
         })
         .catch(function(error) {
-            console.log('ServiceWorker registration failed:', error);
+            console.warn('ServiceWorker registration failed (non-critical):', error);
+            // Don't throw - site works fine without SW
         });
     });
+} else if (window.location.protocol !== 'https:') {
+    console.log('ServiceWorker requires HTTPS');
 }
