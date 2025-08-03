@@ -1,20 +1,16 @@
 // Service Worker for consiliereonline.com
-// Version: 3.0
-const CACHE_NAME = 'consiliereonline-v3';
+// Version: 3.1
+const CACHE_NAME = 'consiliereonline-v3-1';
 const OFFLINE_PAGE = '/404.html';
 
-// Core assets to cache during installation
+// Core assets to cache during installation - only files that actually exist
 const CORE_ASSETS = [
   '/',
   '/index.html',
   '/styles.css',
-  '/script.js',
+  '/script.min.js',
   OFFLINE_PAGE,
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  '/icons/apple-touch-icon.png',
-  '/favicon.ico'
+  '/manifest.json'
 ];
 
 // Dynamic assets (workshop images)
@@ -22,6 +18,16 @@ const DYNAMIC_ASSETS = [
   '/ev1.jpg',
   '/ev2.jpg',
   '/ev3.jpg'
+];
+
+// Optional assets - these may or may not exist
+const OPTIONAL_ASSETS = [
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/icons/apple-touch-icon.png',
+  '/icons/favicon-32x32.png',
+  '/icons/favicon-16x16.png',
+  '/favicon.ico'
 ];
 
 // ===== INSTALLATION =====
@@ -40,10 +46,27 @@ self.addEventListener('install', (event) => {
                 return fetch(url, { cache: 'reload' })
                   .then(response => {
                     if (response.ok) return cache.put(url, response);
-                    throw new Error(`Bad response for ${url}`);
+                    throw new Error(`Bad response for ${url}: ${response.status}`);
                   })
                   .catch(err => {
                     console.warn(`[ServiceWorker] Failed to cache ${url}:`, err);
+                  });
+              })
+            );
+          })
+          .then(() => {
+            // Try to cache optional assets
+            console.log('[ServiceWorker] Caching optional assets');
+            return Promise.all(
+              OPTIONAL_ASSETS.map(url => {
+                return fetch(url, { cache: 'reload' })
+                  .then(response => {
+                    if (response.ok) {
+                      return cache.put(url, response);
+                    }
+                  })
+                  .catch(err => {
+                    console.info(`[ServiceWorker] Optional asset not found: ${url}`);
                   });
               })
             );
@@ -118,7 +141,7 @@ self.addEventListener('fetch', (event) => {
     fetch(request)
       .catch(() => {
         // Return offline page for document requests
-        if (request.headers.get('Accept').includes('text/html')) {
+        if (request.headers.get('Accept') && request.headers.get('Accept').includes('text/html')) {
           return caches.match(OFFLINE_PAGE);
         }
       })
