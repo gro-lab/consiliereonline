@@ -1,31 +1,374 @@
+# ===========================
 # Operating System Files
-.DS_Store
-Thumbs.db
+# ===========================
 
-# Editor directories and files
-.idea/
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================
+# IDE and Editor Files
+# ===========================
+
+# Visual Studio Code
 .vscode/
+*.code-workspace
+.history/
+*.vsix
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Sublime Text
 *.sublime-project
 *.sublime-workspace
-.DS_Store
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+sftp-config.json
+Package Control.last-run
+Package Control.ca-list
+Package Control.ca-bundle
+Package Control.system-ca-bundle
+Package Control.cache/
+Package Control.ca-certs/
+Package Control.merged-ca-bundle
+Package Control.user-ca-bundle
+oscrypto-ca-bundle.crt
+bh_unicode_properties.cache
+GitHub.sublime-settings
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+.org-id-locations
+*_archive
+*_flymake.*
+/eshell/history
+/eshell/lastdir
+/elpa/
+*.rel
+/auto/
+.cask/
+dist/
+flycheck_*.el
+/server/
+.projectile
+.dir-locals.el
+/network-security.data
+
+# ===========================
+# Development Files
+# ===========================
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+.npm
+.eslintcache
+.stylelintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+.cache
+.parcel-cache
+.next
+out
+.nuxt
+dist
+.cache/
+.vuepress/dist
+.temp
+.docusaurus
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+*.mo
+*.pot
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.webassets-cache
+.scrapy
+docs/_build/
+.pybuilder/
+target/
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+__pypackages__/
+celerybeat-schedule
+celerybeat.pid
+*.sage.py
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.spyderproject
+.spyproject
+.ropeproject
+/site
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+cython_debug/
+
+# ===========================
+# Build and Compiled Files
+# ===========================
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.dylib
+*.out
+
+# Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ===========================
+# Logs and Databases
+# ===========================
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Databases
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+
+# ===========================
+# Temporary Files
+# ===========================
+
 # Temporary files
+tmp/
+temp/
 *.tmp
 *.temp
-*.log
+*.bak
+*.backup
+*.swp
+*.swo
+*~
 
-# Dependencies (if you add any later)
-node_modules/
-bower_components/
-
-# Build output (if you add build tools later)
-dist/
-build/
+# ===========================
+# Security and Private Files
+# ===========================
 
 # Environment variables
 .env
-.env.local
+.env.*
+!.env.example
+
+# API keys and secrets
+*.key
+*.pem
+*.crt
+*.p12
+secrets.json
+config.secret.js
+
+# Private configuration
+config.local.js
+settings.local.json
+
+# ===========================
+# Project Specific
+# ===========================
+
+# Build output
+/build
+/dist
+/out
+/.next
+/_site
+
+# Dependencies
+/vendor
+
+# Test coverage
+/coverage
+*.lcov
+.nyc_output
+
+# Documentation build
+/docs/_build
+/docs/.build
+
+# Cache directories
+.sass-cache/
+.cache/
+.parcel-cache/
+
+# Uploaded files (if storing locally)
+/uploads
+/public/uploads
+
+# Generated files
+/generated
+*.generated.*
 
 # Backup files
+backup/
+backups/
 *.backup
-*.bak
-*~
+
+# Analytics and tracking
+google-analytics.js
+analytics.config.js
+
+# Personal notes
+notes.txt
+TODO.txt
+*.notes
+
+# ===========================
+# Optional: Keep these files
+# ===========================
+
+# !.gitignore
+# !.gitkeep
+# !README.md
+# !LICENSE
+# !package.json
+# !package-lock.json
