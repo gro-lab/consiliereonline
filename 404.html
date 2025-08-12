@@ -5,54 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
     <title>404 - Page Not Found</title>
     <link rel="stylesheet" href="/styles.css">
-    <style>
-        .error-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .error-content h1 {
-            font-size: clamp(4rem, 10vw, 8rem);
-            font-weight: 300;
-            margin-bottom: 20px;
-            opacity: 0.2;
-        }
-        
-        .error-content h2 {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: var(--text-light);
-        }
-        
-        .error-content p {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-bottom: 40px;
-        }
-        
-        .back-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 30px;
-            background: var(--primary-color);
-            color: var(--secondary-color);
-            text-decoration: none;
-            border-radius: 30px;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .back-home:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-    </style>
 </head>
 <body>
     <div class="error-container">
@@ -77,14 +29,21 @@
     </div>
     
     <script>
-        // Check for Romanian language preference
-        const savedLanguage = localStorage.getItem('language');
-        const browserLanguage = navigator.language.toLowerCase();
-        
-        if (savedLanguage === 'ro' || browserLanguage.startsWith('ro')) {
-            document.querySelectorAll('[lang="en"]').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('[lang="ro"]').forEach(el => el.style.display = 'block');
-        }
+        // Lightweight language detection for 404 page
+        (function() {
+            try {
+                const savedLanguage = localStorage.getItem('language');
+                const browserLanguage = navigator.language.toLowerCase();
+                
+                if (savedLanguage === 'ro' || (!savedLanguage && browserLanguage.startsWith('ro'))) {
+                    document.querySelectorAll('[lang="en"]').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('[lang="ro"]').forEach(el => el.style.display = 'block');
+                }
+            } catch (e) {
+                // localStorage not available, default to English
+                console.warn('Language detection failed, using default');
+            }
+        })();
     </script>
 </body>
 </html>

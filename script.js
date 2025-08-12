@@ -1,7 +1,10 @@
 // Enhanced JavaScript with Performance Optimizations and Cookie Consent
+// Consiliere Online - Complete JavaScript Module
 
 // Performance: Use strict mode
 'use strict';
+
+// ===== UTILITY FUNCTIONS =====
 
 // Debounce function for scroll performance
 function debounce(func, wait) {
@@ -28,7 +31,7 @@ function throttle(func, wait) {
     };
 }
 
-// Cookie Consent Management System - GDPR Compliant
+// ===== COOKIE CONSENT MANAGEMENT SYSTEM - GDPR COMPLIANT =====
 const CookieConsent = {
     banner: null,
     isShown: false,
@@ -40,6 +43,9 @@ const CookieConsent = {
         // Check if user has already made a choice
         if (!this.hasConsentDecision()) {
             this.showBanner();
+        } else if (this.hasAccepted()) {
+            // Load analytics if consent was previously given
+            this.loadAnalytics();
         }
         
         this.setupEventListeners();
@@ -169,6 +175,10 @@ const CookieConsent = {
             
             console.log('Google Analytics loaded with consent');
         };
+        
+        script.onerror = () => {
+            console.warn('Failed to load Google Analytics');
+        };
     },
     
     trackConsentGiven(choice) {
@@ -228,7 +238,7 @@ const CookieConsent = {
     }
 };
 
-// Language Management System
+// ===== LANGUAGE MANAGEMENT SYSTEM =====
 const LanguageManager = {
     currentLang: 'ro',
     
@@ -322,7 +332,7 @@ const LanguageManager = {
     }
 };
 
-// Mobile Menu Management
+// ===== MOBILE MENU MANAGEMENT =====
 const MobileMenu = {
     isOpen: false,
     menu: null,
@@ -356,6 +366,13 @@ const MobileMenu = {
             if (e.key === 'Escape' && this.isOpen) {
                 this.closeMenu();
                 this.toggle.focus();
+            }
+        });
+        
+        // Close menu when clicking nav links
+        this.menu?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-link')) {
+                this.closeMenu();
             }
         });
     },
@@ -396,7 +413,7 @@ const MobileMenu = {
     }
 };
 
-// Enhanced Carousel with Touch Support and Performance Optimizations
+// ===== ENHANCED CAROUSEL WITH TOUCH SUPPORT =====
 class Carousel {
     constructor() {
         this.currentSlide = 0;
@@ -503,6 +520,9 @@ class Carousel {
         document.addEventListener('visibilitychange', () => {
             document.hidden ? this.stopAutoPlay() : this.startAutoPlay();
         });
+        
+        // Recalculate dimensions on resize
+        window.addEventListener('resize', debounce(() => this.cacheElementDimensions(), 250));
     }
     
     preloadImages() {
@@ -598,7 +618,6 @@ class Carousel {
         announcement.setAttribute('aria-live', 'polite');
         announcement.className = 'sr-only';
         announcement.textContent = `Slide ${this.currentSlide + 1} din ${this.slides.length}`;
-        announcement.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;';
         
         document.body.appendChild(announcement);
         
@@ -630,7 +649,7 @@ class Carousel {
     }
 }
 
-// Modal Management
+// ===== MODAL MANAGEMENT =====
 const Modal = {
     modal: null,
     modalImg: null,
@@ -699,7 +718,7 @@ const Modal = {
             this.isOpen = false;
             
             // Return focus to trigger element
-            const triggerElement = document.querySelector('.carousel-slide.active');
+            const triggerElement = document.querySelector(`#event${this.lastOpenedIndex + 1}`);
             if (triggerElement) triggerElement.focus();
         }, 300);
     },
@@ -732,7 +751,7 @@ const Modal = {
     }
 };
 
-// Optimized Smooth Scroll with Navigation Update
+// ===== OPTIMIZED SMOOTH SCROLL WITH NAVIGATION UPDATE =====
 const Navigation = {
     sections: [],
     navLinks: [],
@@ -811,9 +830,12 @@ const Navigation = {
     }
 };
 
-// Intersection Observer for fade-in animations
+// ===== INTERSECTION OBSERVER FOR ANIMATIONS =====
 const AnimationObserver = {
     init() {
+        // Don't run animations if user prefers reduced motion
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        
         const options = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -834,7 +856,7 @@ const AnimationObserver = {
     }
 };
 
-// Form Handler
+// ===== FORM HANDLER =====
 const FormHandler = {
     init() {
         const form = document.querySelector('.contact-form');
@@ -849,6 +871,7 @@ const FormHandler = {
         const inputs = form.querySelectorAll('input, textarea');
         inputs.forEach(input => {
             input.addEventListener('blur', () => this.validateField(input));
+            input.addEventListener('input', () => this.clearFieldError(input));
         });
     },
     
@@ -875,7 +898,7 @@ const FormHandler = {
             button.textContent = originalText;
             button.disabled = false;
             
-            // Track conversion only if analytics is loaded
+            // Track conversion only if analytics is loaded and consent given
             if (typeof gtag !== 'undefined' && CookieConsent.hasAccepted()) {
                 gtag('event', 'form_submit', {
                     'event_category': 'Contact',
@@ -902,8 +925,8 @@ const FormHandler = {
         const value = field.value.trim();
         let isValid = true;
         
-        // Remove previous error
-        field.classList.remove('error');
+        // Clear previous error
+        this.clearFieldError(field);
         
         // Required field
         if (field.hasAttribute('required') && !value) {
@@ -948,6 +971,14 @@ const FormHandler = {
         errorEl.textContent = message;
     },
     
+    clearFieldError(field) {
+        field.classList.remove('error');
+        const errorEl = field.nextElementSibling;
+        if (errorEl && errorEl.classList.contains('field-error')) {
+            errorEl.remove();
+        }
+    },
+    
     showMessage(message, type = 'info') {
         const messageEl = document.createElement('div');
         messageEl.className = `form-message ${type}`;
@@ -968,7 +999,7 @@ const FormHandler = {
     }
 };
 
-// Performance Monitor
+// ===== PERFORMANCE MONITOR =====
 const PerformanceMonitor = {
     init() {
         // Monitor long tasks
@@ -987,52 +1018,213 @@ const PerformanceMonitor = {
                 // longtask not supported
             }
         }
+        
+        // Monitor Core Web Vitals
+        this.observeWebVitals();
+    },
+    
+    observeWebVitals() {
+        // Monitor Largest Contentful Paint (LCP)
+        if ('PerformanceObserver' in window) {
+            try {
+                const lcpObserver = new PerformanceObserver((list) => {
+                    const entries = list.getEntries();
+                    const lastEntry = entries[entries.length - 1];
+                    console.log('LCP:', lastEntry.startTime);
+                });
+                lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+            } catch (e) {
+                // Not supported
+            }
+        }
     }
 };
 
-// Global carousel instance
+// ===== EVENT DATA MANAGEMENT =====
+const EventData = {
+    // Dynamic event data for JSON-LD updates
+    upcomingEvents: {
+        "@context": "https://schema.org",
+        "@type": "EventSeries",
+        "name": "Ateliere de Dezvoltare Personală",
+        "description": "Serie de workshop-uri pentru dezvoltare personală și creștere interioară",
+        "organizer": {
+            "@type": "Person",
+            "name": "Răzvan Mischie"
+        },
+        "location": {
+            "@type": "VirtualLocation",
+            "url": "https://consiliereonline.com/events"
+        }
+    },
+    
+    init() {
+        // Any dynamic event management logic can go here
+        this.updateEventVisibility();
+    },
+    
+    updateEventVisibility() {
+        // Future implementation for showing/hiding past events
+        const today = new Date();
+        // Logic to manage event visibility based on dates
+    }
+};
+
+// ===== GLOBAL VARIABLES =====
 let carousel;
 
-// Initialize everything when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize cookie consent first
-    CookieConsent.init();
+// ===== GLOBAL FUNCTIONS FOR ONCLICK HANDLERS =====
+window.openModal = (index) => {
+    Modal.lastOpenedIndex = index;
+    Modal.open(index);
+};
+
+window.closeModal = () => Modal.close();
+
+window.moveCarousel = (dir) => carousel && carousel.move(dir);
+
+window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
+
+window.toggleMobileMenu = () => MobileMenu.toggleMenu();
+
+// ===== SERVICE WORKER REGISTRATION =====
+const ServiceWorkerManager = {
+    init() {
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js', { scope: './' })
+                    .then((registration) => {
+                        console.log('ServiceWorker registration successful with scope:', registration.scope);
+                        
+                        // Listen for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New content is available, notify user
+                                    this.showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+    },
     
-    // Initialize other modules
-    LanguageManager.init();
-    MobileMenu.init();
-    Navigation.init();
-    Modal.init();
-    AnimationObserver.init();
-    FormHandler.init();
-    PerformanceMonitor.init();
-    
-    // Initialize carousel
-    carousel = new Carousel();
-    carousel.init();
-    
-    // Load analytics if consent was already given
-    if (CookieConsent.hasAccepted()) {
-        CookieConsent.loadAnalytics();
+    showUpdateNotification() {
+        // Simple update notification
+        const notification = document.createElement('div');
+        notification.className = 'update-notification';
+        notification.innerHTML = `
+            <p>O versiune nouă este disponibilă!</p>
+            <button onclick="window.location.reload()">Actualizează</button>
+        `;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem;
+            border-radius: 8px;
+            z-index: 9999;
+            box-shadow: var(--shadow-lg);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 10000);
     }
+};
+
+// ===== MAIN INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Consiliere Online - Initializing...');
     
-    // Make functions globally available for onclick handlers
-    window.openModal = (index) => Modal.open(index);
-    window.closeModal = () => Modal.close();
-    window.moveCarousel = (dir) => carousel.move(dir);
-    window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
-    window.toggleMobileMenu = () => MobileMenu.toggleMenu();
+    try {
+        // Initialize cookie consent first (critical for GDPR compliance)
+        CookieConsent.init();
+        
+        // Initialize core modules
+        LanguageManager.init();
+        MobileMenu.init();
+        Navigation.init();
+        Modal.init();
+        AnimationObserver.init();
+        FormHandler.init();
+        EventData.init();
+        ServiceWorkerManager.init();
+        PerformanceMonitor.init();
+        
+        // Initialize carousel
+        carousel = new Carousel();
+        carousel.init();
+        
+        console.log('✅ All modules initialized successfully');
+        
+        // Dispatch custom event for any external scripts
+        window.dispatchEvent(new CustomEvent('consiliereonlineReady', {
+            detail: { timestamp: Date.now() }
+        }));
+        
+    } catch (error) {
+        console.error('❌ Initialization error:', error);
+        
+        // Basic fallback functionality
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                document.body.classList.toggle('lang-ro', lang === 'ro');
+            });
+        });
+    }
 });
 
-// Service Worker Registration (for PWA)
-if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-        .then(function(registration) {
-            console.log('ServiceWorker registration successful with scope:', registration.scope);
-        })
-        .catch(function(error) {
-            console.log('ServiceWorker registration failed!', error);
+// ===== ERROR HANDLING =====
+window.addEventListener('error', (e) => {
+    console.error('Global error:', e.error);
+    
+    // Track errors if analytics is available and consent given
+    if (typeof gtag !== 'undefined' && CookieConsent.hasAccepted()) {
+        gtag('event', 'exception', {
+            'description': e.error.message,
+            'fatal': false
         });
-    });
+    }
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('Unhandled promise rejection:', e.reason);
+    
+    // Track promise rejections if analytics is available and consent given
+    if (typeof gtag !== 'undefined' && CookieConsent.hasAccepted()) {
+        gtag('event', 'exception', {
+            'description': e.reason?.message || 'Promise rejection',
+            'fatal': false
+        });
+    }
+});
+
+// ===== EXPORT FOR TESTING (if needed) =====
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        CookieConsent,
+        LanguageManager,
+        MobileMenu,
+        Carousel,
+        Modal,
+        Navigation,
+        AnimationObserver,
+        FormHandler,
+        PerformanceMonitor,
+        EventData
+    };
 }

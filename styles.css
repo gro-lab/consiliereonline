@@ -670,6 +670,18 @@ section {
     font-size: 1.1rem;
 }
 
+.carousel-location {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.carousel-location svg {
+    width: 16px;
+    height: 16px;
+}
+
 /* Carousel Navigation */
 .carousel-nav {
     position: absolute;
@@ -862,11 +874,62 @@ section {
     box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
 }
 
+.contact-form input.error,
+.contact-form select.error,
+.contact-form textarea.error {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+}
+
+.field-error {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
 .contact-form button {
     margin-top: var(--spacing-md);
     cursor: pointer;
     border: none;
     font-size: 1rem;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border-radius: 8px;
+    transition: var(--transition);
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.contact-form button:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.contact-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.form-message {
+    padding: var(--spacing-md);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-lg);
+    font-weight: 500;
+}
+
+.form-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.form-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
 /* Footer */
@@ -941,6 +1004,15 @@ footer {
     transform: scale(1.1);
 }
 
+.modal-caption {
+    text-align: center;
+    color: white;
+    padding: var(--spacing-lg);
+    font-size: 1.2rem;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
 /* Mobile Menu Toggle */
 .mobile-menu-toggle {
     display: none;
@@ -987,6 +1059,19 @@ body:not(.lang-ro) p[lang="en"] {
 body.lang-ro li[lang="ro"],
 body:not(.lang-ro) li[lang="en"] {
     display: list-item !important;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
 }
 
 /* Mobile Responsive Design */
@@ -1153,4 +1238,4 @@ body:not(.lang-ro) li[lang="en"] {
     .cookie-banner {
         transition: none;
     }
-} 
+}
