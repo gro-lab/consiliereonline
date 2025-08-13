@@ -1228,3 +1228,71 @@ if (typeof module !== 'undefined' && module.exports) {
         EventData
     };
 }
+
+
+function openPrivacyModal() {
+    const modal = document.getElementById('privacyModal');
+    if (modal) {
+        modal.style.display = 'block';
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus management
+        modal.setAttribute('tabindex', '-1');
+        modal.focus();
+        
+        // Trap focus
+        trapPrivacyModalFocus();
+    }
+}
+
+function closePrivacyModal() {
+    const modal = document.getElementById('privacyModal');
+    if (modal) {
+        modal.classList.remove('show');
+        
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 300);
+    }
+}
+
+function trapPrivacyModalFocus() {
+    const modal = document.getElementById('privacyModal');
+    const focusableElements = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+    
+    const handlePrivacyModalTabKey = (e) => {
+        if (e.key !== 'Tab') return;
+        
+        if (e.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+                lastFocusable.focus();
+                e.preventDefault();
+            }
+        } else {
+            if (document.activeElement === lastFocusable) {
+                firstFocusable.focus();
+                e.preventDefault();
+            }
+        }
+    };
+    
+    modal.addEventListener('keydown', handlePrivacyModalTabKey);
+    
+    // Close on Escape
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closePrivacyModal();
+        }
+    });
+}
+
+// Make functions globally available
+window.openPrivacyModal = openPrivacyModal;
+window.closePrivacyModal = closePrivacyModal;
