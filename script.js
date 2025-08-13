@@ -1295,4 +1295,4 @@ function trapPrivacyModalFocus() {
 
 // Make functions globally available
 window.openPrivacyModal = openPrivacyModal;
-window.closePrivacyModal = closePrivacyModal;
+window.closePrivacyModal = closePrivacyModal; 
