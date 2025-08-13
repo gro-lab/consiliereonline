@@ -455,6 +455,186 @@
         ]
     }
     </script>
+
+    <!-- Privacy Modal CSS -->
+    <style>
+    /* Privacy Modal Specific Styles */
+    .modal-content-document {
+        background: white;
+        margin: 2% auto;
+        padding: 0;
+        max-width: 800px;
+        max-height: 90vh;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+        position: relative;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(-50px) scale(0.95); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .modal-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 300;
+    }
+
+    .modal-close-btn {
+        background: rgba(255,255,255,0.1);
+        border: none;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .modal-close-btn:hover {
+        background: rgba(255,255,255,0.2);
+        transform: scale(1.1);
+    }
+
+    .modal-body {
+        padding: 2rem;
+        max-height: calc(90vh - 120px);
+        overflow-y: auto;
+        line-height: 1.6;
+    }
+
+    .modal-date {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        background: rgba(0,0,0,0.02);
+        padding: 0.5rem;
+        border-radius: 5px;
+    }
+
+    .privacy-section {
+        margin-bottom: 2rem;
+    }
+
+    .privacy-section h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+    }
+
+    .privacy-section p {
+        margin-bottom: 1rem;
+        color: var(--text-light);
+    }
+
+    .privacy-section ul {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .privacy-section li {
+        margin-bottom: 0.5rem;
+        color: var(--text-light);
+    }
+
+    .contact-info {
+        background: rgba(0,0,0,0.02);
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    .contact-info p {
+        margin: 0.5rem 0;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .privacy-note {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .privacy-note p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .modal-content-document {
+            margin: 5% auto;
+            max-width: 95%;
+            max-height: 85vh;
+        }
+        
+        .modal-header {
+            padding: 1rem 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.2rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .privacy-section h3 {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Scrollbar Styling */
+    .modal-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 3px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-color);
+    }
+    </style>
 </head>
 <body class="lang-ro">
     <!-- Skip to Content for Accessibility -->
@@ -900,27 +1080,28 @@ Sunt Răzvan Mischie, <strong>life coach certificat</strong> și <strong>consili
                     Consilierea nu înlocuiește tratamentul medical profesional.</span>
                     <span lang="en">The information on this site is for informational purposes only.
 Counseling is not a substitute for professional medical treatment.</span>
+                    </p>
                 </div>
             </div>
         </section>
     </main>
 
-   <!-- Footer -->
-<footer itemscope itemtype="https://schema.org/WPFooter">
-    <div class="footer-content">
-        <p>&copy; 2025 Consiliere Online România - Răzvan Mischie. Toate drepturile rezervate.</p>
-        <p lang="ro">Life Coach Certificat | Consilier Dezvoltare Personală | Consiliere Online România</p>
-        <p lang="en">Certified Life Coach | Personal Development Counselor | Online Counseling Romania</p>
-        
-        <!-- ADD THIS PRIVACY LINK -->
-        <p style="margin-top: 1rem;">
-            <button onclick="openPrivacyModal()" style="background: none; border: none; color: rgba(255,255,255,0.8); text-decoration: underline; cursor: pointer; font-family: inherit; font-size: inherit;">
-                <span lang="ro">Politica de Confidențialitate</span>
-                <span lang="en">Privacy Policy</span>
-            </button>
-        </p>
-    </div>
-</footer>
+    <!-- Footer -->
+    <footer itemscope itemtype="https://schema.org/WPFooter">
+        <div class="footer-content">
+            <p>&copy; 2025 Consiliere Online România - Răzvan Mischie. Toate drepturile rezervate.</p>
+            <p lang="ro">Life Coach Certificat | Consilier Dezvoltare Personală | Consiliere Online România</p>
+            <p lang="en">Certified Life Coach | Personal Development Counselor | Online Counseling Romania</p>
+            
+            <!-- Privacy Policy Link -->
+            <p style="margin-top: 1rem;">
+                <button onclick="openPrivacyModal()" style="background: none; border: none; color: rgba(255,255,255,0.8); text-decoration: underline; cursor: pointer; font-family: inherit; font-size: inherit;">
+                    <span lang="ro">Politica de Confidențialitate</span>
+                    <span lang="en">Privacy Policy</span>
+                </button>
+            </p>
+        </div>
+    </footer>
 
     <!-- Image Modal -->
     <div id="imageModal" class="modal" onclick="closeModal()" role="dialog" aria-modal="true" aria-labelledby="modalCaption">
@@ -928,171 +1109,176 @@ Counseling is not a substitute for professional medical treatment.</span>
         <img class="modal-content" id="modalImage" alt="Imagine eveniment consiliere">
         <div class="modal-caption" id="modalCaption"></div>
     </div>
+
     <!-- Privacy Policy Modal -->
-<div id="privacyModal" class="modal" onclick="closePrivacyModal()" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
-    <div class="modal-content-document" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <h2 id="privacyModalTitle" class="modal-title">
-                <span lang="ro">Politica de Confidențialitate</span>
-                <span lang="en">Privacy Policy</span>
-            </h2>
-            <button class="modal-close-btn" onclick="closePrivacyModal()" aria-label="Închide">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </button>
-        </div>
-        
-        <div class="modal-body">
-            <p class="modal-date">
-                <span lang="ro">Ultima actualizare: August 2025</span>
-                <span lang="en">Last updated: August 2025</span>
-            </p>
+    <div id="privacyModal" class="modal" onclick="closePrivacyModal()" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+        <div class="modal-content-document" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="privacyModalTitle" class="modal-title">
+                    <span lang="ro">Politica de Confidențialitate</span>
+                    <span lang="en">Privacy Policy</span>
+                </h2>
+                <button class="modal-close-btn" onclick="closePrivacyModal()" aria-label="Închide">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="modal-date">
+                    <span lang="ro">Ultima actualizare: August 2025</span>
+                    <span lang="en">Last updated: August 2025</span>
+                </p>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">1. Colectarea Datelor</span>
-                    <span lang="en">1. Data Collection</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        <strong>Pe website:</strong> Nu colectăm date personale prin formulare online. Website-ul nostru folosește doar cookie-uri pentru funcționarea de bază și analiză statistică (cu consimțământul dumneavoastră).
-                    </span>
-                    <span lang="en">
-                        <strong>On website:</strong> We do not collect personal data through online forms. Our website only uses cookies for basic functionality and statistical analysis (with your consent).
-                    </span>
-                </p>
-                <p>
-                    <span lang="ro">
-                        <strong>Contact direct:</strong> Când ne contactați prin telefon sau email, colectăm doar informațiile necesare pentru a vă oferi serviciile de consiliere.
-                    </span>
-                    <span lang="en">
-                        <strong>Direct contact:</strong> When you contact us by phone or email, we collect only the information necessary to provide counseling services.
-                    </span>
-                </p>
-            </section>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">1. Colectarea Datelor</span>
+                        <span lang="en">1. Data Collection</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            <strong>Pe website:</strong> Nu colectăm date personale prin formulare online. Website-ul nostru folosește doar cookie-uri pentru funcționarea de bază și analiză statistică (cu consimțământul dumneavoastră).
+                        </span>
+                        <span lang="en">
+                            <strong>On website:</strong> We do not collect personal data through online forms. Our website only uses cookies for basic functionality and statistical analysis (with your consent).
+                        </span>
+                    </p>
+                    <p>
+                        <span lang="ro">
+                            <strong>Contact direct:</strong> Când ne contactați prin telefon sau email, colectăm doar informațiile necesare pentru a vă oferi serviciile de consiliere.
+                        </span>
+                        <span lang="en">
+                            <strong>Direct contact:</strong> When you contact us by phone or email, we collect only the information necessary to provide counseling services.
+                        </span>
+                    </p>
+                </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">2. Utilizarea Datelor</span>
-                    <span lang="en">2. Data Usage</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Informațiile pe care le primim prin contact direct sunt folosite exclusiv pentru:
-                    </span>
-                    <span lang="en">
-                        Information received through direct contact is used exclusively for:
-                    </span>
-                </p>
-                <ul>
-                    <li>
-                        <span lang="ro">Programarea și desfășurarea sesiunilor de consiliere</span>
-                        <span lang="en">Scheduling and conducting counseling sessions</span>
-                    </li>
-                    <li>
-                        <span lang="ro">Comunicarea legată de serviciile noastre</span>
-                        <span lang="en">Communication related to our services</span>
-                    </li>
-                    <li>
-                        <span lang="ro">Îndeplinirea obligațiilor profesionale și legale</span>
-                        <span lang="en">Fulfilling professional and legal obligations</span>
-                    </li>
-                </ul>
-            </section>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">2. Utilizarea Datelor</span>
+                        <span lang="en">2. Data Usage</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            Informațiile pe care le primim prin contact direct sunt folosite exclusiv pentru:
+                        </span>
+                        <span lang="en">
+                            Information received through direct contact is used exclusively for:
+                        </span>
+                    </p>
+                    <ul>
+                        <li>
+                            <span lang="ro">Programarea și desfășurarea sesiunilor de consiliere</span>
+                            <span lang="en">Scheduling and conducting counseling sessions</span>
+                        </li>
+                        <li>
+                            <span lang="ro">Comunicarea legată de serviciile noastre</span>
+                            <span lang="en">Communication related to our services</span>
+                        </li>
+                        <li>
+                            <span lang="ro">Îndeplinirea obligațiilor profesionale și legale</span>
+                            <span lang="en">Fulfilling professional and legal obligations</span>
+                        </li>
+                    </ul>
+                </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">3. Cookie-uri</span>
-                    <span lang="en">3. Cookies</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Website-ul folosește cookie-uri pentru funcționarea de bază și Google Analytics (doar cu consimțământul dumneavoastră). Puteți gestiona preferințele pentru cookie-uri prin bannerul afișat la prima vizită.
-                    </span>
-                    <span lang="en">
-                        The website uses cookies for basic functionality and Google Analytics (only with your consent). You can manage cookie preferences through the banner displayed on first visit.
-                    </span>
-                </p>
-            </section>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">3. Cookie-uri</span>
+                        <span lang="en">3. Cookies</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            Website-ul folosește cookie-uri pentru funcționarea de bază și Google Analytics (doar cu consimțământul dumneavoastră). Puteți gestiona preferințele pentru cookie-uri prin bannerul afișat la prima vizită.
+                        </span>
+                        <span lang="en">
+                            The website uses cookies for basic functionality and Google Analytics (only with your consent). You can manage cookie preferences through the banner displayed on first visit.
+                        </span>
+                    </p>
+                </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">4. Confidențialitatea Profesională</span>
-                    <span lang="en">4. Professional Confidentiality</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Toate informațiile împărtășite în cadrul sesiunilor de consiliere sunt strict confidențiale și protejate conform standardelor profesionale și legale în vigoare.
-                    </span>
-                    <span lang="en">
-                        All information shared during counseling sessions is strictly confidential and protected according to current professional and legal standards.
-                    </span>
-                </p>
-            </section>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">4. Confidențialitatea Profesională</span>
+                        <span lang="en">4. Professional Confidentiality</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            Toate informațiile împărtășite în cadrul sesiunilor de consiliere sunt strict confidențiale și protejate conform standardelor profesionale și legale în vigoare.
+                        </span>
+                        <span lang="en">
+                            All information shared during counseling sessions is strictly confidential and protected according to current professional and legal standards.
+                        </span>
+                    </p>
+                </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">5. Păstrarea Datelor</span>
-                    <span lang="en">5. Data Retention</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Păstrăm informațiile cât timp este necesar pentru furnizarea serviciilor și conform obligațiilor legale profesionale. Înregistrările de consiliere sunt păstrate conform reglementărilor în vigoare.
-                    </span>
-                    <span lang="en">
-                        We retain information as long as necessary for service provision and according to professional legal obligations. Counseling records are kept according to current regulations.
-                    </span>
-                </p>
-            </section>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">5. Păstrarea Datelor</span>
+                        <span lang="en">5. Data Retention</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            Păstrăm informațiile cât timp este necesar pentru furnizarea serviciilor și conform obligațiilor legale profesionale. Înregistrările de consiliere sunt păstrate conform reglementărilor în vigoare.
+                        </span>
+                        <span lang="en">
+                            We retain information as long as necessary for service provision and according to professional legal obligations. Counseling records are kept according to current regulations.
+                        </span>
+                    </p>
+                </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">6. Drepturile Dumneavoastră</span>
-                    <span lang="en">6. Your Rights</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Conform GDPR, aveți dreptul la accesul, rectificarea, ștergerea și portabilitatea datelor personale. Pentru orice solicitare, ne puteți contacta prin metodele de mai jos.
-                    </span>
-                    <span lang="en">
-                        Under GDPR, you have the right to access, rectify, delete and port your personal data. For any requests, you can contact us through the methods below.
-                    </span>
-                </p>
-            </section>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">6. Drepturile Dumneavoastră</span>
+                        <span lang="en">6. Your Rights</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            Conform GDPR, aveți dreptul la accesul, rectificarea, ștergerea și portabilitatea datelor personale. Pentru orice solicitare, ne puteți contacta prin metodele de mai jos.
+                        </span>
+                        <span lang="en">
+                            Under GDPR, you have the right to access, rectify, delete and port your personal data. For any requests, you can contact us through the methods below.
+                        </span>
+                    </p>
+                </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">7. Contact</span>
-                    <span lang="en">7. Contact</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Pentru întrebări despre această politică de confidențialitate:
-                    </span>
-                    <span lang="en">
-                        For questions about this privacy policy:
-                    </span>
-                </p>
-                <div class="contact-info">
-                    <p>📧 razvanmischie@consiliereonline.com</p>
-                    <p>📞 +40750267476</p>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">7. Contact</span>
+                        <span lang="en">7. Contact</span>
+                    </h3>
+                    <p>
+                        <span lang="ro">
+                            Pentru întrebări despre această politică de confidențialitate:
+                        </span>
+                        <span lang="en">
+                            For questions about this privacy policy:
+                        </span>
+                    </p>
+                    <div class="contact-info">
+                        <p>📧 razvanmischie@consiliereonline.com</p>
+                        <p>📞 +40750267476</p>
+                        <p>
+                            <span lang="ro">📍 Str. Episcop Augustin Pacha, nr.1, ap. 31, Timișoara</span>
+                            <span lang="en">📍 Str. Episcop Augustin Pacha, nr.1, ap. 31, Timișoara</span>
+                        </p>
+                    </div>
+                </section>
+
+                <div class="privacy-note">
+                    <p>
+                        <span lang="ro">
+                            <strong>Notă:</strong> Această politică poate fi actualizată periodic. Modificările vor fi publicate pe această pagină cu data actualizării.
+                        </span>
+                        <span lang="en">
+                            <strong>Note:</strong> This policy may be updated periodically. Changes will be published on this page with the update date.
+                        </span>
+                    </p>
                 </div>
-            </section>
-
-            <div class="privacy-note">
-                <p>
-                    <span lang="ro">
-                        <strong>Notă:</strong> Această politică poate fi actualizată periodic. Modificările vor fi publicate pe această pagină cu data actualizării.
-                    </span>
-                    <span lang="en">
-                        <strong>Note:</strong> This policy may be updated periodically. Changes will be published on this page with the update date.
-                    </span>
-                </p>
             </div>
         </div>
     </div>
-</div>
 
     <!-- Scripts -->
     <script src="./script.min.js" defer></script>

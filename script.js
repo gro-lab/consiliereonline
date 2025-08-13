@@ -751,6 +751,93 @@ const Modal = {
     }
 };
 
+// ===== PRIVACY MODAL MANAGEMENT =====
+const PrivacyModal = {
+    modal: null,
+    isOpen: false,
+    
+    init() {
+        this.modal = document.getElementById('privacyModal');
+        
+        if (!this.modal) return;
+        
+        // Close on click outside
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+                this.close();
+            }
+        });
+        
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.close();
+            }
+        });
+    },
+    
+    open() {
+        if (!this.modal) return;
+        
+        requestAnimationFrame(() => {
+            this.modal.style.display = 'block';
+            
+            // Force reflow only once
+            this.modal.offsetHeight;
+            
+            this.modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            this.isOpen = true;
+            
+            // Focus management
+            this.modal.setAttribute('tabindex', '-1');
+            this.modal.focus();
+            
+            // Trap focus
+            this.trapFocus();
+        });
+    },
+    
+    close() {
+        if (!this.modal) return;
+        
+        this.modal.classList.remove('show');
+        
+        setTimeout(() => {
+            this.modal.style.display = 'none';
+            document.body.style.overflow = '';
+            this.isOpen = false;
+        }, 300);
+    },
+    
+    trapFocus() {
+        const focusableElements = this.modal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+        
+        const handleTabKey = (e) => {
+            if (e.key !== 'Tab') return;
+            
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    lastFocusable.focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    firstFocusable.focus();
+                    e.preventDefault();
+                }
+            }
+        };
+        
+        this.modal.addEventListener('keydown', handleTabKey);
+    }
+};
+
 // ===== OPTIMIZED SMOOTH SCROLL WITH NAVIGATION UPDATE =====
 const Navigation = {
     sections: [],
@@ -1081,6 +1168,10 @@ window.openModal = (index) => {
 
 window.closeModal = () => Modal.close();
 
+window.openPrivacyModal = () => PrivacyModal.open();
+
+window.closePrivacyModal = () => PrivacyModal.close();
+
 window.moveCarousel = (dir) => carousel && carousel.move(dir);
 
 window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
@@ -1158,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         MobileMenu.init();
         Navigation.init();
         Modal.init();
-        PrivacyModal.init(); // ADD THIS LINE
+        PrivacyModal.init(); // Initialize Privacy Modal
         AnimationObserver.init();
         FormHandler.init();
         EventData.init();
@@ -1222,6 +1313,7 @@ if (typeof module !== 'undefined' && module.exports) {
         MobileMenu,
         Carousel,
         Modal,
+        PrivacyModal,
         Navigation,
         AnimationObserver,
         FormHandler,
@@ -1229,71 +1321,3 @@ if (typeof module !== 'undefined' && module.exports) {
         EventData
     };
 }
-
-
-function openPrivacyModal() {
-    const modal = document.getElementById('privacyModal');
-    if (modal) {
-        modal.style.display = 'block';
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        
-        // Focus management
-        modal.setAttribute('tabindex', '-1');
-        modal.focus();
-        
-        // Trap focus
-        trapPrivacyModalFocus();
-    }
-}
-
-function closePrivacyModal() {
-    const modal = document.getElementById('privacyModal');
-    if (modal) {
-        modal.classList.remove('show');
-        
-        setTimeout(() => {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }, 300);
-    }
-}
-
-function trapPrivacyModalFocus() {
-    const modal = document.getElementById('privacyModal');
-    const focusableElements = modal.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    
-    const firstFocusable = focusableElements[0];
-    const lastFocusable = focusableElements[focusableElements.length - 1];
-    
-    const handlePrivacyModalTabKey = (e) => {
-        if (e.key !== 'Tab') return;
-        
-        if (e.shiftKey) {
-            if (document.activeElement === firstFocusable) {
-                lastFocusable.focus();
-                e.preventDefault();
-            }
-        } else {
-            if (document.activeElement === lastFocusable) {
-                firstFocusable.focus();
-                e.preventDefault();
-            }
-        }
-    };
-    
-    modal.addEventListener('keydown', handlePrivacyModalTabKey);
-    
-    // Close on Escape
-    modal.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closePrivacyModal();
-        }
-    });
-}
-
-// Make functions globally available
-window.openPrivacyModal = openPrivacyModal;
-window.closePrivacyModal = closePrivacyModal; 
