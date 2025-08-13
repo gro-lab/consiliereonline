@@ -1158,6 +1158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         MobileMenu.init();
         Navigation.init();
         Modal.init();
+        PrivacyModal.init(); // ADD THIS LINE
         AnimationObserver.init();
         FormHandler.init();
         EventData.init();
