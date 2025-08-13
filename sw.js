@@ -15,9 +15,9 @@ const CORE_ASSETS = [
 
 // Dynamic assets (workshop images)
 const DYNAMIC_ASSETS = [
-  '/ev1.jpg',
-  '/ev2.jpg',
-  '/ev3.jpg'
+  '/consiliere-online-razvan-mischie-event-1.jpg',
+  '/consiliere-online-razvan-mischie-event-2.jpg',
+  '/consiliere-online-razvan-mischie-event-3.jpg'
 ];
 
 // Optional assets - these may or may not exist
