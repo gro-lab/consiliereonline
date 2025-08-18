@@ -925,7 +925,7 @@ section {
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    max-height: 340px; /* Add max height constraint */
+    max-height: 300px; /* Add max height constraint */
 }
 
 .carousel-slide::after {
