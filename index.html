@@ -655,14 +655,26 @@
         </div>
     </div>
     
-    <!-- Enhanced Navigation with Schema Markup -->
+   <!-- Enhanced Navigation with Logo -->
     <nav role="navigation" aria-label="Navigare principală">
         <div class="nav-container">
+            <!-- Brand/Logo Section -->
+            <div class="nav-brand">
+                <a href="#hero" class="brand-link" aria-label="Consiliere Online - Acasă">
+                    <img src="./logo.png" alt="Răzvan Mischie Consiliere Online Logo" class="brand-logo">
+                    <span class="brand-text">
+                        <span lang="ro">Răzvan Mischie </span>
+                        <span lang="en">Răzvan Mischie</span>
+                    </span>
+                </a>
+            </div>
+
             <button class="mobile-menu-toggle" aria-label="Meniu mobil" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
+            
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#hero" class="nav-link active" data-en="Home" data-ro="Acasă">Acasă</a></li>
                 <li><a href="#about" class="nav-link" data-en="About me" data-ro="Despre mine">Despre mine</a></li>
@@ -671,6 +683,7 @@
                 <li><a href="#faq" class="nav-link" data-en="FAQ" data-ro="Întrebări">Întrebări</a></li>
                 <li><a href="#contact" class="nav-link" data-en="Contact" data-ro="Contact">Contact</a></li>
             </ul>
+            
             <div class="language-toggle">
                 <button class="lang-btn" data-lang="en" onclick="setLanguage('en')" aria-label="English">EN</button>
                 <button class="lang-btn active" data-lang="ro" onclick="setLanguage('ro')" aria-label="Română">RO</button>
