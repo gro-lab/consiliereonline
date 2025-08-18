@@ -252,7 +252,7 @@ strong {
     color: var(--primary-color);
 }
 
-/* ===== UPDATED NAVIGATION WITH SAFARI/FIREFOX FIXES ===== */
+/* ===== UPDATED NAVIGATION WITH CROSS-BROWSER LOGO FIXES ===== */
 nav {
     position: fixed;
     top: 0;
@@ -294,15 +294,21 @@ nav {
     min-height: 54px;
 }
 
-/* Brand/Logo Styles with Safari fixes */
+/* ===== FIXED BRAND/LOGO STYLES WITH CROSS-BROWSER SUPPORT ===== */
 .nav-brand {
     flex-shrink: 0;
     -webkit-flex-shrink: 0;
     z-index: 1001;
-    /* Safari positioning fix */
+    /* Cross-browser positioning fix */
     position: relative;
     order: 1;
     -webkit-order: 1;
+    /* Ensure consistent height */
+    height: 44px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
 }
 
 .brand-link {
@@ -315,29 +321,117 @@ nav {
     color: var(--primary-color);
     transition: var(--transition-fast);
     -webkit-transition: var(--transition-fast);
-    /* Safari link fix */
+    /* Cross-browser tap highlight */
     -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    /* Ensure consistent height */
+    height: 44px;
+    /* Remove outline for consistency */
+    outline: none;
 }
 
 .brand-link:hover {
     transform: translateY(-1px);
     -webkit-transform: translateY(-1px);
+    -moz-transform: translateY(-1px);
+    -ms-transform: translateY(-1px);
 }
 
+/* FIXED LOGO STYLES - CROSS-BROWSER COMPATIBLE */
 .brand-logo {
-    height: 40px;
-    width: auto;
-    max-width: 40px; /* Safari constraint */
-    filter: brightness(0);
-    -webkit-filter: brightness(0);
-    transition: var(--transition-fast);
-    -webkit-transition: var(--transition-fast);
-    /* Safari image rendering */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    /* Prevent Safari image stretching */
+    /* Fixed dimensions for consistency */
+    height: 42px;
+    width: 42px;
+    /* Remove auto width to prevent aspect ratio issues */
+    min-width: 42px;
+    max-width: 42px;
+    
+    /* Cross-browser object fit */
     object-fit: contain;
     -webkit-object-fit: contain;
+    -moz-object-fit: contain;
+    -ms-object-fit: contain;
+    -o-object-fit: contain;
+    
+    /* Remove filters that cause rendering issues */
+    /* filter: brightness(0); - REMOVED */
+    /* -webkit-filter: brightness(0); - REMOVED */
+    
+    /* Cross-browser transitions */
+    transition: var(--transition-fast);
+    -webkit-transition: var(--transition-fast);
+    -moz-transition: var(--transition-fast);
+    -ms-transition: var(--transition-fast);
+    -o-transition: var(--transition-fast);
+    
+    /* Improved image rendering for all browsers */
+    image-rendering: -webkit-optimize-contrast; /* Safari */
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -o-crisp-edges; /* Opera */
+    image-rendering: crisp-edges; /* Standard */
+    image-rendering: pixelated; /* Fallback */
+    
+    /* Prevent image dragging */
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    
+    /* Prevent selection */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    /* Cross-browser display fix */
+    display: block;
+    vertical-align: middle;
+    
+    /* Edge/IE specific fixes */
+    -ms-interpolation-mode: bicubic;
+    
+    /* Ensure no border or padding */
+    border: none;
+    padding: 0;
+    margin: 0;
+    
+    /* Background fallback for broken images */
+    background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Firefox specific logo fixes */
+@-moz-document url-prefix() {
+    .brand-logo {
+        image-rendering: -moz-crisp-edges;
+        /* Firefox sometimes needs explicit dimensions */
+        box-sizing: border-box;
+    }
+}
+
+/* Edge/IE specific logo fixes */
+@supports (-ms-ime-align: auto) {
+    .brand-logo {
+        -ms-interpolation-mode: bicubic;
+        /* Ensure proper scaling in IE/Edge */
+        width: 42px !important;
+        height: 42px !important;
+    }
+}
+
+/* Safari specific logo fixes */
+@supports (-webkit-appearance: none) {
+    .brand-logo {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /* Safari sometimes has blurry images */
+        -webkit-font-smoothing: subpixel-antialiased;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+    }
 }
 
 .brand-text {
@@ -345,9 +439,17 @@ nav {
     font-weight: 600;
     color: var(--primary-color);
     white-space: nowrap;
-    /* Safari text rendering */
+    /* Cross-browser text rendering */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Ensure consistent line height */
+    line-height: 1.2;
+    /* Prevent text selection issues */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Navigation Menu - Updated for Safari flexbox */
@@ -1541,13 +1643,13 @@ body:not(.lang-ro) li[lang="en"] {
     border: 0 !important;
 }
 
-/* ===== SAFARI & FIREFOX SPECIFIC MOBILE FIXES ===== */
+/* ===== CROSS-BROWSER MOBILE FIXES ===== */
 @media (max-width: 768px) {
     :root {
         --header-height: 60px;
     }
     
-    /* Safari mobile navigation fixes */
+    /* Mobile navigation fixes */
     .nav-container {
         justify-content: space-between;
         -webkit-justify-content: space-between;
@@ -1555,29 +1657,41 @@ body:not(.lang-ro) li[lang="en"] {
         padding: 0 var(--spacing-md);
     }
     
-    /* Logo adjustments for mobile Safari */
+    /* Mobile logo adjustments - FIXED */
+    .nav-brand {
+        height: 36px; /* Consistent mobile height */
+    }
+    
     .brand-logo {
-        height: 32px;
-        max-width: 32px;
+        height: 34px;
+        width: 34px;
+        min-width: 34px;
+        max-width: 34px;
     }
     
     .brand-text {
         font-size: 0.95rem;
     }
     
-    /* Hide nav menu text on small screens for Safari */
+    /* Hide nav menu text on small screens */
     @media (max-width: 480px) {
         .brand-text {
             display: none;
         }
         
+        .nav-brand {
+            height: 32px;
+        }
+        
         .brand-logo {
-            height: 28px;
-            max-width: 28px;
+            height: 30px;
+            width: 30px;
+            min-width: 30px;
+            max-width: 30px;
         }
     }
     
-    /* Safari mobile menu fixes */
+    /* Mobile menu fixes */
     .nav-menu {
         display: none;
         position: absolute;
@@ -1594,7 +1708,7 @@ body:not(.lang-ro) li[lang="en"] {
         -webkit-transform: none;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        /* Safari mobile menu ordering */
+        /* Mobile menu ordering */
         order: unset;
         -webkit-order: unset;
         position: absolute;
@@ -1613,7 +1727,7 @@ body:not(.lang-ro) li[lang="en"] {
         display: -webkit-flex;
     }
     
-    /* Language toggle mobile Safari fixes */
+    /* Language toggle mobile fixes */
     .language-toggle {
         gap: var(--spacing-xs);
         order: 3;
@@ -1647,7 +1761,7 @@ body:not(.lang-ro) li[lang="en"] {
         min-height: 44px;
     }
 
-    /* Contact links mobile Safari fixes */
+    /* Contact links mobile fixes */
     .contact-links {
         flex-direction: column;
         -webkit-flex-direction: column;
@@ -1660,7 +1774,7 @@ body:not(.lang-ro) li[lang="en"] {
         grid-template-columns: 1fr;
     }
 
-    /* Carousel mobile Safari fixes */
+    /* Carousel mobile fixes */
     .carousel-container {
         max-width: 350px;
         width: min(85vw, 350px); /* More viewport width on mobile */
@@ -1696,7 +1810,7 @@ body:not(.lang-ro) li[lang="en"] {
         gap: var(--spacing-md);
     }
     
-    /* Safari tap target improvements */
+    /* Tap target improvements */
     .nav-link,
     .lang-btn,
     .contact-btn,
@@ -1713,7 +1827,7 @@ body:not(.lang-ro) li[lang="en"] {
         -webkit-justify-content: center;
     }
     
-    /* Cookie banner mobile Safari fixes */
+    /* Cookie banner mobile fixes */
     .cookie-banner {
         padding: 1.25rem;
     }
@@ -1737,7 +1851,7 @@ body:not(.lang-ro) li[lang="en"] {
         min-width: auto;
     }
     
-    /* Privacy modal mobile Safari fixes */
+    /* Privacy modal mobile fixes */
     .modal-content-document {
         margin: 5% auto;
         max-width: 95%;
@@ -1786,7 +1900,7 @@ body:not(.lang-ro) li[lang="en"] {
         margin: 0.15rem 0;
     }
 
-    /* Safari mobile extra small screens */
+    /* Mobile extra small screens */
     .cookie-banner-actions {
         flex-direction: column;
         -webkit-flex-direction: column;
@@ -1798,7 +1912,7 @@ body:not(.lang-ro) li[lang="en"] {
     }
 }
 
-/* Tablet responsive with Safari fixes */
+/* Tablet responsive with cross-browser fixes */
 @media (min-width: 769px) and (max-width: 1024px) {
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1846,7 +1960,7 @@ body:not(.lang-ro) li[lang="en"] {
     }
 }
 
-/* Reduced motion support with Safari prefixes */
+/* Reduced motion support with cross-browser prefixes */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -1903,7 +2017,9 @@ body:not(.lang-ro) li[lang="en"] {
     }
     
     .brand-logo {
-        image-rendering: crisp-edges;
+        image-rendering: -moz-crisp-edges;
+        /* Firefox logo fix */
+        box-sizing: border-box;
     }
     
     .carousel-nav,
@@ -1916,6 +2032,50 @@ body:not(.lang-ro) li[lang="en"] {
     .modal-body {
         scrollbar-width: thin;
         scrollbar-color: var(--primary-color) #f1f1f1;
+    }
+}
+
+/* Edge/IE specific logo and layout fixes */
+@supports (-ms-ime-align: auto) {
+    .nav-container {
+        display: -ms-flexbox;
+        display: flex;
+    }
+    
+    .brand-logo {
+        -ms-interpolation-mode: bicubic;
+        /* Edge sometimes needs explicit dimensions */
+        width: 42px !important;
+        height: 42px !important;
+        box-sizing: border-box;
+    }
+    
+    .nav-brand {
+        -ms-flex-negative: 0;
+    }
+    
+    .language-toggle {
+        -ms-flex-negative: 0;
+    }
+}
+
+/* Safari specific logo and rendering fixes */
+@supports (-webkit-appearance: none) {
+    .brand-logo {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /* Safari hardware acceleration for crisp rendering */
+        -webkit-font-smoothing: subpixel-antialiased;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        /* Safari sometimes needs explicit sizing */
+        flex-shrink: 0;
+        -webkit-flex-shrink: 0;
+    }
+    
+    .nav-brand {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 }
 
