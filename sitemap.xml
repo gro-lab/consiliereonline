@@ -37,7 +37,7 @@
     
     <!-- Logo -->
     <image:image>
-      <image:loc>https://consiliereonline.com/icons/logo.png</image:loc>
+      <image:loc>https://consiliereonline.com/icons/logo.svg</image:loc>
       <image:title>Logo Consiliere Online</image:title>
     </image:image>
   </url>
