@@ -563,7 +563,7 @@ nav {
     -webkit-tap-highlight-color: transparent;
     /* Safari ordering */
     order: 4;
-    -webkit-order: 4;
+    -webkit-order: 0;
 }
 
 .mobile-menu-toggle span {
@@ -1537,7 +1537,9 @@ footer {
 }
 
 .privacy-section {
-    margin-bottom: 2rem;
+    margin: 0;
+    display: block;
+    min-height: 30vh;
 }
 
 .privacy-section h3 {
