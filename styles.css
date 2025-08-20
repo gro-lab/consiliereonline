@@ -340,11 +340,11 @@ nav {
 /* FIXED LOGO STYLES - CROSS-BROWSER COMPATIBLE */
 .brand-logo {
     /* Fixed dimensions for consistency */
-    height: 42px;
-    width: 42px;
+    height: 70px;
+    width: 70px;
     /* Remove auto width to prevent aspect ratio issues */
-    min-width: 42px;
-    max-width: 42px;
+    min-width: 70px;
+    max-width: 70px;
     
     /* Cross-browser object fit */
     object-fit: contain;
@@ -1665,10 +1665,10 @@ body:not(.lang-ro) li[lang="en"] {
     }
     
     .brand-logo {
-        height: 45px;
-        width: 45px;
-        min-width: 45px;
-        max-width: 45px;
+        height: 65px;
+        width: 65px;
+        min-width: 65px;
+        max-width: 65px;
     }
     
     .brand-text {
@@ -1686,10 +1686,10 @@ body:not(.lang-ro) li[lang="en"] {
         }
         
         .brand-logo {
-            height: 60px;
-            width: 60px;
-            min-width: 60px;
-            max-width: 60px;
+            height: 70px;
+            width: 70px;
+            min-width: 70px;
+            max-width: 70px;
         }
     }
     
