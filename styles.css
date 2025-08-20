@@ -1665,10 +1665,10 @@ body:not(.lang-ro) li[lang="en"] {
     }
     
     .brand-logo {
-        height: 34px;
-        width: 34px;
-        min-width: 34px;
-        max-width: 34px;
+        height: 45px;
+        width: 45px;
+        min-width: 45px;
+        max-width: 45px;
     }
     
     .brand-text {
@@ -1686,10 +1686,10 @@ body:not(.lang-ro) li[lang="en"] {
         }
         
         .brand-logo {
-            height: 50px;
-            width: 50px;
-            min-width: 50px;
-            max-width: 50px;
+            height: 60px;
+            width: 60px;
+            min-width: 60px;
+            max-width: 60px;
         }
     }
     
