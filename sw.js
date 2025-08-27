@@ -8,7 +8,7 @@ const CORE_ASSETS = [
   '/',
   '/index.html',
   '/styles.css',
-  '/script.min.js',
+  '/script.js',
   OFFLINE_PAGE,
   '/manifest.json'
 ];
