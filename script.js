@@ -144,34 +144,37 @@ const CookieConsent = {
         // Only load if consent was given
         if (!this.hasAccepted()) return;
         
-        // Load Google Analytics dynamically
+        // Load Google Analytics 4 (GA4) dynamically
         const script = document.createElement('script');
         script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061';
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-P10PREW0D3'; // Replace with actual GA4 ID
         document.head.appendChild(script);
         
         script.onload = () => {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'AW-17401674061', {
-                anonymize_ip: true, // GDPR compliance
-                cookie_flags: 'SameSite=None;Secure'
+            
+            // Configure Google Analytics with privacy-friendly settings
+            gtag('config', 'G-P10PREW0D3', {
+                'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
+                'cookie_flags': 'SameSite=None;Secure',
+                'allow_google_signals': false, // Disable advertising features
+                'allow_ad_personalization_signals': false // Disable ad personalization
             });
             
-            // Event snippet for Book appointment conversion page
-            window.gtag_report_conversion = function(url) {
-                var callback = function () {
-                    if (typeof(url) != 'undefined') {
-                        window.location = url;
-                    }
-                };
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-17401674061/yl43CML9yf4aEM3y4elA',
-                    'event_callback': callback
+            // Custom event tracking for appointment bookings (without ads conversion)
+            window.gtag_report_appointment = function(url) {
+                gtag('event', 'appointment_booking', {
+                    'event_category': 'engagement',
+                    'event_label': 'phone_call',
+                    'value': 1
                 });
+                if (typeof(url) != 'undefined') {
+                    window.location = url;
+                }
                 return false;
-            }
+            };
             
             console.log('Google Analytics loaded with consent');
         };
@@ -985,7 +988,7 @@ const FormHandler = {
             button.textContent = originalText;
             button.disabled = false;
             
-            // Track conversion only if analytics is loaded and consent given
+            // Track form submission in analytics if available and consent given
             if (typeof gtag !== 'undefined' && CookieConsent.hasAccepted()) {
                 gtag('event', 'form_submit', {
                     'event_category': 'Contact',
