@@ -141,47 +141,47 @@ const CookieConsent = {
     },
     
     loadAnalytics() {
-        // Only load if consent was given
-        if (!this.hasAccepted()) return;
+    // Only load if consent was given
+    if (!this.hasAccepted()) return;
+    
+    // Load Google Analytics with the AW ID (as specified by Google)
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061'; // Use the AW ID
+    document.head.appendChild(script);
+    
+    script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
         
-        // Load Google Analytics 4 (GA4) dynamically
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061'; // Replace with actual GA4 ID
-        document.head.appendChild(script);
+        // Configure ONLY the AW ID with privacy-friendly settings
+        gtag('config', 'AW-17401674061', {
+            'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
+            'cookie_flags': 'SameSite=None;Secure',
+            'allow_google_signals': false, // Disable advertising features
+            'allow_ad_personalization_signals': false // Disable ad personalization
+        });
         
-        script.onload = () => {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            
-            // Configure Google Analytics with privacy-friendly settings
-            gtag('config', 'AW-17401674061', {
-                'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
-                'cookie_flags': 'SameSite=None;Secure',
-                'allow_google_signals': false, // Disable advertising features
-                'allow_ad_personalization_signals': false // Disable ad personalization
+        // Custom event tracking for appointment bookings
+        window.gtag_report_appointment = function(url) {
+            gtag('event', 'appointment_booking', {
+                'event_category': 'engagement',
+                'event_label': 'phone_call',
+                'value': 1
             });
-            
-            // Custom event tracking for appointment bookings (without ads conversion)
-            window.gtag_report_appointment = function(url) {
-                gtag('event', 'appointment_booking', {
-                    'event_category': 'engagement',
-                    'event_label': 'phone_call',
-                    'value': 1
-                });
-                if (typeof(url) != 'undefined') {
-                    window.location = url;
-                }
-                return false;
-            };
-            
-            console.log('Google Analytics loaded with consent');
+            if (typeof(url) != 'undefined') {
+                window.location = url;
+            }
+            return false;
         };
         
-        script.onerror = () => {
-            console.warn('Failed to load Google Analytics');
-        };
+        console.log('Google Analytics loaded with consent');
+    };
+    
+    script.onerror = () => {
+        console.warn('Failed to load Google Analytics');
+    };
     },
     
     trackConsentGiven(choice) {
