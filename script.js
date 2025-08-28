@@ -147,7 +147,7 @@ const CookieConsent = {
         // Load Google Analytics 4 (GA4) dynamically
         const script = document.createElement('script');
         script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-P10PREW0D3'; // Replace with actual GA4 ID
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061'; // Replace with actual GA4 ID
         document.head.appendChild(script);
         
         script.onload = () => {
@@ -156,7 +156,7 @@ const CookieConsent = {
             gtag('js', new Date());
             
             // Configure Google Analytics with privacy-friendly settings
-            gtag('config', 'G-P10PREW0D3', {
+            gtag('config', 'AW-17401674061', {
                 'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
                 'cookie_flags': 'SameSite=None;Secure',
                 'allow_google_signals': false, // Disable advertising features
