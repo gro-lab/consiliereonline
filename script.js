@@ -1,5 +1,5 @@
-// Enhanced JavaScript with Performance Optimizations and Cookie Consent
-// Consiliere Online - Complete JavaScript Module
+// Enhanced JavaScript with Performance Optimizations and Advanced Cookie Consent
+// Consiliere Online - Complete JavaScript Module with Cookie Settings Management
 
 // Performance: Use strict mode
 'use strict';
@@ -31,30 +31,68 @@ function throttle(func, wait) {
     };
 }
 
-// ===== COOKIE CONSENT MANAGEMENT SYSTEM - GDPR COMPLIANT =====
+// ===== ENHANCED COOKIE CONSENT MANAGEMENT SYSTEM - GDPR COMPLIANT =====
 const CookieConsent = {
     banner: null,
+    settingsModal: null,
+    floatingButton: null,
     isShown: false,
+    preferences: {
+        essential: true, // Always true
+        analytics: false,
+        marketing: false
+    },
     
     init() {
         this.banner = document.getElementById('cookieBanner');
+        this.settingsModal = document.getElementById('cookieSettingsModal');
+        this.floatingButton = document.getElementById('cookieSettingsFloat');
+        
         if (!this.banner) return;
+        
+        // Load saved preferences
+        this.loadPreferences();
         
         // Check if user has already made a choice
         if (!this.hasConsentDecision()) {
             this.showBanner();
-        } else if (this.hasAccepted()) {
-            // Load analytics if consent was previously given
-            this.loadAnalytics();
+            this.hideFloatingButton();
+        } else {
+            // Apply saved preferences
+            this.applyPreferences();
+            this.showFloatingButton();
         }
         
         this.setupEventListeners();
     },
     
+    loadPreferences() {
+        try {
+            const saved = localStorage.getItem('cookiePreferences');
+            if (saved) {
+                const prefs = JSON.parse(saved);
+                this.preferences = { ...this.preferences, ...prefs };
+                // Ensure essential is always true
+                this.preferences.essential = true;
+            }
+        } catch (e) {
+            console.warn('Could not load cookie preferences');
+        }
+    },
+    
+    savePreferences() {
+        try {
+            localStorage.setItem('cookiePreferences', JSON.stringify(this.preferences));
+            localStorage.setItem('cookieConsent', 'custom');
+        } catch (e) {
+            console.warn('Could not save cookie preferences');
+        }
+    },
+    
     hasConsentDecision() {
         try {
             const consent = localStorage.getItem('cookieConsent');
-            return consent === 'accepted' || consent === 'rejected';
+            return consent !== null;
         } catch (e) {
             return false;
         }
@@ -62,7 +100,8 @@ const CookieConsent = {
     
     hasAccepted() {
         try {
-            return localStorage.getItem('cookieConsent') === 'accepted';
+            const consent = localStorage.getItem('cookieConsent');
+            return consent === 'accepted' || (consent === 'custom' && this.preferences.analytics);
         } catch (e) {
             return false;
         }
@@ -88,18 +127,58 @@ const CookieConsent = {
         
         // Remove focus trap
         this.removeFocusTrap();
+        
+        // Show floating button after banner is hidden
+        this.showFloatingButton();
+    },
+    
+    showFloatingButton() {
+        if (!this.floatingButton) return;
+        
+        requestAnimationFrame(() => {
+            this.floatingButton.classList.add('show');
+        });
+    },
+    
+    hideFloatingButton() {
+        if (!this.floatingButton) return;
+        
+        this.floatingButton.classList.remove('show');
     },
     
     setupEventListeners() {
         const acceptBtn = document.getElementById('cookieAccept');
         const rejectBtn = document.getElementById('cookieReject');
+        const settingsBtn = document.getElementById('cookieSettings');
         
         if (acceptBtn) {
-            acceptBtn.addEventListener('click', () => this.acceptCookies());
+            acceptBtn.addEventListener('click', () => this.acceptAllCookies());
         }
         
         if (rejectBtn) {
-            rejectBtn.addEventListener('click', () => this.rejectCookies());
+            rejectBtn.addEventListener('click', () => this.rejectAllCookies());
+        }
+        
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => this.openSettings());
+        }
+        
+        // Setup settings modal toggles
+        const analyticsCookies = document.getElementById('analyticsCookies');
+        const marketingCookies = document.getElementById('marketingCookies');
+        
+        if (analyticsCookies) {
+            analyticsCookies.checked = this.preferences.analytics;
+            analyticsCookies.addEventListener('change', (e) => {
+                this.preferences.analytics = e.target.checked;
+            });
+        }
+        
+        if (marketingCookies) {
+            marketingCookies.checked = this.preferences.marketing;
+            marketingCookies.addEventListener('change', (e) => {
+                this.preferences.marketing = e.target.checked;
+            });
         }
         
         // Keyboard navigation
@@ -111,77 +190,191 @@ const CookieConsent = {
         });
     },
     
-    acceptCookies() {
+    acceptAllCookies() {
+        this.preferences = {
+            essential: true,
+            analytics: true,
+            marketing: true
+        };
+        
+        this.savePreferences();
+        
         try {
             localStorage.setItem('cookieConsent', 'accepted');
         } catch (e) {
             console.warn('Could not save cookie consent');
         }
         
-        // Load analytics
-        this.loadAnalytics();
-        
+        this.applyPreferences();
         this.hideBanner();
+        this.closeSettings();
         
         // Track the consent
         this.trackConsentGiven('accepted');
     },
     
-    rejectCookies() {
+    rejectAllCookies() {
+        this.preferences = {
+            essential: true,
+            analytics: false,
+            marketing: false
+        };
+        
+        this.savePreferences();
+        
         try {
             localStorage.setItem('cookieConsent', 'rejected');
         } catch (e) {
             console.warn('Could not save cookie consent');
         }
         
+        this.applyPreferences();
         this.hideBanner();
+        this.closeSettings();
         
         // Track the consent (using essential tracking only)
         this.trackConsentGiven('rejected');
     },
     
-    loadAnalytics() {
-    // Only load if consent was given
-    if (!this.hasAccepted()) return;
-    
-    // Load Google Analytics with the AW ID (as specified by Google)
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061'; // Use the AW ID
-    document.head.appendChild(script);
-    
-    script.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    saveCustomPreferences() {
+        this.savePreferences();
+        this.applyPreferences();
+        this.hideBanner();
+        this.closeSettings();
         
-        // Configure ONLY the AW ID with privacy-friendly settings
-        gtag('config', 'AW-17401674061', {
-            'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
-            'cookie_flags': 'SameSite=None;Secure',
-            'allow_google_signals': false, // Disable advertising features
-            'allow_ad_personalization_signals': false // Disable ad personalization
+        // Track the consent
+        this.trackConsentGiven('custom');
+    },
+    
+    applyPreferences() {
+        // Apply analytics preference
+        if (this.preferences.analytics) {
+            this.loadAnalytics();
+        } else {
+            this.removeAnalytics();
+        }
+        
+        // Apply marketing preference
+        if (this.preferences.marketing) {
+            this.loadMarketing();
+        } else {
+            this.removeMarketing();
+        }
+    },
+    
+    openSettings() {
+        if (!this.settingsModal) return;
+        
+        // Update toggle states
+        const analyticsCookies = document.getElementById('analyticsCookies');
+        const marketingCookies = document.getElementById('marketingCookies');
+        
+        if (analyticsCookies) {
+            analyticsCookies.checked = this.preferences.analytics;
+        }
+        
+        if (marketingCookies) {
+            marketingCookies.checked = this.preferences.marketing;
+        }
+        
+        requestAnimationFrame(() => {
+            this.settingsModal.style.display = 'block';
+            
+            // Force reflow
+            this.settingsModal.offsetHeight;
+            
+            this.settingsModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus management
+            this.settingsModal.setAttribute('tabindex', '-1');
+            this.settingsModal.focus();
         });
+    },
+    
+    closeSettings() {
+        if (!this.settingsModal) return;
         
-        // Custom event tracking for appointment bookings
-        window.gtag_report_appointment = function(url) {
-            gtag('event', 'appointment_booking', {
-                'event_category': 'engagement',
-                'event_label': 'phone_call',
-                'value': 1
+        this.settingsModal.classList.remove('show');
+        
+        setTimeout(() => {
+            this.settingsModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 300);
+    },
+    
+    loadAnalytics() {
+        // Only load if not already loaded
+        if (window.gtag) return;
+        
+        // Load Google Analytics 4 (GA4) dynamically
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061'; // Replace with actual GA4 ID
+        script.id = 'google-analytics';
+        document.head.appendChild(script);
+        
+        script.onload = () => {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            // Configure Google Analytics with privacy-friendly settings
+            gtag('config', 'AW-17401674061', {
+                'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
+                'cookie_flags': 'SameSite=None;Secure',
+                'allow_google_signals': false, // Disable advertising features
+                'allow_ad_personalization_signals': false // Disable ad personalization
             });
-            if (typeof(url) != 'undefined') {
-                window.location = url;
-            }
-            return false;
+            
+            // Custom event tracking for appointment bookings (without ads conversion)
+            window.gtag_report_appointment = function(url) {
+                gtag('event', 'appointment_booking', {
+                    'event_category': 'engagement',
+                    'event_label': 'phone_call',
+                    'value': 1
+                });
+                if (typeof(url) != 'undefined') {
+                    window.location = url;
+                }
+                return false;
+            };
+            
+            console.log('Google Analytics loaded with consent');
         };
         
-        console.log('Google Analytics loaded with consent');
-    };
+        script.onerror = () => {
+            console.warn('Failed to load Google Analytics');
+        };
+    },
     
-    script.onerror = () => {
-        console.warn('Failed to load Google Analytics');
-    };
+    removeAnalytics() {
+        // Remove Google Analytics script if present
+        const script = document.getElementById('google-analytics');
+        if (script) {
+            script.remove();
+        }
+        
+        // Clear GA cookies
+        this.clearCookies(['_ga', '_gid', '_gat']);
+    },
+    
+    loadMarketing() {
+        // Placeholder for marketing scripts (Facebook Pixel, Google Ads, etc.)
+        console.log('Marketing cookies enabled');
+    },
+    
+    removeMarketing() {
+        // Remove marketing cookies
+        // Placeholder for removing marketing scripts
+        console.log('Marketing cookies disabled');
+    },
+    
+    clearCookies(names) {
+        names.forEach(name => {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
+        });
     },
     
     trackConsentGiven(choice) {
@@ -190,6 +383,7 @@ const CookieConsent = {
             const data = JSON.stringify({
                 event: 'cookie_consent',
                 choice: choice,
+                preferences: this.preferences,
                 timestamp: new Date().toISOString(),
                 page: window.location.pathname
             });
@@ -851,7 +1045,7 @@ const Navigation = {
         this.sections = document.querySelectorAll('section[id]');
         this.navLinks = document.querySelectorAll('.nav-link');
         
-        // Cache section data to prevent reflows during scroll
+        // Cache section data to prevent reflows
         this.cacheSectionData();
         
         // Smooth scroll
@@ -1180,6 +1374,17 @@ window.moveCarousel = (dir) => carousel && carousel.move(dir);
 window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
 
 window.toggleMobileMenu = () => MobileMenu.toggleMenu();
+
+// Cookie Settings Global Functions
+window.openCookieSettings = () => CookieConsent.openSettings();
+
+window.closeCookieSettings = () => CookieConsent.closeSettings();
+
+window.acceptAllCookies = () => CookieConsent.acceptAllCookies();
+
+window.rejectAllCookies = () => CookieConsent.rejectAllCookies();
+
+window.savePreferences = () => CookieConsent.saveCustomPreferences();
 
 // ===== SERVICE WORKER REGISTRATION =====
 const ServiceWorkerManager = {

@@ -629,7 +629,7 @@
     <!-- Skip to Content for Accessibility -->
     <a href="#main-content" class="skip-link">Sari la conținutul principal</a>
     
-    <!-- GDPR Cookie Consent Banner -->
+    <!-- GDPR Cookie Consent Banner with Settings -->
     <div id="cookieBanner" class="cookie-banner" role="dialog" aria-labelledby="cookieBannerTitle" aria-describedby="cookieBannerDesc">
         <div class="cookie-banner-content">
             <div class="cookie-banner-text">
@@ -651,9 +651,164 @@
                     <span lang="ro">Doar Esențiale</span>
                     <span lang="en">Essential Only</span>
                 </button>
+                <button id="cookieSettings" class="cookie-btn cookie-btn-settings">
+                    <span lang="ro">Setări Cookie</span>
+                    <span lang="en">Cookie Settings</span>
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- Cookie Settings Modal -->
+    <div id="cookieSettingsModal" class="modal cookie-settings-modal" role="dialog" aria-modal="true" aria-labelledby="cookieSettingsTitle">
+        <div class="modal-content-document cookie-settings-content">
+            <div class="modal-header">
+                <h2 id="cookieSettingsTitle" class="modal-title">
+                    <span lang="ro">Setări Cookie-uri</span>
+                    <span lang="en">Cookie Settings</span>
+                </h2>
+                <button class="modal-close-btn" onclick="closeCookieSettings()" aria-label="Închide">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body cookie-settings-body">
+                <div class="cookie-settings-intro">
+                    <p>
+                        <span lang="ro">Aici puteți gestiona preferințele pentru cookie-uri. Cookie-urile esențiale nu pot fi dezactivate deoarece sunt necesare pentru funcționarea corectă a site-ului.</span>
+                        <span lang="en">Here you can manage your cookie preferences. Essential cookies cannot be disabled as they are necessary for the proper functioning of the site.</span>
+                    </p>
+                </div>
+
+                <!-- Essential Cookies -->
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <div class="cookie-category-info">
+                            <h3>
+                                <span lang="ro">Cookie-uri Esențiale</span>
+                                <span lang="en">Essential Cookies</span>
+                            </h3>
+                            <p>
+                                <span lang="ro">Necesare pentru funcționarea de bază a site-ului. Nu pot fi dezactivate.</span>
+                                <span lang="en">Necessary for basic site functionality. Cannot be disabled.</span>
+                            </p>
+                        </div>
+                        <div class="cookie-toggle disabled">
+                            <input type="checkbox" id="essentialCookies" checked disabled>
+                            <label for="essentialCookies" class="toggle-label">
+                                <span class="toggle-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="cookie-details">
+                        <ul>
+                            <li>
+                                <span lang="ro"><strong>language</strong> - Salvează preferința de limbă</span>
+                                <span lang="en"><strong>language</strong> - Saves language preference</span>
+                            </li>
+                            <li>
+                                <span lang="ro"><strong>cookieConsent</strong> - Înregistrează preferințele pentru cookie-uri</span>
+                                <span lang="en"><strong>cookieConsent</strong> - Records cookie preferences</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Analytics Cookies -->
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <div class="cookie-category-info">
+                            <h3>
+                                <span lang="ro">Cookie-uri de Analiză</span>
+                                <span lang="en">Analytics Cookies</span>
+                            </h3>
+                            <p>
+                                <span lang="ro">Ne ajută să înțelegem cum vizitatorii interacționează cu site-ul nostru.</span>
+                                <span lang="en">Help us understand how visitors interact with our site.</span>
+                            </p>
+                        </div>
+                        <div class="cookie-toggle">
+                            <input type="checkbox" id="analyticsCookies">
+                            <label for="analyticsCookies" class="toggle-label">
+                                <span class="toggle-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="cookie-details">
+                        <ul>
+                            <li>
+                                <span lang="ro"><strong>Google Analytics</strong> - Colectează statistici anonime despre utilizare</span>
+                                <span lang="en"><strong>Google Analytics</strong> - Collects anonymous usage statistics</span>
+                            </li>
+                            <li>
+                                <span lang="ro">Date colectate: pagini vizitate, timp petrecut, sursa de trafic</span>
+                                <span lang="en">Data collected: pages visited, time spent, traffic source</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Marketing Cookies -->
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <div class="cookie-category-info">
+                            <h3>
+                                <span lang="ro">Cookie-uri de Marketing</span>
+                                <span lang="en">Marketing Cookies</span>
+                            </h3>
+                            <p>
+                                <span lang="ro">Folosite pentru a afișa reclame relevante și pentru a măsura eficacitatea campaniilor.</span>
+                                <span lang="en">Used to display relevant ads and measure campaign effectiveness.</span>
+                            </p>
+                        </div>
+                        <div class="cookie-toggle">
+                            <input type="checkbox" id="marketingCookies">
+                            <label for="marketingCookies" class="toggle-label">
+                                <span class="toggle-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="cookie-details">
+                        <ul>
+                            <li>
+                                <span lang="ro"><strong>Google Ads</strong> - Pentru remarketing și conversii</span>
+                                <span lang="en"><strong>Google Ads</strong> - For remarketing and conversions</span>
+                            </li>
+                            <li>
+                                <span lang="ro"><strong>Facebook Pixel</strong> - Pentru reclame pe rețele sociale</span>
+                                <span lang="en"><strong>Facebook Pixel</strong> - For social media advertising</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="cookie-settings-actions">
+                    <button class="cookie-btn cookie-btn-secondary" onclick="rejectAllCookies()">
+                        <span lang="ro">Respinge Toate</span>
+                        <span lang="en">Reject All</span>
+                    </button>
+                    <button class="cookie-btn cookie-btn-secondary" onclick="acceptAllCookies()">
+                        <span lang="ro">Acceptă Toate</span>
+                        <span lang="en">Accept All</span>
+                    </button>
+                    <button class="cookie-btn cookie-btn-primary" onclick="savePreferences()">
+                        <span lang="ro">Salvează Preferințele</span>
+                        <span lang="en">Save Preferences</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Settings Floating Button -->
+    <button id="cookieSettingsFloat" class="cookie-settings-float" onclick="openCookieSettings()" aria-label="Cookie Settings" title="Cookie Settings">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6 0 1.32.43 2.54 1.15 3.54L8.85 14c-.39-.81-.61-1.72-.61-2.68 0-2.42 1.72-4.44 4-4.93V4.26c-3.35.5-5.94 3.37-5.94 6.86 0 3.82 3.1 6.92 6.92 6.92S20 14.94 20 11.12c0-3.49-2.59-6.36-5.94-6.86v2.13c2.28.49 4 2.51 4 4.93 0 .96-.22 1.87-.61 2.68l1.7 1.54c.72-1 1.15-2.22 1.15-3.54 0-3.31-2.69-6-6-6z"/>
+        </svg>
+    </button>
     
    <!-- Enhanced Navigation with Logo -->
     <nav role="navigation" aria-label="Navigare principală">
@@ -1079,7 +1234,7 @@ Sunt Răzvan Mischie, <strong>life coach certificat</strong> și <strong>consili
                     <p lang="en" style="display: none;">📍 Timișoara, Romania | 🌍 Available for clients throughout EU</p>
                     <p class="disclaimer">
                     <span lang="ro">Informațiile de pe acest site au scop informativ. 
-                    Consilierea nu înlocuiește tratamentul medical profesional.</span>
+                    Consilierea nu înlocuiește tratamentul medical profesionist.</span>
                     <span lang="en">The information on this site is for informational purposes only.
 Counseling is not a substitute for professional medical treatment.</span>
                     </p>
@@ -1425,7 +1580,7 @@ Counseling is not a substitute for professional medical treatment.</span>
                 <div class="privacy-note">
                     <p>
                         <span lang="ro">
-                            <strong>Notă:</strong> Această politică poate fi actualizată periodic conform modificărilor legislative sau operaționale. Modificările vor fi publicate pe această pagină cu data actualizării. Vă recomandăm să verificați periodic această politică.
+                            <strong>Notă:</strong> Această politică poate fi actualizată periodic conform modificărilor legislative sau operaționale. Modificările vor fi publ
                         </span>
                         <span lang="en">
                             <strong>Note:</strong> This policy may be updated periodically according to legislative or operational changes. Changes will be published on this page with the update date. We recommend checking this policy periodically.
