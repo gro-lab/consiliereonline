@@ -1,5 +1,5 @@
-// Enhanced JavaScript with Performance Optimizations and Advanced Cookie Consent
-// Consiliere Online - Complete JavaScript Module with Cookie Settings Management
+// Enhanced JavaScript with Performance Optimizations and GDPR-Compliant Cookie Consent
+// Consiliere Online - Complete JavaScript Module with GDPR Form Validation
 
 // Performance: Use strict mode
 'use strict';
@@ -40,7 +40,8 @@ const CookieConsent = {
     preferences: {
         essential: true, // Always true
         analytics: false,
-        marketing: false
+        marketing: false,
+        thirdParty: false // NEW: For Formspree and other third-party services
     },
     
     init() {
@@ -84,6 +85,9 @@ const CookieConsent = {
         try {
             localStorage.setItem('cookiePreferences', JSON.stringify(this.preferences));
             localStorage.setItem('cookieConsent', 'custom');
+            
+            // Track consent changes for GDPR compliance
+            this.trackConsentChange();
         } catch (e) {
             console.warn('Could not save cookie preferences');
         }
@@ -105,6 +109,10 @@ const CookieConsent = {
         } catch (e) {
             return false;
         }
+    },
+    
+    hasThirdPartyConsent() {
+        return this.preferences.thirdParty === true;
     },
     
     showBanner() {
@@ -166,6 +174,7 @@ const CookieConsent = {
         // Setup settings modal toggles
         const analyticsCookies = document.getElementById('analyticsCookies');
         const marketingCookies = document.getElementById('marketingCookies');
+        const thirdPartyCookies = document.getElementById('thirdPartyCookies'); // NEW
         
         if (analyticsCookies) {
             analyticsCookies.checked = this.preferences.analytics;
@@ -178,6 +187,16 @@ const CookieConsent = {
             marketingCookies.checked = this.preferences.marketing;
             marketingCookies.addEventListener('change', (e) => {
                 this.preferences.marketing = e.target.checked;
+            });
+        }
+        
+        // NEW: Third-party cookie toggle
+        if (thirdPartyCookies) {
+            thirdPartyCookies.checked = this.preferences.thirdParty;
+            thirdPartyCookies.addEventListener('change', (e) => {
+                this.preferences.thirdParty = e.target.checked;
+                // Enable/disable form based on consent
+                this.updateFormState();
             });
         }
         
@@ -194,13 +213,15 @@ const CookieConsent = {
         this.preferences = {
             essential: true,
             analytics: true,
-            marketing: true
+            marketing: true,
+            thirdParty: true // Include third-party
         };
         
         this.savePreferences();
         
         try {
             localStorage.setItem('cookieConsent', 'accepted');
+            localStorage.setItem('cookieConsentDate', new Date().toISOString()); // GDPR: Track consent date
         } catch (e) {
             console.warn('Could not save cookie consent');
         }
@@ -217,13 +238,15 @@ const CookieConsent = {
         this.preferences = {
             essential: true,
             analytics: false,
-            marketing: false
+            marketing: false,
+            thirdParty: false // Reject third-party
         };
         
         this.savePreferences();
         
         try {
             localStorage.setItem('cookieConsent', 'rejected');
+            localStorage.setItem('cookieConsentDate', new Date().toISOString());
         } catch (e) {
             console.warn('Could not save cookie consent');
         }
@@ -260,6 +283,75 @@ const CookieConsent = {
         } else {
             this.removeMarketing();
         }
+        
+        // Apply third-party preference
+        if (this.preferences.thirdParty) {
+            this.enableThirdPartyServices();
+        } else {
+            this.disableThirdPartyServices();
+        }
+        
+        // Update form state
+        this.updateFormState();
+    },
+    
+    // NEW: Enable third-party services
+    enableThirdPartyServices() {
+        // Enable Formspree forms
+        const forms = document.querySelectorAll('form[data-requires-consent="true"]');
+        forms.forEach(form => {
+            form.classList.remove('consent-required');
+            const inputs = form.querySelectorAll('input, textarea, button');
+            inputs.forEach(input => input.disabled = false);
+        });
+        
+        console.log('Third-party services enabled');
+    },
+    
+    // NEW: Disable third-party services
+    disableThirdPartyServices() {
+        // Disable forms that require consent
+        const forms = document.querySelectorAll('form[data-requires-consent="true"]');
+        forms.forEach(form => {
+            form.classList.add('consent-required');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Requires Cookie Consent';
+            }
+        });
+        
+        console.log('Third-party services disabled');
+    },
+    
+    // NEW: Update form state based on consent
+    updateFormState() {
+        const eventForm = document.getElementById('eventRegistrationForm');
+        if (!eventForm) return;
+        
+        if (!this.hasThirdPartyConsent()) {
+            // Show consent required message
+            const consentNotice = document.createElement('div');
+            consentNotice.className = 'consent-notice';
+            consentNotice.innerHTML = `
+                <p>
+                    <span lang="ro">Pentru a utiliza acest formular, trebuie să acceptați cookie-urile terțe în </span>
+                    <span lang="en">To use this form, you need to accept third-party cookies in </span>
+                    <button onclick="openCookieSettings()" style="text-decoration: underline; border: none; background: none; color: #4169e1; cursor: pointer;">
+                        <span lang="ro">Setări Cookie</span>
+                        <span lang="en">Cookie Settings</span>
+                    </button>
+                </p>
+            `;
+            
+            if (!eventForm.querySelector('.consent-notice')) {
+                eventForm.insertBefore(consentNotice, eventForm.firstChild);
+            }
+        } else {
+            // Remove consent notice if exists
+            const notice = eventForm.querySelector('.consent-notice');
+            if (notice) notice.remove();
+        }
     },
     
     openSettings() {
@@ -268,6 +360,7 @@ const CookieConsent = {
         // Update toggle states
         const analyticsCookies = document.getElementById('analyticsCookies');
         const marketingCookies = document.getElementById('marketingCookies');
+        const thirdPartyCookies = document.getElementById('thirdPartyCookies');
         
         if (analyticsCookies) {
             analyticsCookies.checked = this.preferences.analytics;
@@ -275,6 +368,10 @@ const CookieConsent = {
         
         if (marketingCookies) {
             marketingCookies.checked = this.preferences.marketing;
+        }
+        
+        if (thirdPartyCookies) {
+            thirdPartyCookies.checked = this.preferences.thirdParty;
         }
         
         requestAnimationFrame(() => {
@@ -377,6 +474,26 @@ const CookieConsent = {
         });
     },
     
+    // NEW: Track consent changes for GDPR audit trail
+    trackConsentChange() {
+        const consentHistory = {
+            timestamp: new Date().toISOString(),
+            preferences: this.preferences,
+            action: 'preferences_updated'
+        };
+        
+        try {
+            // Store consent history (you might want to send this to your server)
+            const history = JSON.parse(localStorage.getItem('consentHistory') || '[]');
+            history.push(consentHistory);
+            // Keep only last 10 entries
+            if (history.length > 10) history.shift();
+            localStorage.setItem('consentHistory', JSON.stringify(history));
+        } catch (e) {
+            console.warn('Could not save consent history');
+        }
+    },
+    
     trackConsentGiven(choice) {
         // Basic tracking without cookies (for essential analytics)
         if (navigator.sendBeacon) {
@@ -391,6 +508,9 @@ const CookieConsent = {
             // This would go to your own analytics endpoint
             // navigator.sendBeacon('/analytics/consent', data);
         }
+        
+        // Track in consent history
+        this.trackConsentChange();
     },
     
     trapFocus() {
@@ -431,6 +551,225 @@ const CookieConsent = {
         if (this.focusTrapHandler) {
             document.removeEventListener('keydown', this.focusTrapHandler);
             this.focusTrapHandler = null;
+        }
+    }
+};
+
+// ===== GDPR FORM VALIDATION SYSTEM =====
+const GDPRFormHandler = {
+    init() {
+        const form = document.getElementById('eventRegistrationForm');
+        if (!form) return;
+            this.checkThirdPartyCookies();
+
+        // Add submit handler
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleSubmit(form);
+        });
+        
+        // Add real-time validation for consent checkboxes
+        const consentCheckboxes = form.querySelectorAll('input[type="checkbox"][required]');
+        consentCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                this.validateConsentField(checkbox);
+            });
+        });
+        
+        // Check if third-party cookies are enabled
+        this.checkThirdPartyCookies();
+    },
+    
+    checkThirdPartyCookies() {
+        if (!CookieConsent.hasThirdPartyConsent()) {
+            this.showConsentRequired();
+        }
+    },
+    
+    showConsentRequired() {
+        const form = document.getElementById('eventRegistrationForm');
+        if (!form) return;
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.setAttribute('data-original-text', originalText);
+            submitBtn.innerHTML = `
+                <span lang="ro">Necesită Consimțământ pentru Cookie-uri. Acceptați-le și reîmprospătați pagina.</span>
+                <span lang="en">Requires Cookie Consent. Accept the cookies and reload the page.</span>
+            `;
+        }
+    },
+    
+    validateConsentField(checkbox) {
+        const errorId = `${checkbox.id}-error`;
+        let errorElement = document.getElementById(errorId);
+        
+        if (!checkbox.checked) {
+            if (!errorElement) {
+                errorElement = document.createElement('span');
+                errorElement.id = errorId;
+                errorElement.className = 'consent-error';
+                errorElement.innerHTML = `
+                    <span lang="ro">Acest câmp este obligatoriu pentru conformitate GDPR</span>
+                    <span lang="en">This field is required for GDPR compliance</span>
+                `;
+                checkbox.parentElement.appendChild(errorElement);
+            }
+            checkbox.setAttribute('aria-invalid', 'true');
+            return false;
+        } else {
+            if (errorElement) {
+                errorElement.remove();
+            }
+            checkbox.setAttribute('aria-invalid', 'false');
+            return true;
+        }
+    },
+    
+    validateAllConsents(form) {
+        const consentCheckboxes = form.querySelectorAll('input[type="checkbox"][required]');
+        let allValid = true;
+        
+        consentCheckboxes.forEach(checkbox => {
+            if (!this.validateConsentField(checkbox)) {
+                allValid = false;
+            }
+        });
+        
+        return allValid;
+    },
+    
+    handleSubmit(form) {
+        // Clear previous errors
+        const errorContainer = document.getElementById('formErrors');
+        if (errorContainer) {
+            errorContainer.style.display = 'none';
+            errorContainer.innerHTML = '';
+        }
+        
+        // Check if third-party cookies are enabled
+        if (!CookieConsent.hasThirdPartyConsent()) {
+            this.showError('form', 'third_party_cookies_required');
+            return;
+        }
+        
+        // Validate all consent checkboxes
+        if (!this.validateAllConsents(form)) {
+            this.showError('form', 'missing_consents');
+            return;
+        }
+        
+        // Validate email
+        const emailInput = form.querySelector('input[type="email"]');
+        if (!emailInput || !emailInput.value) {
+            this.showError('email', 'required');
+            return;
+        }
+        
+        if (!this.isValidEmail(emailInput.value)) {
+            this.showError('email', 'invalid');
+            return;
+        }
+        
+        // All validations passed
+        this.submitForm(form);
+    },
+    
+    isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    },
+    
+    showError(field, type) {
+        const errorContainer = document.getElementById('formErrors');
+        if (!errorContainer) return;
+        
+        const errors = {
+            third_party_cookies_required: {
+                ro: 'Pentru a trimite formularul, trebuie să acceptați cookie-urile terțe în Setările Cookie.',
+                en: 'To submit the form, you need to accept third-party cookies in Cookie Settings.'
+            },
+            missing_consents: {
+                ro: 'Vă rugăm să bifați toate căsuțele de consimțământ obligatorii.',
+                en: 'Please check all required consent boxes.'
+            },
+            email_required: {
+                ro: 'Adresa de email este obligatorie.',
+                en: 'Email address is required.'
+            },
+            email_invalid: {
+                ro: 'Vă rugăm să introduceți o adresă de email validă.',
+                en: 'Please enter a valid email address.'
+            }
+        };
+        
+        const errorKey = `${field}_${type}`;
+        const error = errors[errorKey] || errors[type];
+        
+        if (error) {
+            errorContainer.innerHTML = `
+                <span lang="ro">${error.ro}</span>
+                <span lang="en">${error.en}</span>
+            `;
+            errorContainer.style.display = 'block';
+            
+            // Scroll to error
+            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    },
+    
+    submitForm(form) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+            <span lang="ro">Se trimite...</span>
+            <span lang="en">Sending...</span>
+        `;
+        
+        // Track form submission for GDPR audit
+        this.trackFormSubmission(form);
+        
+        // Actually submit the form
+        form.submit();
+        
+        // Note: After submission, Formspree will redirect or show its own success message
+        // You might want to handle this differently based on your needs
+    },
+    
+    trackFormSubmission(form) {
+        const submissionData = {
+            timestamp: new Date().toISOString(),
+            form: 'event_registration',
+            consents: {
+    dataProcessing: document.getElementById('dataProcessingConsent').checked,
+    internationalTransfer: document.getElementById('internationalTransferConsent').checked,
+    privacyPolicy: document.getElementById('privacyPolicyConsent').checked
+}
+
+        };
+        
+        // Store submission data for audit trail
+        try {
+            const submissions = JSON.parse(localStorage.getItem('formSubmissions') || '[]');
+            submissions.push(submissionData);
+            // Keep only last 5 submissions
+            if (submissions.length > 5) submissions.shift();
+            localStorage.setItem('formSubmissions', JSON.stringify(submissions));
+        } catch (e) {
+            console.warn('Could not save form submission data');
+        }
+        
+        // Track in analytics if enabled
+        if (typeof gtag !== 'undefined' && CookieConsent.hasAccepted()) {
+            gtag('event', 'form_submit', {
+                'event_category': 'GDPR_Compliant_Form',
+                'event_label': 'Event Registration',
+                'consents_given': true
+            });
         }
     }
 };
@@ -1140,7 +1479,7 @@ const AnimationObserver = {
     }
 };
 
-// ===== FORM HANDLER =====
+// ===== FORM HANDLER (Original Contact Form) =====
 const FormHandler = {
     init() {
         const form = document.querySelector('.contact-form');
@@ -1446,18 +1785,26 @@ const ServiceWorkerManager = {
 
 // ===== MAIN INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Consiliere Online - Initializing...');
+    console.log('🚀 Consiliere Online - Initializing with GDPR Compliance...');
     
     try {
         // Initialize cookie consent first (critical for GDPR compliance)
         CookieConsent.init();
+                // Initialize cookie consent first (critical for GDPR compliance)
+        CookieConsent.init();
+        
+        // Initialize GDPR form handler - MAKE SURE THIS LINE IS PRESENT
+        GDPRFormHandler.init();
+
+        // Initialize GDPR form handler
+        GDPRFormHandler.init();
         
         // Initialize core modules
         LanguageManager.init();
         MobileMenu.init();
         Navigation.init();
         Modal.init();
-        PrivacyModal.init(); // Initialize Privacy Modal
+        PrivacyModal.init();
         AnimationObserver.init();
         FormHandler.init();
         EventData.init();
@@ -1468,11 +1815,14 @@ document.addEventListener('DOMContentLoaded', () => {
         carousel = new Carousel();
         carousel.init();
         
-        console.log('✅ All modules initialized successfully');
+        console.log('✅ All modules initialized successfully with GDPR compliance');
         
         // Dispatch custom event for any external scripts
         window.dispatchEvent(new CustomEvent('consiliereonlineReady', {
-            detail: { timestamp: Date.now() }
+            detail: { 
+                timestamp: Date.now(),
+                gdprCompliant: true
+            }
         }));
         
     } catch (error) {
@@ -1525,6 +1875,7 @@ if (typeof module !== 'undefined' && module.exports) {
         Navigation,
         AnimationObserver,
         FormHandler,
+        GDPRFormHandler,
         PerformanceMonitor,
         EventData
     };

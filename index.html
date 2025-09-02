@@ -784,6 +784,44 @@
                     </div>
                 </div>
 
+                <!-- Third-Party Service Cookies -->
+                <div class="cookie-category">
+                    <div class="cookie-category-header">
+                        <div class="cookie-category-info">
+                            <h3>
+                                <span lang="ro">Cookie-uri de Servicii Terțe</span>
+                                <span lang="en">Third-Party Service Cookies</span>
+                            </h3>
+                            <p>
+                                <span lang="ro">Cookie-uri utilizate de servicii terțe integrate în site, cum ar fi formularul de contact (Formspree).</span>
+                                <span lang="en">Cookies used by third-party services integrated into the site, such as the contact form (Formspree).</span>
+                            </p>
+                        </div>
+                        <div class="cookie-toggle">
+                            <input type="checkbox" id="thirdPartyCookies">
+                            <label for="thirdPartyCookies" class="toggle-label">
+                                <span class="toggle-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="cookie-details">
+                        <ul>
+                            <li>
+                                <span lang="ro"><strong>Formspree</strong> - Procesează trimiterile formularelor și previne spam-ul</span>
+                                <span lang="en"><strong>Formspree</strong> - Processes form submissions and prevents spam</span>
+                            </li>
+                            <li>
+                                <span lang="ro">Date colectate: adresa email, nume (opțional), mesaje trimise</span>
+                                <span lang="en">Data collected: email address, name (optional), submitted messages</span>
+                            </li>
+                            <li>
+                                <span lang="ro">Locație procesare: Statele Unite ale Americii</span>
+                                <span lang="en">Processing location: United States of America</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
                 <!-- Actions -->
                 <div class="cookie-settings-actions">
                     <button class="cookie-btn cookie-btn-secondary" onclick="rejectAllCookies()">
@@ -1014,7 +1052,7 @@ Sunt Răzvan Mischie, <strong>life coach certificat</strong> și <strong>consili
                             <h4 lang="en">Emotional Balance & Stress Management</h4>
                             <ul>
                                 <li lang="ro">Managementul stresului și anxietății</li>
-                                <li lang="ro">Dezvoltarea inteligenței emoționale</li>
+                                <li lang="ro">Dezvoltarea inteligențe emoționale</li>
                                 <li lang="ro">Tehnici de mindfulness și prezență</li>
                                 <li lang="ro">Construirea rezilienței emoționale</li>
                                 
@@ -1042,6 +1080,169 @@ Sunt Răzvan Mischie, <strong>life coach certificat</strong> și <strong>consili
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- GDPR-Compliant Online Event Form -->
+        <section id="online-event">
+            <div class="section-content">
+                <h2>
+                    <span lang="en">Sign up for the next online event</span>
+                    <span lang="ro">Înregistrează-te pentru noul eveniment online</span>
+                </h2>
+                
+                <!-- Data Controller Information Box -->
+                <div class="data-controller-info">
+                    <p>
+                        <span lang="ro">
+                            <strong>Informații despre procesarea datelor:</strong><br>
+                            Datele dumneavoastră vor fi procesate de către Răzvan Mischie (consiliereonline.com) și de către Formspree Inc. (furnizorul serviciului de formulare) în calitate de operatori asociați.
+                        </span>
+                        <span lang="en">
+                            <strong>Data Processing Information:</strong><br>
+                            Your data will be processed by Răzvan Mischie (consiliereonline.com) and Formspree Inc. (form service provider) as joint data controllers.
+                        </span>
+                    </p>
+                </div>
+                
+                <!-- Enhanced GDPR-Compliant Form -->
+                <form
+                    action="https://formspree.io/f/xpwjyawv"
+                    method="POST"
+                    id="eventRegistrationForm"
+                    class="gdpr-compliant-form"
+                >
+                    <!-- Name Field (Optional) -->
+                    <div class="form-group">
+                        <label class="input-label" for="userName">
+                            <span lang="ro">Nume (opțional):</span>
+                            <span lang="en">Name (optional):</span>
+                        </label>
+                        <input 
+                            class="input" 
+                            type="text" 
+                            name="name" 
+                            id="userName"
+                            placeholder="Numele dumneavoastră / Your name"
+                        >
+                    </div>
+                    
+                    <!-- Email Field (Required) -->
+                    <div class="form-group">
+                        <label class="input-label" for="userEmail">
+                            <span lang="ro">Email <span class="required">*</span>:</span>
+                            <span lang="en">Email <span class="required">*</span>:</span>
+                        </label>
+                        <input 
+                            class="input" 
+                            type="email" 
+                            name="email" 
+                            id="userEmail"
+                            required
+                            placeholder="email@example.com"
+                        >
+                    </div>
+                    
+                    <!-- GDPR Consent Section -->
+                    <div class="consent-section">
+                        <h3>
+                            <span lang="ro">Consimțământ pentru procesarea datelor</span>
+                            <span lang="en">Data Processing Consent</span>
+                        </h3>
+                        
+                        <!-- Data Processing Consent -->
+                        <div class="consent-item">
+                            <input 
+                                type="checkbox" 
+                                id="dataProcessingConsent" 
+                                name="dataProcessingConsent" 
+                                required
+                            >
+                            <label for="dataProcessingConsent">
+                                <span lang="ro">
+                                    <span class="required">*</span> Accept ca datele mele personale să fie procesate în scopul înregistrării la eveniment și pentru comunicări ulterioare legate de acesta.
+                                </span>
+                                <span lang="en">
+                                    <span class="required">*</span> I agree to have my personal data processed for event registration and related communications.
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <!-- International Transfer Consent -->
+                        <div class="consent-item">
+                            <input 
+                                type="checkbox" 
+                                id="internationalTransferConsent" 
+                                name="internationalTransferConsent" 
+                                required
+                            >
+                            <label for="internationalTransferConsent">
+                                <span lang="ro">
+                                    <span class="required">*</span> Înțeleg că datele mele vor fi transferate și procesate în Statele Unite de către Formspree Inc., care respectă standardele de protecție a datelor conform clauzelor contractuale standard.
+                                </span>
+                                <span lang="en">
+                                    <span class="required">*</span> I understand that my data will be transferred to and processed in the United States by Formspree Inc., which complies with data protection standards through standard contractual clauses.
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <!-- Privacy Policy Acceptance -->
+                        <div class="consent-item">
+                            <input 
+                                type="checkbox" 
+                                id="privacyPolicyConsent" 
+                                name="privacyPolicyConsent" 
+                                required
+                            >
+                            <label for="privacyPolicyConsent">
+                                <span lang="ro">
+                                    <span class="required">*</span> Am citit și accept 
+                                    <a href="#" onclick="openPrivacyModal(); return false;">Politica de Confidențialitate</a> 
+                                    a consiliereonline.com și 
+                                    <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Politica de Confidențialitate Formspree</a>.
+                                </span>
+                                <span lang="en">
+                                    <span class="required">*</span> I have read and accept the 
+                                    <a href="#" onclick="openPrivacyModal(); return false;">Privacy Policy</a> 
+                                    of consiliereonline.com and 
+                                    <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Formspree's Privacy Policy</a>.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- User Rights Information -->
+                    <div class="user-rights-info">
+                        <p>
+                            <span lang="ro">
+                                <strong>Drepturile dumneavoastră:</strong> Aveți dreptul de a accesa, rectifica, șterge sau restricționa procesarea datelor dumneavoastră. Puteți exercita aceste drepturi contactându-ne la razvanmischie@consiliereonline.com sau contactând Formspree la team@formspree.io.
+                            </span>
+                            <span lang="en">
+                                <strong>Your rights:</strong> You have the right to access, rectify, delete, or restrict the processing of your data. You can exercise these rights by contacting us at razvanmischie@consiliereonline.com or by contacting Formspree at team@formspree.io.
+                            </span>
+                        </p>
+                    </div>
+                     <!-- Online Event Info -->
+                    <div class="user-rights-info">
+                        <p>
+                            <span lang="ro">
+                                <strong>Informații eveniment online:</strong> Link-ul de accces la intalnire îl veți primi pe e-mail in data stabilita cu cel putin o ora inainte de intalnire.
+                            </span>
+                            <span lang="en">
+                                <strong>Online Event Information:</strong> The access link for the meeting will be sent through e-mail on the scheduled day at least one hour before the meeting.
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button class="btn btn-submit" type="submit">
+                        <span lang="en">Register for Event</span>
+                        <span lang="ro">Înregistrează-te la Eveniment</span>
+                    </button>
+                    
+                    <!-- Error Messages Container -->
+                    <div id="formErrors" class="form-errors" style="display: none;"></div>
+                </form>
             </div>
         </section>
 
@@ -1277,118 +1478,183 @@ Counseling is not a substitute for professional medical treatment.</span>
         <div class="modal-caption" id="modalCaption"></div>
     </div>
 
-  <!-- Privacy Policy Modal -->
-<div id="privacyModal" class="modal" onclick="closePrivacyModal()" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
-    <div class="modal-content-document" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <h2 id="privacyModalTitle" class="modal-title">
-                <span lang="ro">Politica de Confidențialitate și Cookie-uri</span>
-                <span lang="en">Privacy & Cookie Policy</span>
-            </h2>
-            <button class="modal-close-btn" onclick="closePrivacyModal()" aria-label="Închide">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </button>
-        </div>
-        
-        <div class="modal-body">
-            <p class="modal-date">
-                <span lang="ro">Ultima actualizare: August 2025</span>
-                <span lang="en">Last updated: August 2025</span>
-            </p>
-
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">1. Informații despre Cookie-uri</span>
-                    <span lang="en">1. Cookie Information</span>
-                </h3>
-                <p>
-                    <span lang="ro">
-                        Cookie-urile sunt fișiere mici de text salvate pe dispozitivul dumneavoastră când vizitați website-ul nostru. Folosim cookie-uri pentru a asigura funcționarea corectă a site-ului și pentru a înțelege mai bine cum interacționați cu conținutul nostru.
-                    </span>
-                    <span lang="en">
-                        Cookies are small text files saved on your device when you visit our website. We use cookies to ensure proper site functionality and to better understand how you interact with our content.
-                    </span>
+    <!-- Enhanced Privacy Policy Modal with Formspree Information -->
+    <div id="privacyModal" class="modal" onclick="closePrivacyModal()" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+        <div class="modal-content-document" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="privacyModalTitle" class="modal-title">
+                    <span lang="ro">Politica de Confidențialitate și Cookie-uri</span>
+                    <span lang="en">Privacy & Cookie Policy</span>
+                </h2>
+                <button class="modal-close-btn" onclick="closePrivacyModal()" aria-label="Închide">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="modal-date">
+                    <span lang="ro">Ultima actualizare: August 2025</span>
+                    <span lang="en">Last updated: August 2025</span>
                 </p>
-            </section>
 
-            <section class="privacy-section">
-                <h3>
-                    <span lang="ro">2. Ce Cookie-uri Folosim</span>
-                    <span lang="en">2. Cookies We Use</span>
-                </h3>
-                
-                <p>
-                    <span lang="ro"><strong>Cookie-uri Esențiale (Necesare)</strong></span>
-                    <span lang="en"><strong>Essential Cookies (Required)</strong></span>
-                </p>
-                <ul>
-                    <li>
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">1. Informații despre Cookie-uri</span>
+                        <span lang="en">1. Cookie Information</span>
+                    </h3>
+                    <p>
                         <span lang="ro">
-                            <strong>language</strong> - Salvează preferința dumneavoastră de limbă (Română/Engleză)<br>
-                            <em>Durată:</em> Permanent (până la ștergerea manuală)<br>
-                            <em>Scop:</em> Afișarea site-ului în limba preferată<br>
-                            <em>Date colectate:</em> Preferință de limbă
+                            Cookie-urile sunt fișiere mici de text salvate pe dispozitivul dumneavoastră când vizitați website-ul nostru. Folosim cookie-uri pentru a asigura funcționarea corectă a site-ului și pentru a înțelege mai bine cum interacționați cu conținutul nostru.
                         </span>
                         <span lang="en">
-                            <strong>language</strong> - Saves your language preference (Romanian/English)<br>
-                            <em>Duration:</em> Permanent (until manually deleted)<br>
-                            <em>Purpose:</em> Display the site in your preferred language<br>
-                            <em>Data collected:</em> Language preference
+                            Cookies are small text files saved on your device when you visit our website. We use cookies to ensure proper site functionality and to better understand how you interact with our content.
                         </span>
-                    </li>
-                    <li>
-                        <span lang="ro">
-                            <strong>cookieConsent</strong> - Înregistrează consimțământul dumneavoastră pentru cookie-uri<br>
-                            <em>Durată:</em> Permanent (până la ștergerea manuală)<br>
-                            <em>Scop:</em> Respectarea cerințelor GDPR privind consimțământul pentru cookie-uri<br>
-                            <em>Date colectate:</em> Starea consimțământului pentru cookie-uri
-                        </span>
-                        <span lang="en">
-                            <strong>cookieConsent</strong> - Records your cookie consent choice<br>
-                            <em>Duration:</em> Permanent (until manually deleted)<br>
-                            <em>Purpose:</em> GDPR compliance for cookie consent<br>
-                            <em>Data collected:</em> Cookie consent status
-                        </span>
-                    </li>
-                    <li>
-                        <span lang="ro">
-                            <strong>cookiePreferences</strong> - Salvează preferințele dumneavoastră pentru cookie-uri<br>
-                            <em>Durată:</em> Permanent (până la ștergerea manuală)<br>
-                            <em>Scop:</em> Stocarea preferințelor dumneavoastră pentru cookie-uri<br>
-                            <em>Date colectate:</em> Preferințe pentru cookie-uri
-                        </span>
-                        <span lang="en">
-                            <strong>cookiePreferences</strong> - Stores your cookie preferences<br>
-                            <em>Duration:</em> Permanent (until manually deleted)<br>
-                            <em>Purpose:</em> Store user's cookie preferences<br>
-                            <em>Data collected:</em> Cookie preferences
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h3>
+                        <span lang="ro">2. Ce Cookie-uri Folosim</span>
+                        <span lang="en">2. Cookies We Use</span>
+                    </h3>
+                    
+                    <p>
+                        <span lang="ro"><strong>Cookie-uri Esențiale (Necesare)</strong></span>
+                        <span lang="en"><strong>Essential Cookies (Required)</strong></span>
+                    </p>
+                    <ul>
+                        <li>
+                            <span lang="ro">
+                                <strong>language</strong> - Salvează preferința dumneavoastră de limbă (Română/Engleză)<br>
+                                <em>Durată:</em> Permanent (până la ștergerea manuală)<br>
+                                <em>Scop:</em> Afișarea site-ului în limba preferată<br>
+                                <em>Date colectate:</em> Preferință de limbă
+                            </span>
+                            <span lang="en">
+                                <strong>language</strong> - Saves your language preference (Romanian/English)<br>
+                                <em>Duration:</em> Permanent (until manually deleted)<br>
+                                <em>Purpose:</em> Display the site in your preferred language<br>
+                                <em>Data collected:</em> Language preference
+                            </span>
+                        </li>
+                        <li>
+                            <span lang="ro">
+                                <strong>cookieConsent</strong> - Înregistrează consimțământul dumneavoastră pentru cookie-uri<br>
+                                <em>Durată:</em> Permanent (până la ștergerea manuală)<br>
+                                <em>Scop:</em> Respectarea cerințelor GDPR privind consimțământul pentru cookie-uri<br>
+                                <em>Date colectate:</em> Starea consimțământului pentru cookie-uri
+                            </span>
+                            <span lang="en">
+                                <strong>cookieConsent</strong> - Records your cookie consent choice<br>
+                                <em>Duration:</em> Permanent (until manually deleted)<br>
+                                <em>Purpose:</em> GDPR compliance for cookie consent<br>
+                                <em>Data collected:</em> Cookie consent status
+                            </span>
+                        </li>
+                        <li>
+                            <span lang="ro">
+                                <strong>cookiePreferences</strong> - Salvează preferințele dumneavoastră pentru cookie-uri<br>
+                                <em>Durată:</em> Permanent (până la ștergerea manuală)<br>
+                                <em>Scop:</em> Stocarea preferințelor dumneavoastră pentru cookie-uri<br>
+                                <em>Date colectate:</em> Preferințe pentru cookie-uri
+                            </span>
+                            <span lang="en">
+                                <strong>cookiePreferences</strong> - Stores your cookie preferences<br>
+                                <em>Duration:</em> Permanent (until manually deleted)<br>
+                                <em>Purpose:</em> Store user's cookie preferences<br>
+                                <em>Data collected:</em> Cookie preferences
+                            </span>
+                        </li>
+                    </ul>
+
+                    <p>
+                        <span lang="ro"><strong>Cookie-uri de Analiză (Opționale)</strong></span>
+                        <span lang="en"><strong>Analytics Cookies (Optional)</strong></span>
+                    </p>
+                    <ul>
+                        <li>
+                            <span lang="ro">
+                                <strong>Google Analytics (_ga, _gid, _gat)</strong><br>
+                                <em>Durată:</em> _ga - 2 ani, _gid - 24 ore, _gat - 1 minut<br>
+                                <em>Scop:</em> Colectarea de statistici anonime despre utilizarea site-ului (pagini vizitate, timp petrecut, rata de respingere)<br>
+                                <em>Date colectate:</em> Adresă IP anonimizată, tipul de browser, sistemul de operare, sursa de trafic<br>
+                                <em>Destinatar:</em> Google LLC (SUA)<br>
+                                <em>Mecanism de transfer:</em> Clauze Contractuale Standard (SCC) pentru transferuri internaționale de date
+                            </span>
+                            <span lang="en">
+                                <strong>Google Analytics (_ga, _gid, _gat)</strong><br>
+                                <em>Duration:</em> _ga - 2 years, _gid - 24 hours, _gat - 1 minute<br>
+                                <em>Purpose:</em> Collect anonymous statistics about site usage (pages visited, time spent, bounce rate)<br>
+                                <em>Data collected:</em> Anonymized IP address, browser type, operating system, traffic source<br>
+                                <em>Recipient:</em> Google LLC (USA)<br>
+                                <!-- Continuing from Privacy Modal section -->
+                                <em>Transfer mechanism:</em> Standard Contractual Clauses (SCC) for international data transfers
                         </span>
                     </li>
                 </ul>
 
                 <p>
-                    <span lang="ro"><strong>Cookie-uri de Analiză (Opționale)</strong></span>
-                    <span lang="en"><strong>Analytics Cookies (Optional)</strong></span>
+                    <span lang="ro"><strong>Cookie-uri de Marketing (Opționale)</strong></span>
+                    <span lang="en"><strong>Marketing Cookies (Optional)</strong></span>
                 </p>
                 <ul>
                     <li>
                         <span lang="ro">
-                            <strong>Google Analytics (_ga, _gid, _gat)</strong><br>
-                            <em>Durată:</em> _ga - 2 ani, _gid - 24 ore, _gat - 1 minut<br>
-                            <em>Scop:</em> Colectarea de statistici anonime despre utilizarea site-ului (pagini vizitate, timp petrecut, rata de respingere)<br>
-                            <em>Date colectate:</em> Adresă IP anonimizată, tipul de browser, sistemul de operare, sursa de trafic<br>
-                            <em>Destinatar:</em> Google LLC (SUA)<br>
-                            <em>Mecanism de transfer:</em> Clauze Contractuale Standard (SCC) pentru transferuri internaționale de date
+                            <strong>Google Ads</strong> - Pentru remarketing și conversii<br>
+                            <em>Durată:</em> Variabilă (30-90 zile)<br>
+                            <em>Scop:</em> Afișarea de reclame relevante și măsurarea conversiilor<br>
+                            <em>Date colectate:</em> Interacțiuni cu anunțurile, conversii<br>
+                            <em>Destinatar:</em> Google LLC (SUA)
                         </span>
                         <span lang="en">
-                            <strong>Google Analytics (_ga, _gid, _gat)</strong><br>
-                            <em>Duration:</em> _ga - 2 years, _gid - 24 hours, _gat - 1 minute<br>
-                            <em>Purpose:</em> Collect anonymous statistics about site usage (pages visited, time spent, bounce rate)<br>
-                            <em>Data collected:</em> Anonymized IP address, browser type, operating system, traffic source<br>
-                            <em>Recipient:</em> Google LLC (USA)<br>
-                                                        <em>Transfer mechanism:</em> Standard Contractual Clauses (SCC) for international data transfers
+                            <strong>Google Ads</strong> - For remarketing and conversions<br>
+                            <em>Duration:</em> Variable (30-90 days)<br>
+                            <em>Purpose:</em> Display relevant ads and measure conversions<br>
+                            <em>Data collected:</em> Ad interactions, conversions<br>
+                            <em>Recipient:</em> Google LLC (USA)
+                        </span>
+                    </li>
+                    <li>
+                        <span lang="ro">
+                            <strong>Facebook Pixel</strong> - Pentru reclame pe rețele sociale<br>
+                            <em>Durată:</em> _fbp - 90 zile<br>
+                            <em>Scop:</em> Retargeting și măsurarea performanței campaniilor<br>
+                            <em>Date colectate:</em> Pagini vizitate, acțiuni pe site<br>
+                            <em>Destinatar:</em> Meta Platforms Inc. (SUA)
+                        </span>
+                        <span lang="en">
+                            <strong>Facebook Pixel</strong> - For social media advertising<br>
+                            <em>Duration:</em> _fbp - 90 days<br>
+                            <em>Purpose:</em> Retargeting and campaign performance measurement<br>
+                            <em>Data collected:</em> Pages visited, site actions<br>
+                            <em>Recipient:</em> Meta Platforms Inc. (USA)
+                        </span>
+                    </li>
+                </ul>
+
+                <p>
+                    <span lang="ro"><strong>Cookie-uri de Servicii Terțe (Pentru formulare)</strong></span>
+                    <span lang="en"><strong>Third-Party Service Cookies (For forms)</strong></span>
+                </p>
+                <ul>
+                    <li>
+                        <span lang="ro">
+                            <strong>Formspree</strong> - Procesare formulare de contact<br>
+                            <em>Durată:</em> Sesiune<br>
+                            <em>Scop:</em> Prevenirea spam-ului și procesarea trimiterilor de formulare<br>
+                            <em>Date colectate:</em> Adresă email, nume (opțional), mesaje trimise<br>
+                            <em>Destinatar:</em> Formspree Inc. (SUA)<br>
+                            <em>Mecanism de transfer:</em> Clauze Contractuale Standard (SCC)
+                        </span>
+                        <span lang="en">
+                            <strong>Formspree</strong> - Contact form processing<br>
+                            <em>Duration:</em> Session<br>
+                            <em>Purpose:</em> Spam prevention and form submission processing<br>
+                            <em>Data collected:</em> Email address, name (optional), submitted messages<br>
+                            <em>Recipient:</em> Formspree Inc. (USA)<br>
+                            <em>Transfer mechanism:</em> Standard Contractual Clauses (SCC)
                         </span>
                     </li>
                 </ul>
@@ -1396,56 +1662,246 @@ Counseling is not a substitute for professional medical treatment.</span>
 
             <section class="privacy-section">
                 <h3>
-                    <span lang="ro">3. Drepturile Dumneavoastră</span>
-                    <span lang="en">3. Your Rights</span>
+                    <span lang="ro">3. Procesarea Datelor prin Formspree</span>
+                    <span lang="en">3. Data Processing through Formspree</span>
                 </h3>
                 <p>
                     <span lang="ro">
-                        Aveți dreptul de a vă retrage consimțământul pentru utilizarea cookie-urilor în orice moment. De asemenea, puteți gestiona preferințele dumneavoastră pentru cookie-uri făcând clic pe butonul "Setări Cookie" de mai jos.
+                        Pentru formularul nostru de contact folosim serviciul Formspree Inc., un furnizor de servicii de procesare a formularelor bazat în Statele Unite ale Americii. Când trimiteți un formular pe site-ul nostru:
                     </span>
                     <span lang="en">
-                        You have the right to withdraw your consent to the use of cookies at any time. You can also manage your cookie preferences by clicking on the "Cookie Settings" button below.
+                        For our contact form we use Formspree Inc., a form processing service provider based in the United States of America. When you submit a form on our site:
                     </span>
                 </p>
-                <button class="cookie-settings-btn" onclick="closePrivacyModal(openCookieSettings())">Setări Cookie</button>
+                <ul>
+                    <li>
+                        <span lang="ro"><strong>Relația de procesare:</strong> Răzvan Mischie (consiliereonline.com) și Formspree Inc. acționează ca operatori asociați de date conform GDPR.</span>
+                        <span lang="en"><strong>Processing relationship:</strong> Răzvan Mischie (consiliereonline.com) and Formspree Inc. act as joint data controllers under GDPR.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Date transferate:</strong> Email, nume (dacă este furnizat), conținutul mesajului, adresa IP, timestamp.</span>
+                        <span lang="en"><strong>Data transferred:</strong> Email, name (if provided), message content, IP address, timestamp.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Baza legală:</strong> Consimțământul dumneavoastră explicit (Art. 6(1)(a) GDPR).</span>
+                        <span lang="en"><strong>Legal basis:</strong> Your explicit consent (Art. 6(1)(a) GDPR).</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Perioada de stocare:</strong> Formspree păstrează datele timp de 30 de zile, noi păstrăm corespondența atât timp cât este necesar pentru scopul comunicării.</span>
+                        <span lang="en"><strong>Storage period:</strong> Formspree retains data for 30 days, we keep correspondence as long as necessary for the communication purpose.</span>
+                    </li>
+                </ul>
+                <p>
+                    <span lang="ro">
+                        Pentru mai multe informații despre practicile de confidențialitate ale Formspree, consultați 
+                        <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Politica de Confidențialitate Formspree</a>.
+                    </span>
+                    <span lang="en">
+                        For more information about Formspree's privacy practices, see 
+                        <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Formspree's Privacy Policy</a>.
+                    </span>
+                </p>
             </section>
 
             <section class="privacy-section">
                 <h3>
-                    <span lang="ro">4. Actualizări ale Politicii de Confidențialitate</span>
-                    <span lang="en">4. Updates to this Privacy Policy</span>
+                    <span lang="ro">4. Drepturile Dumneavoastră GDPR</span>
+                    <span lang="en">4. Your GDPR Rights</span>
                 </h3>
                 <p>
                     <span lang="ro">
-                        Ne rezervăm dreptul de a actualiza această politică de confidențialitate în orice moment. Vă vom anunța despre orice modificări importante prin intermediul site-ului nostru.
+                        Conform Regulamentului General privind Protecția Datelor (GDPR), aveți următoarele drepturi:
                     </span>
                     <span lang="en">
-                        We reserve the right to update this privacy policy at any time. We will notify you of any significant changes through our website.
+                        Under the General Data Protection Regulation (GDPR), you have the following rights:
+                    </span>
+                </p>
+                <ul>
+                    <li>
+                        <span lang="ro"><strong>Dreptul de acces:</strong> Puteți solicita o copie a datelor personale pe care le deținem despre dumneavoastră.</span>
+                        <span lang="en"><strong>Right to access:</strong> You can request a copy of the personal data we hold about you.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Dreptul de rectificare:</strong> Puteți solicita corectarea datelor incorecte sau incomplete.</span>
+                        <span lang="en"><strong>Right to rectification:</strong> You can request correction of inaccurate or incomplete data.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Dreptul la ștergere:</strong> Puteți solicita ștergerea datelor dumneavoastră personale.</span>
+                        <span lang="en"><strong>Right to erasure:</strong> You can request deletion of your personal data.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Dreptul la restricționarea procesării:</strong> Puteți solicita limitarea procesării datelor dumneavoastră.</span>
+                        <span lang="en"><strong>Right to restrict processing:</strong> You can request limitation of processing your data.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Dreptul la portabilitatea datelor:</strong> Puteți solicita transferul datelor către alt operator.</span>
+                        <span lang="en"><strong>Right to data portability:</strong> You can request transfer of data to another controller.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Dreptul de opoziție:</strong> Puteți să vă opuneți procesării datelor dumneavoastră.</span>
+                        <span lang="en"><strong>Right to object:</strong> You can object to the processing of your data.</span>
+                    </li>
+                    <li>
+                        <span lang="ro"><strong>Dreptul de a retrage consimțământul:</strong> Puteți retrage consimțământul în orice moment, fără a afecta legalitatea procesării anterioare.</span>
+                        <span lang="en"><strong>Right to withdraw consent:</strong> You can withdraw consent at any time, without affecting the lawfulness of prior processing.</span>
+                    </li>
+                </ul>
+                <p>
+                    <span lang="ro">
+                        Pentru a exercita aceste drepturi în legătură cu datele procesate de noi, contactați-ne la: 
+                        <strong>razvanmischie@consiliereonline.com</strong>
+                    </span>
+                    <span lang="en">
+                        To exercise these rights regarding data processed by us, contact us at: 
+                        <strong>razvanmischie@consiliereonline.com</strong>
+                    </span>
+                </p>
+                <p>
+                    <span lang="ro">
+                        Pentru datele procesate de Formspree, puteți contacta direct: 
+                        <strong>team@formspree.io</strong>
+                    </span>
+                    <span lang="en">
+                        For data processed by Formspree, you can contact directly: 
+                        <strong>team@formspree.io</strong>
                     </span>
                 </p>
             </section>
 
             <section class="privacy-section">
                 <h3>
-                    <span lang="ro">5. Contact</span>
-                    <span lang="en">5. Contact</span>
+                    <span lang="ro">5. Transferuri Internaționale de Date</span>
+                    <span lang="en">5. International Data Transfers</span>
                 </h3>
                 <p>
                     <span lang="ro">
-                        Dacă aveți întrebări sau preocupări cu privire la această politică de confidențialitate, vă rugăm să ne contactați la adresa <a href="mailto:razvanmischie@consiliereonline.com">razvanmischie@consiliereonline.com</a>.
+                        Unele dintre serviciile terțe pe care le folosim (Google Analytics, Formspree) transferă date în Statele Unite. Aceste transferuri sunt protejate prin:
                     </span>
                     <span lang="en">
-                        If you have any questions or concerns about this privacy policy, please contact us at <a href="mailto:razvanmischie@consiliereonline.com">razvanmischie@consiliereonline.com</a>.
+                        Some third-party services we use (Google Analytics, Formspree) transfer data to the United States. These transfers are protected through:
+                    </span>
+                </p>
+                <ul>
+                    <li>
+                        <span lang="ro">Clauze Contractuale Standard (SCC) aprobate de Comisia Europeană</span>
+                        <span lang="en">Standard Contractual Clauses (SCC) approved by the European Commission</span>
+                    </li>
+                    <li>
+                        <span lang="ro">Măsuri tehnice și organizatorice suplimentare pentru protecția datelor</span>
+                        <span lang="en">Additional technical and organizational measures for data protection</span>
+                    </li>
+                    <li>
+                        <span lang="ro">Criptare în tranzit și în repaus</span>
+                        <span lang="en">Encryption in transit and at rest</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="privacy-section">
+                <h3>
+                    <span lang="ro">6. Securitatea Datelor</span>
+                    <span lang="en">6. Data Security</span>
+                </h3>
+                <p>
+                    <span lang="ro">
+                        Implementăm măsuri tehnice și organizatorice adecvate pentru a proteja datele dumneavoastră personale împotriva accesului neautorizat, modificării, divulgării sau distrugerii. Acestea includ:
+                    </span>
+                    <span lang="en">
+                        We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, modification, disclosure, or destruction. These include:
+                    </span>
+                </p>
+                <ul>
+                    <li>
+                        <span lang="ro">Criptare SSL/TLS pentru toate transmisiile de date</span>
+                        <span lang="en">SSL/TLS encryption for all data transmissions</span>
+                    </li>
+                    <li>
+                        <span lang="ro">Acces restricționat la datele personale</span>
+                        <span lang="en">Restricted access to personal data</span>
+                    </li>
+                    <li>
+                        <span lang="ro">Monitorizare regulată a securității</span>
+                        <span lang="en">Regular security monitoring</span>
+                    </li>
+                    <li>
+                        <span lang="ro">Actualizări regulate ale sistemelor și software-ului</span>
+                        <span lang="en">Regular system and software updates</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="privacy-section">
+                <h3>
+                    <span lang="ro">7. Actualizări ale Politicii</span>
+                    <span lang="en">7. Policy Updates</span>
+                </h3>
+                <p>
+                    <span lang="ro">
+                        Ne rezervăm dreptul de a actualiza această politică de confidențialitate pentru a reflecta schimbări în practicile noastre sau în cerințele legale. Vă vom notifica despre orice modificări semnificative prin afișarea unei notificări pe site-ul nostru.
+                    </span>
+                    <span lang="en">
+                        We reserve the right to update this privacy policy to reflect changes in our practices or legal requirements. We will notify you of any significant changes by posting a notice on our website.
                     </span>
                 </p>
             </section>
+
+            <section class="privacy-section">
+                <h3>
+                    <span lang="ro">8. Autoritatea de Supraveghere</span>
+                    <span lang="en">8. Supervisory Authority</span>
+                </h3>
+                <p>
+                    <span lang="ro">
+                        Dacă nu sunteți mulțumit de modul în care procesăm datele dumneavoastră, aveți dreptul să depuneți o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP):
+                    </span>
+                    <span lang="en">
+                        If you are not satisfied with how we process your data, you have the right to lodge a complaint with the National Supervisory Authority for Personal Data Processing (ANSPDCP):
+                    </span>
+                </p>
+                <div class="contact-info">
+                    <p><strong>Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal</strong></p>
+                    <p>B-dul G-ral. Gheorghe Magheru 28-30, Sector 1, București</p>
+                    <p>Email: anspdcp@dataprotection.ro</p>
+                    <p>Website: <a href="https://www.dataprotection.ro" target="_blank" rel="noopener noreferrer">www.dataprotection.ro</a></p>
+                </div>
+            </section>
+
+            <section class="privacy-section">
+                <h3>
+                    <span lang="ro">9. Contact</span>
+                    <span lang="en">9. Contact</span>
+                </h3>
+                <p>
+                    <span lang="ro">
+                        Pentru orice întrebări sau preocupări legate de această politică de confidențialitate sau procesarea datelor dumneavoastră, ne puteți contacta la:
+                    </span>
+                    <span lang="en">
+                        For any questions or concerns about this privacy policy or the processing of your data, you can contact us at:
+                    </span>
+                </p>
+                <div class="contact-info">
+                    <p><strong>Răzvan Mischie - Consiliere Online</strong></p>
+                    <p>Email: razvanmischie@consiliereonline.com</p>
+                    <p>Telefon: +40750267476</p>
+                    <p>Adresa: Str. Episcop Augustin Pacha, nr.1, ap. 31, interfon 131, Timișoara, România</p>
+                </div>
+            </section>
+
+            <div class="privacy-note">
+                <p>
+                    <span lang="ro">
+                        Această politică de confidențialitate a fost actualizată ultima dată în August 2025 și este conformă cu cerințele GDPR (Regulamentul UE 2016/679).
+                    </span>
+                    <span lang="en">
+                        This privacy policy was last updated in August 2025 and complies with GDPR requirements (EU Regulation 2016/679).
+                    </span>
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
-
-
     <!-- Scripts -->
-    <script src="./script.js?v=2.1.0" defer></script>
+    <script src="./script.js?v=2.5.0" defer></script>
 </body>
 </html>
