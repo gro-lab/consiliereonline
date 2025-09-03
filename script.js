@@ -31,7 +31,7 @@ function throttle(func, wait) {
     };
 }
 
-// ===== ENHANCED COOKIE CONSENT MANAGEMENT SYSTEM - GDPR COMPLIANT =====
+// ===== ENHANCED COOKIE CONSENT MANAGEMENT SYSTEM - FIXED FOR IMMEDIATE FORM ACTIVATION =====
 const CookieConsent = {
     banner: null,
     settingsModal: null,
@@ -41,7 +41,7 @@ const CookieConsent = {
         essential: true, // Always true
         analytics: false,
         marketing: false,
-        thirdParty: false // NEW: For Formspree and other third-party services
+        thirdParty: false
     },
     
     init() {
@@ -174,7 +174,7 @@ const CookieConsent = {
         // Setup settings modal toggles
         const analyticsCookies = document.getElementById('analyticsCookies');
         const marketingCookies = document.getElementById('marketingCookies');
-        const thirdPartyCookies = document.getElementById('thirdPartyCookies'); // NEW
+        const thirdPartyCookies = document.getElementById('thirdPartyCookies');
         
         if (analyticsCookies) {
             analyticsCookies.checked = this.preferences.analytics;
@@ -190,13 +190,10 @@ const CookieConsent = {
             });
         }
         
-        // NEW: Third-party cookie toggle
         if (thirdPartyCookies) {
             thirdPartyCookies.checked = this.preferences.thirdParty;
             thirdPartyCookies.addEventListener('change', (e) => {
                 this.preferences.thirdParty = e.target.checked;
-                // Enable/disable form based on consent
-                this.updateFormState();
             });
         }
         
@@ -214,14 +211,14 @@ const CookieConsent = {
             essential: true,
             analytics: true,
             marketing: true,
-            thirdParty: true // Include third-party
+            thirdParty: true
         };
         
         this.savePreferences();
         
         try {
             localStorage.setItem('cookieConsent', 'accepted');
-            localStorage.setItem('cookieConsentDate', new Date().toISOString()); // GDPR: Track consent date
+            localStorage.setItem('cookieConsentDate', new Date().toISOString());
         } catch (e) {
             console.warn('Could not save cookie consent');
         }
@@ -232,6 +229,9 @@ const CookieConsent = {
         
         // Track the consent
         this.trackConsentGiven('accepted');
+        
+        // IMPORTANT: Reinitialize form handler immediately
+        this.reinitializeForms();
     },
     
     rejectAllCookies() {
@@ -239,7 +239,7 @@ const CookieConsent = {
             essential: true,
             analytics: false,
             marketing: false,
-            thirdParty: false // Reject third-party
+            thirdParty: false
         };
         
         this.savePreferences();
@@ -255,8 +255,11 @@ const CookieConsent = {
         this.hideBanner();
         this.closeSettings();
         
-        // Track the consent (using essential tracking only)
+        // Track the consent
         this.trackConsentGiven('rejected');
+        
+        // Reinitialize forms
+        this.reinitializeForms();
     },
     
     saveCustomPreferences() {
@@ -267,6 +270,9 @@ const CookieConsent = {
         
         // Track the consent
         this.trackConsentGiven('custom');
+        
+        // IMPORTANT: Reinitialize form handler immediately
+        this.reinitializeForms();
     },
     
     applyPreferences() {
@@ -290,67 +296,130 @@ const CookieConsent = {
         } else {
             this.disableThirdPartyServices();
         }
-        
-        // Update form state
-        this.updateFormState();
     },
     
-    // NEW: Enable third-party services
     enableThirdPartyServices() {
-        // Enable Formspree forms
-        const forms = document.querySelectorAll('form[data-requires-consent="true"]');
-        forms.forEach(form => {
+        console.log('Enabling third-party services...');
+        
+        // Remove all consent notices
+        const consentNotices = document.querySelectorAll('.consent-notice');
+        consentNotices.forEach(notice => notice.remove());
+        
+        // Enable the event registration form
+        const eventForm = document.getElementById('eventRegistrationForm');
+        if (eventForm) {
+            // Remove disabled state
+            eventForm.classList.remove('consent-required');
+            
+            // Enable all form inputs
+            const inputs = eventForm.querySelectorAll('input, textarea, button');
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.removeAttribute('disabled');
+            });
+            
+            // Fix submit button text
+            const submitBtn = eventForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                const originalText = submitBtn.getAttribute('data-original-text');
+                if (originalText) {
+                    submitBtn.innerHTML = originalText;
+                } else {
+                    submitBtn.innerHTML = `
+                        <span lang="en">Register for Event</span>
+                        <span lang="ro">Înregistrează-te la Eveniment</span>
+                    `;
+                }
+                submitBtn.disabled = false;
+                submitBtn.style.cursor = 'pointer';
+                submitBtn.style.opacity = '1';
+            }
+            
+            console.log('Event form enabled successfully');
+        }
+        
+        // Enable any other forms marked with data-requires-consent
+        const consentForms = document.querySelectorAll('form[data-requires-consent="true"]');
+        consentForms.forEach(form => {
             form.classList.remove('consent-required');
             const inputs = form.querySelectorAll('input, textarea, button');
-            inputs.forEach(input => input.disabled = false);
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.removeAttribute('disabled');
+            });
         });
         
         console.log('Third-party services enabled');
     },
     
-    // NEW: Disable third-party services
     disableThirdPartyServices() {
-        // Disable forms that require consent
-        const forms = document.querySelectorAll('form[data-requires-consent="true"]');
-        forms.forEach(form => {
-            form.classList.add('consent-required');
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Requires Cookie Consent';
+        console.log('Disabling third-party services...');
+        
+        const eventForm = document.getElementById('eventRegistrationForm');
+        if (eventForm) {
+            // Show consent required notice
+            if (!eventForm.querySelector('.consent-notice')) {
+                const consentNotice = document.createElement('div');
+                consentNotice.className = 'consent-notice';
+                consentNotice.innerHTML = `
+                    <p>
+                        <span lang="ro">Pentru a utiliza acest formular, trebuie să acceptați cookie-urile terțe în </span>
+                        <span lang="en">To use this form, you need to accept third-party cookies in </span>
+                        <button onclick="openCookieSettings()" style="text-decoration: underline; border: none; background: none; color: #4169e1; cursor: pointer;">
+                            <span lang="ro">Setări Cookie</span>
+                            <span lang="en">Cookie Settings</span>
+                        </button>
+                    </p>
+                `;
+                eventForm.insertBefore(consentNotice, eventForm.firstChild);
             }
-        });
+            
+            // Disable submit button
+            const submitBtn = eventForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                const originalText = submitBtn.innerHTML;
+                submitBtn.setAttribute('data-original-text', originalText);
+                submitBtn.innerHTML = `
+                    <span lang="ro">Necesită Consimțământ pentru Cookie-uri</span>
+                    <span lang="en">Requires Cookie Consent</span>
+                `;
+                submitBtn.disabled = true;
+                submitBtn.style.cursor = 'not-allowed';
+                submitBtn.style.opacity = '0.6';
+            }
+        }
         
         console.log('Third-party services disabled');
     },
     
-    // NEW: Update form state based on consent
-    updateFormState() {
-        const eventForm = document.getElementById('eventRegistrationForm');
-        if (!eventForm) return;
+    reinitializeForms() {
+        console.log('Reinitializing forms after cookie consent change...');
         
-        if (!this.hasThirdPartyConsent()) {
-            // Show consent required message
-            const consentNotice = document.createElement('div');
-            consentNotice.className = 'consent-notice';
-            consentNotice.innerHTML = `
-                <p>
-                    <span lang="ro">Pentru a utiliza acest formular, trebuie să acceptați cookie-urile terțe în </span>
-                    <span lang="en">To use this form, you need to accept third-party cookies in </span>
-                    <button onclick="openCookieSettings()" style="text-decoration: underline; border: none; background: none; color: #4169e1; cursor: pointer;">
-                        <span lang="ro">Setări Cookie</span>
-                        <span lang="en">Cookie Settings</span>
-                    </button>
-                </p>
-            `;
-            
-            if (!eventForm.querySelector('.consent-notice')) {
-                eventForm.insertBefore(consentNotice, eventForm.firstChild);
+        // Dispatch a custom event that the form handler can listen to
+        window.dispatchEvent(new CustomEvent('cookieConsentChanged', {
+            detail: {
+                preferences: this.preferences,
+                hasThirdPartyConsent: this.hasThirdPartyConsent()
             }
-        } else {
-            // Remove consent notice if exists
-            const notice = eventForm.querySelector('.consent-notice');
-            if (notice) notice.remove();
+        }));
+        
+        // If form handler exists, reinitialize it
+        if (window.GDPRFormHandler) {
+            window.GDPRFormHandler.checkThirdPartyCookies();
+            
+            // Re-bind event handlers if needed
+            const form = document.getElementById('eventRegistrationForm');
+            if (form && this.hasThirdPartyConsent()) {
+                // Make sure the form is fully functional
+                form.style.opacity = '1';
+                form.style.pointerEvents = 'auto';
+                
+                // Focus on the first input to show it's ready
+                const firstInput = form.querySelector('input:not([type="hidden"])');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }
         }
     },
     
@@ -407,7 +476,7 @@ const CookieConsent = {
         // Load Google Analytics 4 (GA4) dynamically
         const script = document.createElement('script');
         script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061'; // Replace with actual GA4 ID
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17401674061';
         script.id = 'google-analytics';
         document.head.appendChild(script);
         
@@ -416,15 +485,14 @@ const CookieConsent = {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             
-            // Configure Google Analytics with privacy-friendly settings
             gtag('config', 'AW-17401674061', {
-                'anonymize_ip': true, // GDPR compliance - anonymize IP addresses
+                'anonymize_ip': true,
                 'cookie_flags': 'SameSite=None;Secure',
-                'allow_google_signals': false, // Disable advertising features
-                'allow_ad_personalization_signals': false // Disable ad personalization
+                'allow_google_signals': false,
+                'allow_ad_personalization_signals': false
             });
             
-            // Custom event tracking for appointment bookings (without ads conversion)
+            // Custom event tracking for appointment bookings
             window.gtag_report_appointment = function(url) {
                 gtag('event', 'appointment_booking', {
                     'event_category': 'engagement',
@@ -446,24 +514,18 @@ const CookieConsent = {
     },
     
     removeAnalytics() {
-        // Remove Google Analytics script if present
         const script = document.getElementById('google-analytics');
         if (script) {
             script.remove();
         }
-        
-        // Clear GA cookies
         this.clearCookies(['_ga', '_gid', '_gat']);
     },
     
     loadMarketing() {
-        // Placeholder for marketing scripts (Facebook Pixel, Google Ads, etc.)
         console.log('Marketing cookies enabled');
     },
     
     removeMarketing() {
-        // Remove marketing cookies
-        // Placeholder for removing marketing scripts
         console.log('Marketing cookies disabled');
     },
     
@@ -474,7 +536,6 @@ const CookieConsent = {
         });
     },
     
-    // NEW: Track consent changes for GDPR audit trail
     trackConsentChange() {
         const consentHistory = {
             timestamp: new Date().toISOString(),
@@ -483,10 +544,8 @@ const CookieConsent = {
         };
         
         try {
-            // Store consent history (you might want to send this to your server)
             const history = JSON.parse(localStorage.getItem('consentHistory') || '[]');
             history.push(consentHistory);
-            // Keep only last 10 entries
             if (history.length > 10) history.shift();
             localStorage.setItem('consentHistory', JSON.stringify(history));
         } catch (e) {
@@ -495,7 +554,6 @@ const CookieConsent = {
     },
     
     trackConsentGiven(choice) {
-        // Basic tracking without cookies (for essential analytics)
         if (navigator.sendBeacon) {
             const data = JSON.stringify({
                 event: 'cookie_consent',
@@ -504,12 +562,8 @@ const CookieConsent = {
                 timestamp: new Date().toISOString(),
                 page: window.location.pathname
             });
-            
-            // This would go to your own analytics endpoint
-            // navigator.sendBeacon('/analytics/consent', data);
         }
         
-        // Track in consent history
         this.trackConsentChange();
     },
     
@@ -541,7 +595,6 @@ const CookieConsent = {
         
         document.addEventListener('keydown', this.focusTrapHandler);
         
-        // Focus first button
         if (firstFocusable) {
             firstFocusable.focus();
         }
@@ -555,51 +608,165 @@ const CookieConsent = {
     }
 };
 
-// ===== GDPR FORM VALIDATION SYSTEM =====
+// ===== ENHANCED GDPR FORM VALIDATION SYSTEM =====
 const GDPRFormHandler = {
+    form: null,
+    isInitialized: false,
+    
     init() {
-        const form = document.getElementById('eventRegistrationForm');
-        if (!form) return;
-            this.checkThirdPartyCookies();
-
+        this.form = document.getElementById('eventRegistrationForm');
+        if (!this.form) return;
+        
+        this.isInitialized = true;
+        
+        // Check third-party cookies on init
+        this.checkThirdPartyCookies();
+        
         // Add submit handler
-        form.addEventListener('submit', (e) => {
+        this.form.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.handleSubmit(form);
+            this.handleSubmit(this.form);
         });
         
         // Add real-time validation for consent checkboxes
-        const consentCheckboxes = form.querySelectorAll('input[type="checkbox"][required]');
+        const consentCheckboxes = this.form.querySelectorAll('input[type="checkbox"][required]');
         consentCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 this.validateConsentField(checkbox);
             });
         });
         
-        // Check if third-party cookies are enabled
-        this.checkThirdPartyCookies();
+        // Listen for cookie consent changes
+        window.addEventListener('cookieConsentChanged', (event) => {
+            console.log('Cookie consent changed, updating form state...', event.detail);
+            this.handleCookieConsentChange(event.detail);
+        });
+    },
+    
+    handleCookieConsentChange(detail) {
+        if (detail.hasThirdPartyConsent) {
+            console.log('Third-party consent granted, enabling form...');
+            this.enableForm();
+        } else {
+            console.log('Third-party consent not granted, disabling form...');
+            this.disableForm();
+        }
     },
     
     checkThirdPartyCookies() {
+        if (!this.form) return;
+        
         if (!CookieConsent.hasThirdPartyConsent()) {
-            this.showConsentRequired();
+            this.disableForm();
+        } else {
+            this.enableForm();
         }
     },
     
-    showConsentRequired() {
-        const form = document.getElementById('eventRegistrationForm');
-        if (!form) return;
+    enableForm() {
+        if (!this.form) return;
         
-        const submitBtn = form.querySelector('button[type="submit"]');
+        console.log('Enabling event registration form...');
+        
+        // Remove any consent notices
+        const consentNotices = this.form.querySelectorAll('.consent-notice');
+        consentNotices.forEach(notice => notice.remove());
+        
+        // Remove disabled class
+        this.form.classList.remove('consent-required');
+        this.form.style.opacity = '1';
+        this.form.style.pointerEvents = 'auto';
+        
+        // Enable all inputs
+        const inputs = this.form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.disabled = false;
+            input.removeAttribute('disabled');
+            input.style.cursor = 'auto';
+            input.style.opacity = '1';
+        });
+        
+        // Fix the submit button
+        const submitBtn = this.form.querySelector('button[type="submit"]');
         if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.style.cursor = 'pointer';
+            submitBtn.style.opacity = '1';
+            
+            // Restore original text
+            const originalText = submitBtn.getAttribute('data-original-text');
+            if (originalText) {
+                submitBtn.innerHTML = originalText;
+                submitBtn.removeAttribute('data-original-text');
+            } else {
+                // Default text if no original saved
+                submitBtn.innerHTML = `
+                    <span lang="en">Register for Event</span>
+                    <span lang="ro">Înregistrează-te la Eveniment</span>
+                `;
+            }
+        }
+        
+        // Clear any error messages
+        const errorContainer = document.getElementById('formErrors');
+        if (errorContainer) {
+            errorContainer.style.display = 'none';
+            errorContainer.innerHTML = '';
+        }
+        
+        // Add a visual indicator that the form is now active
+        this.form.style.transition = 'all 0.3s ease';
+        this.form.style.border = '2px solid #4CAF50';
+        setTimeout(() => {
+            this.form.style.border = '';
+        }, 2000);
+        
+        console.log('Form enabled successfully');
+    },
+    
+    disableForm() {
+        if (!this.form) return;
+        
+        console.log('Disabling event registration form...');
+        
+        // Add consent notice if not already present
+        if (!this.form.querySelector('.consent-notice')) {
+            const consentNotice = document.createElement('div');
+            consentNotice.className = 'consent-notice';
+            consentNotice.innerHTML = `
+                <p>
+                    <span lang="ro">Pentru a utiliza acest formular, trebuie să acceptați cookie-urile terțe. </span>
+                    <span lang="en">To use this form, you need to accept third-party cookies. </span>
+                    <button onclick="openCookieSettings()" style="text-decoration: underline; border: none; background: none; color: #4169e1; cursor: pointer; font-weight: 600;">
+                        <span lang="ro">Deschide Setări Cookie</span>
+                        <span lang="en">Open Cookie Settings</span>
+                    </button>
+                </p>
+            `;
+            this.form.insertBefore(consentNotice, this.form.firstChild);
+        }
+        
+        // Add disabled class
+        this.form.classList.add('consent-required');
+        
+        // Disable the submit button
+        const submitBtn = this.form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            // Save original text if not already saved
+            if (!submitBtn.hasAttribute('data-original-text')) {
+                submitBtn.setAttribute('data-original-text', submitBtn.innerHTML);
+            }
+            
             submitBtn.disabled = true;
-            const originalText = submitBtn.innerHTML;
-            submitBtn.setAttribute('data-original-text', originalText);
+            submitBtn.style.cursor = 'not-allowed';
+            submitBtn.style.opacity = '0.6';
             submitBtn.innerHTML = `
-                <span lang="ro">Necesită Consimțământ pentru Cookie-uri. Acceptați-le și reîmprospătați pagina.</span>
-                <span lang="en">Requires Cookie Consent. Accept the cookies and reload the page.</span>
+                <span lang="ro">Necesită Consimțământ Cookie</span>
+                <span lang="en">Requires Cookie Consent</span>
             `;
         }
+        
+        console.log('Form disabled - requires cookie consent');
     },
     
     validateConsentField(checkbox) {
@@ -716,6 +883,12 @@ const GDPRFormHandler = {
             
             // Scroll to error
             errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Add shake animation
+            errorContainer.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                errorContainer.style.animation = '';
+            }, 500);
         }
     },
     
@@ -730,14 +903,47 @@ const GDPRFormHandler = {
             <span lang="en">Sending...</span>
         `;
         
+        // Add loading animation
+        submitBtn.style.position = 'relative';
+        submitBtn.style.overflow = 'hidden';
+        
+        const spinner = document.createElement('span');
+        spinner.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        `;
+        submitBtn.appendChild(spinner);
+        
+        // Add spin animation style
+        if (!document.querySelector('style[data-spinner]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-spinner', 'true');
+            style.textContent = `
+                @keyframes spin {
+                    to { transform: translate(-50%, -50%) rotate(360deg); }
+                }
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         // Track form submission for GDPR audit
         this.trackFormSubmission(form);
         
         // Actually submit the form
         form.submit();
-        
-        // Note: After submission, Formspree will redirect or show its own success message
-        // You might want to handle this differently based on your needs
     },
     
     trackFormSubmission(form) {
@@ -745,18 +951,16 @@ const GDPRFormHandler = {
             timestamp: new Date().toISOString(),
             form: 'event_registration',
             consents: {
-    dataProcessing: document.getElementById('dataProcessingConsent').checked,
-    internationalTransfer: document.getElementById('internationalTransferConsent').checked,
-    privacyPolicy: document.getElementById('privacyPolicyConsent').checked
-}
-
+                dataProcessing: document.getElementById('dataProcessingConsent')?.checked || false,
+                internationalTransfer: document.getElementById('internationalTransferConsent')?.checked || false,
+                privacyPolicy: document.getElementById('privacyPolicyConsent')?.checked || false
+            }
         };
         
         // Store submission data for audit trail
         try {
             const submissions = JSON.parse(localStorage.getItem('formSubmissions') || '[]');
             submissions.push(submissionData);
-            // Keep only last 5 submissions
             if (submissions.length > 5) submissions.shift();
             localStorage.setItem('formSubmissions', JSON.stringify(submissions));
         } catch (e) {
@@ -1715,17 +1919,88 @@ window.setLanguage = (lang) => LanguageManager.setLanguage(lang);
 window.toggleMobileMenu = () => MobileMenu.toggleMenu();
 
 // Cookie Settings Global Functions
-window.openCookieSettings = () => CookieConsent.openSettings();
+window.openCookieSettings = () => {
+    CookieConsent.openSettings();
+    
+    // Highlight the third-party cookies option if form is disabled
+    if (!CookieConsent.hasThirdPartyConsent()) {
+        setTimeout(() => {
+            const thirdPartySection = document.querySelector('#thirdPartyCookies')?.closest('.cookie-category');
+            if (thirdPartySection) {
+                thirdPartySection.style.border = '2px solid #4CAF50';
+                thirdPartySection.style.backgroundColor = '#f0fff0';
+                thirdPartySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Add pulsing animation
+                thirdPartySection.style.animation = 'pulse 2s ease-in-out 3';
+                
+                // Add pulse animation if not exists
+                if (!document.querySelector('style[data-pulse-animation]')) {
+                    const style = document.createElement('style');
+                    style.setAttribute('data-pulse-animation', 'true');
+                    style.textContent = `
+                        @keyframes pulse {
+                            0%, 100% { transform: scale(1); }
+                            50% { transform: scale(1.02); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+        }, 300);
+    }
+};
 
 window.closeCookieSettings = () => CookieConsent.closeSettings();
 
-window.acceptAllCookies = () => CookieConsent.acceptAllCookies();
+window.acceptAllCookies = () => {
+    // Update all checkboxes in the settings modal
+    const analyticsCookies = document.getElementById('analyticsCookies');
+    const marketingCookies = document.getElementById('marketingCookies');
+    const thirdPartyCookies = document.getElementById('thirdPartyCookies');
+    
+    if (analyticsCookies) analyticsCookies.checked = true;
+    if (marketingCookies) marketingCookies.checked = true;
+    if (thirdPartyCookies) thirdPartyCookies.checked = true;
+    
+    // Apply the changes
+    CookieConsent.acceptAllCookies();
+};
 
-window.rejectAllCookies = () => CookieConsent.rejectAllCookies();
+window.rejectAllCookies = () => {
+    // Update all checkboxes in the settings modal
+    const analyticsCookies = document.getElementById('analyticsCookies');
+    const marketingCookies = document.getElementById('marketingCookies');
+    const thirdPartyCookies = document.getElementById('thirdPartyCookies');
+    
+    if (analyticsCookies) analyticsCookies.checked = false;
+    if (marketingCookies) marketingCookies.checked = false;
+    if (thirdPartyCookies) thirdPartyCookies.checked = false;
+    
+    // Apply the changes
+    CookieConsent.rejectAllCookies();
+};
 
-window.savePreferences = () => CookieConsent.saveCustomPreferences();
+window.savePreferences = () => {
+    // Provide visual feedback
+    const saveBtn = document.querySelector('.cookie-btn-primary');
+    if (saveBtn) {
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = `
+            <span lang="ro">Salvat ✓</span>
+            <span lang="en">Saved ✓</span>
+        `;
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+        }, 2000);
+    }
+    
+    // Save the preferences
+    CookieConsent.saveCustomPreferences();
+};
 
-// ===== ENHANCED SERVICE WORKER REGISTRATION =====
+// ===== ENHANCED SERVICE WORKER REGISTRATION WITH UPDATE DETECTION =====
 const ServiceWorkerManager = {
     registration: null,
     updateAvailable: false,
@@ -1733,12 +2008,10 @@ const ServiceWorkerManager = {
     init() {
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                // Add timestamp to bypass cache for service worker file
                 const swUrl = './sw.js';
                 
                 navigator.serviceWorker.register(swUrl, { 
                     scope: './',
-                    // Check for updates more frequently
                     updateViaCache: 'none'
                 })
                 .then((registration) => {
@@ -1758,14 +2031,11 @@ const ServiceWorkerManager = {
                                 console.log('Service Worker state changed to:', newWorker.state);
                                 
                                 if (newWorker.state === 'installed') {
-                                    // There's a new service worker waiting
                                     if (navigator.serviceWorker.controller) {
-                                        // Show update notification only if there's an existing controller
                                         console.log('New service worker available!');
                                         this.updateAvailable = true;
                                         this.showUpdateNotification(newWorker);
                                     } else {
-                                        // First install, no update needed
                                         console.log('Service Worker installed for the first time');
                                     }
                                 }
@@ -1773,19 +2043,11 @@ const ServiceWorkerManager = {
                         }
                     });
                     
-                    // Also listen for controller change (when skipWaiting is called)
+                    // Listen for controller change
                     navigator.serviceWorker.addEventListener('controllerchange', () => {
                         console.log('Controller changed, reloading page...');
-                        // Only reload if we were waiting for an update
                         if (this.updateAvailable) {
                             window.location.reload();
-                        }
-                    });
-                    
-                    // Listen for messages from service worker
-                    navigator.serviceWorker.addEventListener('message', (event) => {
-                        if (event.data && event.data.type === 'SERVICE_WORKER_ACTIVATED') {
-                            console.log('Service Worker activated with version:', event.data.version);
                         }
                     });
                     
@@ -1799,7 +2061,7 @@ const ServiceWorkerManager = {
                 });
             });
             
-            // Also check for updates when the page gains focus
+            // Check for updates when the page gains focus
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden && this.registration) {
                     this.registration.update();
@@ -1853,72 +2115,71 @@ const ServiceWorkerManager = {
             border: 2px solid #4CAF50;
         `;
         
-        // Add animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(400px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            .update-notification-content {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .update-notification-content p {
-                margin: 0;
-                font-size: 1rem;
-                font-weight: 500;
-                color: #333;
-            }
-            
-            .update-notification-actions {
-                display: flex;
-                gap: 0.75rem;
-            }
-            
-            .update-btn {
-                padding: 0.5rem 1rem;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 0.9rem;
-                font-weight: 500;
-                transition: all 0.2s ease;
-                font-family: inherit;
-                flex: 1;
-            }
-            
-            .update-btn-primary {
-                background: #4CAF50;
-                color: white;
-            }
-            
-            .update-btn-primary:hover {
-                background: #45a049;
-                transform: translateY(-1px);
-            }
-            
-            .update-btn-secondary {
-                background: #f0f0f0;
-                color: #666;
-            }
-            
-            .update-btn-secondary:hover {
-                background: #e0e0e0;
-            }
-        `;
-        
+        // Add animation styles if not present
         if (!document.querySelector('style[data-update-notification]')) {
+            const style = document.createElement('style');
             style.setAttribute('data-update-notification', 'true');
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(400px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                .update-notification-content {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+                
+                .update-notification-content p {
+                    margin: 0;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: #333;
+                }
+                
+                .update-notification-actions {
+                    display: flex;
+                    gap: 0.75rem;
+                }
+                
+                .update-btn {
+                    padding: 0.5rem 1rem;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    transition: all 0.2s ease;
+                    font-family: inherit;
+                    flex: 1;
+                }
+                
+                .update-btn-primary {
+                    background: #4CAF50;
+                    color: white;
+                }
+                
+                .update-btn-primary:hover {
+                    background: #45a049;
+                    transform: translateY(-1px);
+                }
+                
+                .update-btn-secondary {
+                    background: #f0f0f0;
+                    color: #666;
+                }
+                
+                .update-btn-secondary:hover {
+                    background: #e0e0e0;
+                }
+            `;
             document.head.appendChild(style);
         }
         
@@ -1927,7 +2188,7 @@ const ServiceWorkerManager = {
         // Store reference to the new worker
         this.newWorker = newWorker;
         
-        // Auto-dismiss after 30 seconds (but keep the update available)
+        // Auto-dismiss after 30 seconds
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.style.animation = 'slideOut 0.3s ease forwards';
@@ -1938,11 +2199,8 @@ const ServiceWorkerManager = {
     
     applyUpdate() {
         if (this.newWorker) {
-            // Tell the waiting service worker to skip waiting
             this.newWorker.postMessage({ type: 'SKIP_WAITING' });
-            // The controllerchange event will reload the page
         } else if (this.registration && this.registration.waiting) {
-            // Backup: if we lost the reference to newWorker
             this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
         }
     },
@@ -1954,12 +2212,10 @@ const ServiceWorkerManager = {
             setTimeout(() => notification.remove(), 300);
         }
         
-        // Show a small indicator that an update is available
         this.showUpdateIndicator();
     },
     
     showUpdateIndicator() {
-        // Add a small indicator to the page
         const indicator = document.createElement('div');
         indicator.className = 'update-indicator';
         indicator.innerHTML = `
@@ -1988,28 +2244,26 @@ const ServiceWorkerManager = {
             animation: pulse 2s infinite;
         `;
         
-        // Add pulse animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-            }
-            
-            .update-indicator button {
-                background: transparent;
-                border: none;
-                color: white;
-                cursor: pointer;
-                font-size: 1.2rem;
-                width: 100%;
-                height: 100%;
-                padding: 0;
-            }
-        `;
-        
         if (!document.querySelector('style[data-update-indicator]')) {
+            const style = document.createElement('style');
             style.setAttribute('data-update-indicator', 'true');
+            style.textContent = `
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+                
+                .update-indicator button {
+                    background: transparent;
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    width: 100%;
+                    height: 100%;
+                    padding: 0;
+                }
+            `;
             document.head.appendChild(style);
         }
         
@@ -2017,8 +2271,9 @@ const ServiceWorkerManager = {
     }
 };
 
-// Make ServiceWorkerManager globally accessible
+// Make ServiceWorkerManager and GDPRFormHandler globally accessible
 window.ServiceWorkerManager = ServiceWorkerManager;
+window.GDPRFormHandler = GDPRFormHandler;
 
 // ===== MAIN INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -2027,12 +2282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         // Initialize cookie consent first (critical for GDPR compliance)
         CookieConsent.init();
-                // Initialize cookie consent first (critical for GDPR compliance)
-        CookieConsent.init();
         
-        // Initialize GDPR form handler - MAKE SURE THIS LINE IS PRESENT
-        GDPRFormHandler.init();
-
         // Initialize GDPR form handler
         GDPRFormHandler.init();
         
@@ -2114,6 +2364,7 @@ if (typeof module !== 'undefined' && module.exports) {
         FormHandler,
         GDPRFormHandler,
         PerformanceMonitor,
-        EventData
+        EventData,
+        ServiceWorkerManager
     };
 }
