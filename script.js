@@ -1725,63 +1725,300 @@ window.rejectAllCookies = () => CookieConsent.rejectAllCookies();
 
 window.savePreferences = () => CookieConsent.saveCustomPreferences();
 
-// ===== SERVICE WORKER REGISTRATION =====
+// ===== ENHANCED SERVICE WORKER REGISTRATION =====
 const ServiceWorkerManager = {
+    registration: null,
+    updateAvailable: false,
+    
     init() {
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js', { scope: './' })
-                    .then((registration) => {
-                        console.log('ServiceWorker registration successful with scope:', registration.scope);
+                // Add timestamp to bypass cache for service worker file
+                const swUrl = './sw.js';
+                
+                navigator.serviceWorker.register(swUrl, { 
+                    scope: './',
+                    // Check for updates more frequently
+                    updateViaCache: 'none'
+                })
+                .then((registration) => {
+                    this.registration = registration;
+                    console.log('ServiceWorker registration successful with scope:', registration.scope);
+                    
+                    // Check for updates immediately
+                    registration.update();
+                    
+                    // Listen for any updates
+                    registration.addEventListener('updatefound', () => {
+                        console.log('Service Worker update found!');
+                        const newWorker = registration.installing;
                         
-                        // Listen for updates
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
+                        if (newWorker) {
                             newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // New content is available, notify user
-                                    this.showUpdateNotification();
+                                console.log('Service Worker state changed to:', newWorker.state);
+                                
+                                if (newWorker.state === 'installed') {
+                                    // There's a new service worker waiting
+                                    if (navigator.serviceWorker.controller) {
+                                        // Show update notification only if there's an existing controller
+                                        console.log('New service worker available!');
+                                        this.updateAvailable = true;
+                                        this.showUpdateNotification(newWorker);
+                                    } else {
+                                        // First install, no update needed
+                                        console.log('Service Worker installed for the first time');
+                                    }
                                 }
                             });
-                        });
-                    })
-                    .catch((error) => {
-                        console.log('ServiceWorker registration failed:', error);
+                        }
                     });
+                    
+                    // Also listen for controller change (when skipWaiting is called)
+                    navigator.serviceWorker.addEventListener('controllerchange', () => {
+                        console.log('Controller changed, reloading page...');
+                        // Only reload if we were waiting for an update
+                        if (this.updateAvailable) {
+                            window.location.reload();
+                        }
+                    });
+                    
+                    // Listen for messages from service worker
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        if (event.data && event.data.type === 'SERVICE_WORKER_ACTIVATED') {
+                            console.log('Service Worker activated with version:', event.data.version);
+                        }
+                    });
+                    
+                    // Check for updates every hour
+                    setInterval(() => {
+                        registration.update();
+                    }, 60 * 60 * 1000);
+                })
+                .catch((error) => {
+                    console.log('ServiceWorker registration failed:', error);
+                });
+            });
+            
+            // Also check for updates when the page gains focus
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && this.registration) {
+                    this.registration.update();
+                }
             });
         }
     },
     
-    showUpdateNotification() {
-        // Simple update notification
+    showUpdateNotification(newWorker) {
+        // Remove any existing notification
+        const existingNotification = document.querySelector('.update-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+        
+        // Create update notification
         const notification = document.createElement('div');
         notification.className = 'update-notification';
         notification.innerHTML = `
-            <p>O versiune nouă este disponibilă!</p>
-            <button onclick="window.location.reload()">Actualizează</button>
+            <div class="update-notification-content">
+                <p>
+                    <span lang="ro">O versiune nouă este disponibilă! 🎉</span>
+                    <span lang="en">A new version is available! 🎉</span>
+                </p>
+                <div class="update-notification-actions">
+                    <button class="update-btn update-btn-primary" onclick="ServiceWorkerManager.applyUpdate()">
+                        <span lang="ro">Actualizează Acum</span>
+                        <span lang="en">Update Now</span>
+                    </button>
+                    <button class="update-btn update-btn-secondary" onclick="ServiceWorkerManager.dismissUpdate()">
+                        <span lang="ro">Mai Târziu</span>
+                        <span lang="en">Later</span>
+                    </button>
+                </div>
+            </div>
         `;
+        
+        // Add styles
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 1rem;
-            border-radius: 8px;
+            background: white;
+            color: #333;
+            padding: 1.5rem;
+            border-radius: 12px;
             z-index: 9999;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 350px;
+            animation: slideIn 0.3s ease;
+            border: 2px solid #4CAF50;
         `;
+        
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            .update-notification-content {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .update-notification-content p {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 500;
+                color: #333;
+            }
+            
+            .update-notification-actions {
+                display: flex;
+                gap: 0.75rem;
+            }
+            
+            .update-btn {
+                padding: 0.5rem 1rem;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                font-family: inherit;
+                flex: 1;
+            }
+            
+            .update-btn-primary {
+                background: #4CAF50;
+                color: white;
+            }
+            
+            .update-btn-primary:hover {
+                background: #45a049;
+                transform: translateY(-1px);
+            }
+            
+            .update-btn-secondary {
+                background: #f0f0f0;
+                color: #666;
+            }
+            
+            .update-btn-secondary:hover {
+                background: #e0e0e0;
+            }
+        `;
+        
+        if (!document.querySelector('style[data-update-notification]')) {
+            style.setAttribute('data-update-notification', 'true');
+            document.head.appendChild(style);
+        }
         
         document.body.appendChild(notification);
         
-        // Auto-remove after 10 seconds
+        // Store reference to the new worker
+        this.newWorker = newWorker;
+        
+        // Auto-dismiss after 30 seconds (but keep the update available)
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.remove();
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
             }
-        }, 10000);
+        }, 30000);
+    },
+    
+    applyUpdate() {
+        if (this.newWorker) {
+            // Tell the waiting service worker to skip waiting
+            this.newWorker.postMessage({ type: 'SKIP_WAITING' });
+            // The controllerchange event will reload the page
+        } else if (this.registration && this.registration.waiting) {
+            // Backup: if we lost the reference to newWorker
+            this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+    },
+    
+    dismissUpdate() {
+        const notification = document.querySelector('.update-notification');
+        if (notification) {
+            notification.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }
+        
+        // Show a small indicator that an update is available
+        this.showUpdateIndicator();
+    },
+    
+    showUpdateIndicator() {
+        // Add a small indicator to the page
+        const indicator = document.createElement('div');
+        indicator.className = 'update-indicator';
+        indicator.innerHTML = `
+            <button onclick="ServiceWorkerManager.showUpdateNotification(ServiceWorkerManager.newWorker)" 
+                    title="Update Available" 
+                    aria-label="Update Available">
+                🔄
+            </button>
+        `;
+        
+        indicator.style.cssText = `
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            background: #4CAF50;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            animation: pulse 2s infinite;
+        `;
+        
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
+            
+            .update-indicator button {
+                background: transparent;
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-size: 1.2rem;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+            }
+        `;
+        
+        if (!document.querySelector('style[data-update-indicator]')) {
+            style.setAttribute('data-update-indicator', 'true');
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(indicator);
     }
 };
+
+// Make ServiceWorkerManager globally accessible
+window.ServiceWorkerManager = ServiceWorkerManager;
 
 // ===== MAIN INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {

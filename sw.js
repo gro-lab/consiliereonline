@@ -1,9 +1,10 @@
 // Service Worker for consiliereonline.com
-// Version: 3.1
-const CACHE_NAME = 'consiliereonline-v3-1';
+// Version: 3.2 - INCREMENT THIS TO TRIGGER UPDATE
+const CACHE_VERSION = '3.2'; // Change this version number to trigger updates
+const CACHE_NAME = `consiliereonline-v${CACHE_VERSION}`;
 const OFFLINE_PAGE = '/404.html';
 
-// Core assets to cache during installation - only files that actually exist
+// Core assets to cache during installation
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -20,7 +21,7 @@ const DYNAMIC_ASSETS = [
   '/consiliere-online-razvan-mischie-event-3.jpg'
 ];
 
-// Optional assets - these may or may not exist
+// Optional assets
 const OPTIONAL_ASSETS = [
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
@@ -32,14 +33,14 @@ const OPTIONAL_ASSETS = [
 
 // ===== INSTALLATION =====
 self.addEventListener('install', (event) => {
+  console.log('[ServiceWorker] Installing version:', CACHE_VERSION);
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        // Cache core assets first
         console.log('[ServiceWorker] Caching core assets');
         return cache.addAll(CORE_ASSETS)
           .then(() => {
-            // Cache dynamic assets with network-first strategy
             console.log('[ServiceWorker] Caching dynamic assets');
             return Promise.all(
               DYNAMIC_ASSETS.map(url => {
@@ -55,7 +56,6 @@ self.addEventListener('install', (event) => {
             );
           })
           .then(() => {
-            // Try to cache optional assets
             console.log('[ServiceWorker] Caching optional assets');
             return Promise.all(
               OPTIONAL_ASSETS.map(url => {
@@ -77,6 +77,17 @@ self.addEventListener('install', (event) => {
         throw err;
       })
   );
+  
+  // DON'T call skipWaiting() here - let the user decide when to update
+  // This ensures the update notification will be shown
+});
+
+// ===== MESSAGE HANDLER FOR SKIP WAITING =====
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[ServiceWorker] Received skipWaiting message');
+    self.skipWaiting();
+  }
 });
 
 // ===== FETCH HANDLER =====
@@ -89,12 +100,17 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // For service worker file itself, always fetch from network
+  if (url.pathname.endsWith('/sw.js')) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
   // Strategy 1: Network-first for API calls
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
       fetch(request)
         .then(networkResponse => {
-          // Update cache if successful
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME)
             .then(cache => cache.put(request, responseClone));
@@ -120,7 +136,6 @@ self.addEventListener('fetch', (event) => {
       caches.match(request).then(cached => {
         const networkFetch = fetch(request)
           .then(response => {
-            // Update cache if valid response
             if (response.ok) {
               const clone = response.clone();
               caches.open(CACHE_NAME)
@@ -128,7 +143,7 @@ self.addEventListener('fetch', (event) => {
             }
             return response;
           })
-          .catch(() => cached); // Fallback to cache if fetch fails
+          .catch(() => cached);
         
         return cached || networkFetch;
       })
@@ -140,7 +155,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(request)
       .catch(() => {
-        // Return offline page for document requests
         if (request.headers.get('Accept') && request.headers.get('Accept').includes('text/html')) {
           return caches.match(OFFLINE_PAGE);
         }
@@ -150,6 +164,8 @@ self.addEventListener('fetch', (event) => {
 
 // ===== ACTIVATION =====
 self.addEventListener('activate', (event) => {
+  console.log('[ServiceWorker] Activating version:', CACHE_VERSION);
+  
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
@@ -162,13 +178,28 @@ self.addEventListener('activate', (event) => {
       );
     })
     .then(() => {
-      // Enable navigation preload if available
       if (self.registration.navigationPreload) {
         return self.registration.navigationPreload.enable();
       }
     })
-    .then(() => self.clients.claim())
-    .then(() => console.log('[ServiceWorker] Activation complete'))
+    .then(() => {
+      // Only claim clients after everything is ready
+      // This allows the update notification to work properly
+      return self.clients.claim();
+    })
+    .then(() => {
+      console.log('[ServiceWorker] Activation complete, version:', CACHE_VERSION);
+      
+      // Notify all clients about the activation
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SERVICE_WORKER_ACTIVATED',
+            version: CACHE_VERSION
+          });
+        });
+      });
+    })
   );
 });
 
