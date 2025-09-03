@@ -63,8 +63,11 @@
     
     <!-- Preload Critical Resources -->
     <link rel="preload" href="./styles.css" as="style">
-    <link rel="preload" href="./script.js" as="script">
+    <link rel="preload" href="./script.js" as="script" onload="this.onload=null;this.rel='script'">
+
     
+
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="./styles.css">
     
@@ -1902,6 +1905,6 @@ Counseling is not a substitute for professional medical treatment.</span>
 </div>
 
     <!-- Scripts -->
-    <script src="./script.js?v=4.0.1" defer></script>
+    <script src="./script.js?v=4.0.2" defer></script>
 </body>
 </html>
