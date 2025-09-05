@@ -2008,7 +2008,7 @@ const ServiceWorkerManager = {
     init() {
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                const swUrl = './sw.js';
+                const swUrl = './sw.min.js';
                 
                 navigator.serviceWorker.register(swUrl, { 
                     scope: './',
