@@ -18,7 +18,8 @@ const CORE_ASSETS = [
 const DYNAMIC_ASSETS = [
   '/consiliere-online-razvan-mischie-event-1.jpg',
   '/consiliere-online-razvan-mischie-event-2.jpg',
-  '/consiliere-online-razvan-mischie-event-3.jpg'
+  '/consiliere-online-razvan-mischie-event-3.jpg',
+  '/consiliere-online-razvan-mischie-event-4.jpg'
 ];
 
 // Optional assets

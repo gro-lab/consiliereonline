@@ -1170,7 +1170,7 @@ class Carousel {
         this.trackWidth = 0;
         
         // Event configuration
-        this.eventImages = ['./consiliere-online-razvan-mischie-event-1.jpg', './consiliere-online-razvan-mischie-event-2.jpg', './consiliere-online-razvan-mischie-event-3.jpg'];
+        this.eventImages = ['./consiliere-online-razvan-mischie-event-1.jpg', './consiliere-online-razvan-mischie-event-2.jpg', './consiliere-online-razvan-mischie-event-3.jpg', './consiliere-online-razvan-mischie-event-4.jpg'];
         this.eventCaptions = [
             {
                 ro: 'Atelier de Re-cunoaștere - 25 Iunie, 19:00 - 22:00 - 35 RON',
