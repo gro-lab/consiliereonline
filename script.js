@@ -1170,7 +1170,7 @@ class Carousel {
         this.trackWidth = 0;
         
         // Event configuration
-        this.eventImages = ['./consiliere-online-razvan-mischie-event-1.jpg', './consiliere-online-razvan-mischie-event-2.jpg', './consiliere-online-razvan-mischie-event-3.jpg', './consiliere-online-razvan-mischie-event-4.jpg'];
+        this.eventImages = ['./consiliere-online-razvan-mischie-event-1.jpg', './consiliere-online-razvan-mischie-event-2.jpg', './consiliere-online-razvan-mischie-event-3.jpg', './consiliere-online-razvan-mischie-event-4.jpg', './consiliere-online-razvan-mischie-event-5.jpg'];
         this.eventCaptions = [
             {
                 ro: 'Atelier de Re-cunoaștere - 25 Iunie, 19:00 - 22:00 - 35 RON',
@@ -1181,8 +1181,16 @@ class Carousel {
                 en: 'Workshop: Specific Interests - July 26, 6:00 PM - 8:00 PM - 35 RON'
             },
             {
-                ro: 'Comunicarea și Nuanțele Ei - 10 Iulie, 18:30 - 21:30 - 35 RON',
-                en: 'Communication & Its Nuances - July 10, 6:30 PM - 9:30 PM - 35 RON'
+                ro: 'Comunicarea și Nuanțele ei - 10 Iulie, 18:00 - 20:00 - 35 RON',
+                en: 'Communication and its Nuances - July 10, 6:00 PM - 8:00 PM - 35 RON'
+            },
+            {
+                ro: 'Medicație vs Terapie - 27 August 19:00 - 21:00 - 35 RON',
+                en: 'Medication vs Therapy - August 27 7:00 PM - 9:00 PM  - 35 RON'
+            },
+            {
+                ro: 'Medicație vs Terapie - 12 Septembrie 19:00 - 21:00 - 35 RON',
+                en: 'Medication vs Therapy - September 12 7:00 PM - 9:00 PM  - 35 RON'
             }
         ];
     }

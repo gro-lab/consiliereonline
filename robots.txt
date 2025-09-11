@@ -11,6 +11,7 @@ Allow: /consiliere-online-razvan-mischie-event-1.jpg
 Allow: /consiliere-online-razvan-mischie-event-2.jpg
 Allow: /consiliere-online-razvan-mischie-event-3.jpg
 Allow: /consiliere-online-razvan-mischie-event-4.jpg
+Allow: /consiliere-online-razvan-mischie-event-5.jpg
 Allow: /icons/
 Allow: /images/
 
