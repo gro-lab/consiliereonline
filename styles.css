@@ -2655,3 +2655,6 @@ body:not(.lang-ro) li[lang="en"] {
     border: 1px solid #f5c6cb;
 }
 
+.footer-keywords p strong { 
+    color: #fff;
+}
