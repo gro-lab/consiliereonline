@@ -17,7 +17,7 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
-}
+} 
 
 // Throttle function for scroll events
 function throttle(func, wait) {
